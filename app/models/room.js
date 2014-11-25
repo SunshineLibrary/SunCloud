@@ -23,9 +23,12 @@ var RoomSchema = new Schema({
             type: String
         },
         grade: String,
-        roomType: {
+        type: {
             type: String,
             enum: ['admin', 'teaching']
+        },
+        code: {
+            type: String
         },
         school: {
             type: Schema.Types.ObjectId,

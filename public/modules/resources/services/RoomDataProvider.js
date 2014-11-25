@@ -8,7 +8,7 @@ angular.module('schoolManage')
                 data: {
                     "name": info.name,
                     "school": info.school,
-                    "roomType": 'admin',
+                    "type": 'admin',
                     "students": [],
                     "teachers": []
                 }
@@ -22,7 +22,7 @@ angular.module('schoolManage')
                 data: {
                     "name": info.name,
                     "school": info.school,
-                    "roomType": 'teaching',
+                    "type": 'teaching',
                     "students": [],
                     "teachers": []
                 }
@@ -77,7 +77,7 @@ angular.module('schoolManage')
             var thePromise = defered.promise;
             $http({
                 method: "GET",
-                url: "/rooms?school=" + schoolId + "&roomType=admin&populate=teachers"
+                url: "/rooms?school=" + schoolId + "&type=admin&populate=teachers"
             }).success(function(rooms){
                 defered.resolve(rooms);
             }).error(function(err){
@@ -146,6 +146,7 @@ angular.module('schoolManage')
             var students = _.filter(room.students, function(student){
                 return student !== studentId;
             });
+            console.log('studentsnow:'+ students.length);
             return $http({
                 method: "PUT",
                 url: "/rooms/" + room._id,

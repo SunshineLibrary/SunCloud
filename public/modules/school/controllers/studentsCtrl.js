@@ -40,8 +40,8 @@ angular.module('schoolManage')
                     {field: 'tablet', displayName: '正在使用的晓书',cellTemplate:'<div class="ngCellText" ng-class="col.colIndex()"><a href="/#/tablets/{{row.entity.tablet}}">{{row.getProperty(col.field)}}</a></div>'},
                     {field: '', displayName: '编辑', cellTemplate:
                         '<div class="ngCellText" ng-class="col.colIndex()" ng-show="showedit">' +
-                        '<a class="glyphicon glyphicon-edit text-primary" ng-click="showEditStudentDialog($event, row)"></a> &nbsp;&nbsp;' +
-                        '<a class="glyphicon glyphicon-remove text-primary" ng-click="removeStudent($event, row)"></a></div>'}
+                        '<a class="glyphicon glyphicon-edit text-success" ng-click="showEditStudentDialog($event, row)"></a> &nbsp;&nbsp;' +
+                        '<a class="glyphicon glyphicon-remove text-success" ng-click="removeStudent($event, row)"></a></div>'}
 
                     //{field: 'loginDateLocal', displayName: '上次登录时间', width: 170}
                 ],
@@ -172,13 +172,6 @@ angular.module('schoolManage')
                     }
 
                     var newStudent = newStudents[studentIndex];
-                    //for (var sIndex = 0; sIndex < $scope.students.length; sIndex++) {
-                    //    var student = $scope.students[sIndex];
-                    //    if (student.username === newStudent.username) {
-                    //        failList.push(newStudent);
-                    //        return switcher();
-                    //    }
-                    //}
 
                     StudentDataProvider.createStudent(newStudent)
                         .success(function(student) {
@@ -188,7 +181,6 @@ angular.module('schoolManage')
                             console.error(err);
                             failList.push(newStudent);
                             switcher();
-
                         });
                 }
                 MultipleCreate(0);
@@ -197,4 +189,5 @@ angular.module('schoolManage')
             $scope.selectStudent = function () {
                 $location.path('/students/' + $scope.gridOptions.selectedItems[0]._id);
             };
-        }]);
+        }
+    ]);

@@ -33,7 +33,7 @@ var UserSchema = new Schema({
     },
 	username: {
 		type: String,
-		unique: 'testing error message',
+		unique: 'username unique',
 		required: '请输入用户名',
 		trim: true
 	},

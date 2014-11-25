@@ -1,15 +1,80 @@
 <div class="container-fluid">
 
-    <form class="form-inline pull-right">
-        <div class="form-group">
-            <input type="text" class="form-control" placeholder="新班级名称" ng-model="newRoom.name">
-        </div>
-        <button class="btn btn-primary fui-plus" ng-click="createRoom()">新建班级</button>
-    </form>
+    <h4 class="tableTitle pull-left">所有班级 &nbsp;&nbsp;</h4>
 
-    <p class="tableTitle">所有班级</p>
-    <!--班级:{{selectedRoom}}-->
+    <div class=" pull-right" style="margin-top:10px">
+        <a role="button" class="btn btn-primary btn-warning" href="#createRoomDialog" data-toggle="modal"><i class="glyphicon glyphicon-plus"></i>创建班级</a>
+    </div>
+
+    <div class="inner-addon left-addon pull-left" style="margin-top:10px">
+        <i class="glyphicon glyphicon-search"></i>
+        <input type="search" class="form-control" style="width: 250px"  placeholder="搜索" ng-model="filterOptions.filterText"/>
+    </div>
+    <br>
+    <br>
+
     <div class="table">
         <div class="gridStyle" ng-grid="gridOptions" ng-click="selectRoom()"></div>
+    </div>
+</div>
+
+
+<!--------------------------------Modal--------------------->
+
+<div class="modal fade" id="createRoomDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true" style="overflow-y:scroll">
+    <div class='modal-dialog' style="left: auto">
+        <div class='modal-content'>
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span></button>
+                <h4 class="modal-title">创建班级</h4>
+            </div>
+            <div class='modal-body'>
+                <form name="roomForm" class="form-group">
+                    <div class="input-group input-group-lg">
+                        <input class="form-control" placeholder="请输入新班级名称" ng-model="newRoomName" required>
+                        <div class="input-group-btn">
+                            <button type="button" class="btn  btn-success"
+                                    ng-click="createAdminRoom()" ng-disabled="roomForm.$invalid">创建</button>
+                        </div>
+                    </div>
+                    <span ng-show="temp.createRoomTip=='noName'" class="error-msg">请填写班级名称</span>
+                    <span ng-show="temp.createRoomTip=='formatWrong'" class="error-msg">班级名称不可以超过15个字符，请修改名称</span>
+                    <span ng-show="temp.createRoomTip=='alreadyHave'" class="error-msg">您已经用此名称创建过班级，请修改名称</span>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="editRoomDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class='modal-dialog'>
+        <div class='modal-content'>
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span></button>
+                <h4 class="modal-title">编辑班级</h4>
+            </div>
+            <div class="modal-body">
+                <form name="editForm" class="form-group">
+                    <div class="form-inline">
+                        <label for="newName">&nbsp;&nbsp;&nbsp;班级名</label>
+                        <input type="text" id="newName" class="form-control" style="width:400px"  ng-model="room.newName" required>
+                    </div>
+                    <br>
+                    <div class="form-inline">
+                        <label for="newCode">班级编号</label>
+                        <input type="text" id="newCode" class="form-control" style="width:400px"  ng-model="room.newCode">
+                        <p style="color: green">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;班级编号全校唯一，可用于自动生成班级学生账号.</p>
+                    </div>
+                </form>
+                <span style="color: red" ng-show="room.nameError">班级名已存在，请修改后重试</span>
+                <span style="color: red" ng-show="room.codeError">班级编号已存在，请修改后重试</span>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-defautl" data-dismiss="modal">取消</button>
+                <button class="btn btn-success btn-lg" ng-click="editRoom(row)" ng-disabled="editForm.$invalid">确定</button>
+            </div>
+        </div>
     </div>
 </div>
