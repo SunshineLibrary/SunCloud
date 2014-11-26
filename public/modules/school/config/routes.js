@@ -85,7 +85,13 @@ angular.module('schoolManage').config(['$stateProvider',
                 url: '/apps',
                 parent: 'schoolNav',
                 controller: 'appsController',
-                templateUrl: __templates + 'apps.html'
+                templateUrl: __templates + 'apps.html',
+                resolve: {
+                    apps: ['AppDataProvider', 'AuthService',
+                    function(AppDataProvider, AuthService) {
+                        return AppDataProvider.getAppsBySchool(AuthService.me.school);
+                    }]
+                }
             }).
             state('template',{
                 url: '/template',

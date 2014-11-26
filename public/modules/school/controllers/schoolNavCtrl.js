@@ -12,7 +12,7 @@ angular.module('schoolManage')
                 {name:'老师', state: 'teachers'},
                 {name:'班级', state: 'classes'},
                 {name:'机器', state: 'tablets'},
-                {name:'模板', state: 'template'},
+                //{name:'模板', state: 'template'},
                 {name:'应用程序', state: 'apps'},
                 {name:'设置', state: 'setting'}];
 

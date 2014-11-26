@@ -51,16 +51,20 @@ angular.module('resources')
             return appsPromise;
         };
 
-        var getAppsBySchool = function (schoolId, callBack) {
+        var getAppsBySchool = function (schoolId) {
             var defered = $q.defer();
             var appsPromise = defered.promise;
+            var query = {$or: [{create_by: 'root'}, {$and: [{create_by: 'admin'},{school: schoolId}]}]};
+            //$or=[{\"create_by\":\"root\"},{\"$and\",[{\"create_by\":\"admin\"},{\"school\":\"schoolId\"}]}]
             $http({
                 method: "GET",
-                url: "/apps?$or=[{create_by=root},{$and=[{create_by=admin},{school=schoolId}]}]"
+                url: "/apps",
+                qs: { query: encodeURIComponent(JSON.stringify(query))}
+                //url: "/apps?query={\"$or\": [{\"create_by\": \"root\"}, {\"$and\": [{\"create_by\": \"admin\"},{\"school\":"+ schoolId+"}]}]}"
             }).success(function (apps) {
-                callBack(apps);
                 defered.resolve(apps);
             }).error(function (err) {
+                defered.reject(err);
                 console.error(err)
             });
             return appsPromise;

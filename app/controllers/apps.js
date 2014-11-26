@@ -44,8 +44,8 @@ exports.upload = function(req, res, next) {
                console.error(err);
                res.status(500).send({message: '数据库错误，请重试'});
            }else{
-               if(newApk.package !== app.package) {
-                   res.status(406).send({message: '此文件包名和之前包名不一致，请确认此安装包是否正确'});
+               if(app.package && (newApk.package !== app.package)) {
+                   res.status(406).send({message: '此文件内部包名和之前包名不一致，请确认此安装包是否正确'});
                }else{
                    fs.renameSync(file.path, file_path + new_fileName);
 

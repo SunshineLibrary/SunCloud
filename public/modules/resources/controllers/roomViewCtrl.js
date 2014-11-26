@@ -7,12 +7,13 @@ angular.module('resources')
         'RoomDataProvider',
         'StudentDataProvider',
         'TeacherDataProvider',
+        'SchoolDataProvider',
         '$scope',
         '$state',
         '$stateParams',
         'AuthService',
         '$location', function (
-        room, RoomDataProvider, StudentDataProvider, TeacherDataProvider,$scope, $state, $stateParams,AuthService, $location) {
+        room, RoomDataProvider, StudentDataProvider, TeacherDataProvider, SchoolDataProvider,$scope, $state, $stateParams,AuthService, $location) {
         var me = AuthService.me;
         var allStudents = [];
         //$scope.allTeachers = teachers;
@@ -29,6 +30,12 @@ angular.module('resources')
         $scope.manualState = true;
         $scope.autoState = false;
         $scope.dupList = [];
+        $scope.newStudent = {};
+        $scope.newTeacher = {};
+        $scope.newCode = '';
+        $scope.isCreatingStudent = false;
+        $scope.isCreatingTeacher = false;
+        $scope.isAddingCode = false;
         var failList = [];
         var waitingList = [];
         $scope.filterOptions = {filterText: ''};
@@ -88,14 +95,16 @@ angular.module('resources')
             data: 'studentsNotInRoom',
             multiSelect: true,
             showSelectionCheckbox: true,
-            checkboxCellTemplate: '<div class="ngSelectionCell"><input tabindex="-1" class="ngSelectionCheckbox" type="checkbox" ng-checked="row.selected" /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>',
+            checkboxCellTemplate: '<div class="ngSelectionCell"><input tabindex="-1" class="ngSelectionCheckbox" type="checkbox" ng-checked="row.selected" /> &nbsp;</div>',
             //checkboxCellTemplate: '<div class="ngSelectionCell"><input tabindex="-1" class="ngSelectionCheckbox" type="checkbox" ng-checked="row.selected" /></div>',
-            checkboxHeaderTemplate:'<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>',
+            checkboxHeaderTemplate:'<div>&nbsp</div>',
+            enableColumnResize : true,
             columnDefs: [
                 {field: '_id', visible: false},
                 {field: 'name', displayName: '姓名'},
-                {field: 'username', displayName: '用户名'},
-                {field: 'grade', displayName: '年级', width: 50}],
+                {field: 'username', displayName: '用户名'}
+                //{field: 'grade', displayName: '年级', width: 50}
+            ],
             selectedItems: $scope.selectedStudents,
             filterOptions: $scope.filterOptions
         };
@@ -175,7 +184,7 @@ angular.module('resources')
         };
 
         $scope.removeTeacherFromRoom = function(index) {
-            console.log(teachers[index]);
+            //console.log(teachers[index]);
             RoomDataProvider.removeTeacherFromRoom(room, teachers[index], function(old){
                 $scope.teachers.splice($scope.teachers.indexOf(old),1);
                 $('#removeTeacherFromRoomDialog').modal('hide');
@@ -201,6 +210,41 @@ angular.module('resources')
             $scope.autoState = true;
         };
 
+        $scope.toCreateStudent = function() {
+            $scope.isCreatingStudent = true;
+        };
+        $scope.cancelCreateStudent = function() {
+            $scope.isCreatingStudent = false;
+        };
+        $scope.toCreateTeacher = function() {
+            $scope.isCreatingTeacher = true;
+        };
+        $scope.cancelCreateTeacher = function() {
+            $scope.isCreatingTeacher = false;
+        };
+        $scope.toAddCode = function() {
+            $scope.isAddingCode = true;
+        };
+        $scope.cancelAddCode = function() {
+            $scope.isAddingCode = false;
+        };
+        $scope.addCode = function() {
+            if(!$scope.newCode.trim().length){
+                swal({title: "请输入班级代号", type: "warning", timer: 1500});
+            }else{
+                RoomDataProvider.editRoomCode(room._id, $scope.newCode)
+                    .success(function(newRoom){
+                        $scope.room.code = newRoom.code;
+                        $scope.isAddingCode = false;
+                        swal({title: "添加成功", text: "班级代号为" + newRoom.code, type: "success", timer: 1500});
+                    }).error(function(err){
+                        console.error(err);
+                        swal({title: "添加失败", text: "请重试", type: "error", timer: 2000});
+                    })
+            }
+
+
+        };
 
         $scope.createStudent = function () {
             //if (!$scope.newStudent.username.match(/^[@\.a-zA-Z0-9_-]+$/)) {
@@ -217,8 +261,10 @@ angular.module('resources')
                     $('#createStudentDialog').modal('hide');
                     $scope.newStudent = null;
                     swal({title: "创建成功", type: 'success', timer: 1000});
+                    $('body').addClass('modal-open');
                     $scope.studentsNotInRoom.push(newStudent);
                     $scope.selectedStudents.push(newStudent);
+                    $scope.isCreatingStudent = false;
 
                 })
                 .error(function(err) {
@@ -248,6 +294,7 @@ angular.module('resources')
                     $('#createTeacherDialog').modal('hide');
                     $scope.teachersNotInRoom.push(newTeacher);
                     $scope.selectedTeachers.push(newTeacher);
+                    $scope.isCreatingTeacher = false;
                     swal({
                         title: "创建成功",
                         text: "此用户名可登录晓书教师账号和教师平台\n教师平台默认密码为xiaoshu",
@@ -255,7 +302,7 @@ angular.module('resources')
                         confirmButtonColor: "#2E8B57",
                         confirmButtonText: "确定",
                         closeOnConfirm: false,
-                        timer: 3000})
+                        timer: 3000});
                 })
                 .error(function(err){
                     console.error(err);
@@ -317,35 +364,44 @@ angular.module('resources')
         $scope.addStudentsToRoom = function() {
             console.log($scope.selectedStudents);
             console.log($scope.roomMin.students);
-            RoomDataProvider.addStudentsToRoom($scope.room, $scope.selectedStudents)
-                .success( function(room) {
-                    $('#addStudentsDialog').modal('hide');
-                    $state.transitionTo($state.current, $stateParams, {
-                        reload: true,
-                        inherit: false,
-                        notify: true
+            if($scope.selectedStudents.length) {
+                RoomDataProvider.addStudentsToRoom($scope.room, $scope.selectedStudents)
+                    .success( function(room) {
+                        $('#addStudentsDialog').modal('hide');
+                        $state.transitionTo($state.current, $stateParams, {
+                            reload: true,
+                            inherit: false,
+                            notify: true
+                        });
+                        swal({title: "添加成功", type: "success", timer: 1000})
+                    }).error(function(err) {
+                        console.log(err);
+                        swal({title: "添加失败", text: "请重试", timer: 2000});
                     });
-                    swal({title: "添加成功", type: "success", timer: 1000})
-                 }).error(function(err) {
-                    console.log(err);
-                    swal({title: "添加失败", text: "请重试", timer: 2000});
-                });
+            }else {
+                swal({title: "您还没有选择任何学生", type: "warning", timer: 2000});
+            }
+
         };
 
         $scope.addTeachersToRoom = function() {
 
             console.log($scope.selectedTeachers);
-            RoomDataProvider.addTeachersToRoom($scope.room, $scope.selectedTeachers)
-                .success( function(room) {
-                    $('#addTeachersDialog').modal('hide');
-                    $scope.teachers = $scope.teachers.concat($scope.selectedTeachers);
-                    console.log($scope.teachers);
+            if($scope.selectedTeachers.length) {
+                RoomDataProvider.addTeachersToRoom($scope.room, $scope.selectedTeachers)
+                    .success( function(room) {
+                        $('#addTeachersDialog').modal('hide');
+                        $scope.teachers = $scope.teachers.concat($scope.selectedTeachers);
+                        console.log($scope.teachers);
+                        swal({title: "添加成功", type: "success", timer: 1000})
+                    }).error(function(err) {
+                        console.log(err);
+                        swal({title: "添加失败", text: "请重试", timer: 2000});
+                    });
+            }else {
+                swal({title: "您还没有选择任何老师", type: "warning", timer: 2000});
+            }
 
-                    swal({title: "添加成功", type: "success", timer: 1000})
-                }).error(function(err) {
-                    console.log(err);
-                    swal({title: "添加失败", text: "请重试", timer: 2000});
-                });
         };
 
         $scope.removeStudentFromRoom = function (event, row) {
@@ -460,56 +516,90 @@ angular.module('resources')
         };
 
         var addStudentsToRoom = function() {
-            RoomDataProvider.addStudentsToRoom($scope.roomMin, waitingList)
-                .success( function(room) {
-                    if(failList.length) {
-                        swal({title: "部分添加失败", text: "数据库错误，请重试", type: 'warning', timer: 2000});
-                        var tempList = "";
-                        $scope.errorMessage = true;
-                        console.log(failList);
-                        _.each(failList, function(student) {
-                            tempList = tempList.concat(student.name+","+student.username+"\n");
-                        });
-                        $scope.newStudentsList = tempList;
-                        console.log(tempList);
-                    }else {
-                        swal({title: "批量创建添加学生成功", type: 'success', timer: 2000});
-                        $('#addStudentsBatchDialog').modal('hide');
-                        $scope.newStudentsList = null;
-                        $scope.errorMessage = false;
+            console.log(waitingList);
+            console.log(failList);
+            console.log($scope.dupList);
+            if(waitingList.length) {
+                RoomDataProvider.addStudentsToRoom($scope.roomMin, waitingList)
+                    .success( function(room) {
+                        if(failList.length) {
+                            swal({title: "部分添加失败", text: "数据库错误，请重试", type: 'warning', timer: 2000});
+                            var tempList = "";
+                            $scope.errorMessage = true;
+                            console.log(failList);
+                            _.each(failList, function(student) {
+                                tempList = tempList.concat(student.name+","+student.username+"\n");
+                            });
+                            $scope.newStudentsList = tempList;
+                            console.log(tempList);
+                        }else {
+                            swal({title: "批量创建添加学生成功", type: 'success', timer: 2000});
+                            $('#addStudentsBatchDialog').modal('hide');
+                            $scope.newStudentsList = null;
+                            $scope.errorMessage = false;
+                            waitingList = [];
+                            failList = [];
+                            $state.transitionTo($state.current, $stateParams, {
+                                reload: true,
+                                inherit: false,
+                                notify: true
+                            });
+                        }
+                    }).error(function(err) {
+                        console.log(err);
+                        swal({title: "添加失败", text: "请重试", timer: 2000});
                         waitingList = [];
                         failList = [];
-                        $state.transitionTo($state.current, $stateParams, {
-                            reload: true,
-                            inherit: false,
-                            notify: true
-                        });
-                    }
-                }).error(function(err) {
-                    console.log(err);
-                    swal({title: "添加失败", text: "请重试", timer: 2000});
-                    waitingList = [];
-                    failList = [];
-                });
+                    });
+            }
+        };
 
+        var autoAddStudentsToRoom = function() {
+            console.log(waitingList);
+            console.log(failList);
+            if(waitingList.length) {
+                RoomDataProvider.addStudentsToRoom($scope.roomMin, waitingList)
+                    .success( function(room) {
+                        if(failList.length) {
+                            swal({title: "部分添加失败", text: "数据库错误，请重试", type: 'warning', timer: 2000});
+                            var tempList = "";
+                            $scope.errorMessage = true;
+                            console.log(failList);
+                            _.each(failList, function(student) {
+                                tempList = tempList.concat(student.name+"\n");
+                            });
+                            $scope.newNamesList = tempList;
+                            console.log(tempList);
+                        }else {
+                            swal({title: "批量创建添加学生成功", type: 'success', timer: 2000});
+                            $('#addStudentsBatchDialog').modal('hide');
+                            $scope.newStudentsList = null;
+                            $scope.errorMessage = false;
+                            waitingList = [];
+                            failList = [];
+                            $state.transitionTo($state.current, $stateParams, {
+                                reload: true,
+                                inherit: false,
+                                notify: true
+                            });
+                        }
+                    }).error(function(err) {
+                        console.log(err);
+                        swal({title: "添加失败", text: "请重试", timer: 2000});
+                        waitingList = [];
+                        failList = [];
+                    });
+            }
         };
 
         $scope.manualCreateStudents = function () {
-
             var newStudents = [];
-            //var failList = [];
-            //var dupList = [];
-            //var waitingList = [];
             $scope.newStudentsList = $scope.newStudentsList.trim();
             var lines = $scope.newStudentsList.split(/\n/);
             for (var i = 0; i < lines.length; i++) {
                 lines[i] = lines[i].trim().replace(/[,， \s]+/igm, ' ');
                 var name = lines[i].split(/[,， \s]/)[0];
                 var username = lines[i].split(/[,， \s]/)[1];
-                //if (!username.match(/^[@\.a-zA-Z0-9_-]+$/)) {
-                //    alert('用户名只能包含字母、数字、“-”、“_”、“@”、“.”。\n操作已取消，请重新检查！');
-                //    return;
-                //}
                 newStudents.push({"name": name, "username": username, "school": me.school, "roles": ['student']});
             }
 
@@ -521,7 +611,6 @@ angular.module('resources')
                         MultipleCreate(studentIndex);
                     } else {
                         if($scope.dupList.length) {
-                            console.log($scope.dupList);
                             for(var j = 0; j< $scope.dupList.length; j++) {
                                 $scope.selectednow[j] = true;
                                 $scope.selecteddb[j] = false;
@@ -531,7 +620,6 @@ angular.module('resources')
                             console.log('no duplicates');
                             addStudentsToRoom();
                         }
-
                     }
                 }
 
@@ -587,8 +675,6 @@ angular.module('resources')
             $scope.selectednow[index] = ! $scope.selectednow[index];
         };
         $scope.duplicateCreate = function() {
-            console.log($scope.selectednow);
-            console.log($scope.selecteddb);
             $('#duplicatesDialog').modal('hide');
             for(var i = 0; i < $scope.dupList.length; i++) {
                 if($scope.selectednow[i]) {
@@ -612,54 +698,66 @@ angular.module('resources')
                             }
                         }
                     }
-
                 }
             }
             console.log(waitingList);
             console.log(failList);
             addStudentsToRoom();
         };
-        $scope.generateStudents = function() {
+
+        $scope.autoCreateStudents = function () {
+            var newStudents = [];
+            $scope.newNamesList = $scope.newNamesList.trim();
             var httpPromise;
+            var names = $scope.newNamesList.split('\n');
+            if(names.length > 100) {
+                $scope.temp.student_count_max = true;
+                return;
+            }
+            if(0 < names.length && names.length <=100) {
+                httpPromise = SchoolDataProvider.getSchool(me.school);
+            }
 
-                var names = $scope.temp.names.split('\n');
-                console.log(names.length);
-                //names, class_number
-                if(0 < names.length && names.length <= 100){
-                    $scope.buttonDisabled = true;
-                    httpPromise = UserDataProvider.manualCreateStudents(names, $scope.temp.newClassNumber);
+            httpPromise.then(function(school) {
+                var schoolCode = school.code;
+                for (var i = 0; i < names.length; i++) {
+                    var name = names[i];
+                    var studentNo = (i >= 10) ? '' + i : '0' + i;
+                    var username = schoolCode + room.code + studentNo;
+                    newStudents.push({"name": name, "username": username, "school": me.school, "roles": ['student']});
                 }
-                if(names.length > 100) {
-                    $scope.temp.student_count_max = true;
-                    return;
-                }
-            httpPromise
-                .success(function(joinedStudents) {
-                    $scope.temp.to_add_students = false;
-                    $scope.temp.create_student_account = false;
-                    $scope.temp.show_created_students = true;
-                    $scope.temp.create_student_account_success = true;
 
-                    $scope.temp.students = joinedStudents;
-                    console.log('temp.students.length='+$scope.temp.students.length);
-                    $scope.buttonDisabled = false;
-
-                    //update the classess' theClass
-                    var target = _.find($scope.classes, function(classItem) {
-                        return classItem.classNumber == $scope.temp.newClassNumber;
-                    });
-                    if (target) {
-                        target.students = joinedStudents;
-                    } else {
-                        console.log('Error: Not Found The Needed Update Class');
+                function MultipleCreate(studentIndex) {
+                    function switcher() {
+                        console.log(studentIndex);
+                        if (studentIndex < newStudents.length - 1) {
+                            studentIndex++;
+                            MultipleCreate(studentIndex);
+                        } else {
+                            autoAddStudentsToRoom();
+                        }
                     }
-                })
-                .error(function(error) {
-                    $('#loaderModal').modal('hide');
-                    console.log('Error: ' + angular.toJson(error));
-                })
-        };
 
+                    var newStudent = newStudents[studentIndex];
+                    console.log(newStudent);
+
+                    StudentDataProvider.createStudent(newStudent)
+                        .success(function(student) {
+                            $scope.students.push(student);
+                            waitingList.push(student._id);
+                            switcher();
+                        }).error(function(err) {
+                            console.log(err);
+                            failList.push(newStudent);
+                            switcher();
+                        });
+                }
+                MultipleCreate(0);
+
+            });
+
+
+        };
 
 
         $scope.selectStudent = function () {

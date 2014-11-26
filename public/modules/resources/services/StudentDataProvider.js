@@ -103,11 +103,33 @@ angular.module('schoolManage')
 
         };
 
+        var autoCreateAddStudents = function(room, names, schoolCode, roomCode, callBack) {
+            var student = {};
+            var studentNo = '';
+            var createdStudents = [];
+            var failedStudents = [];
+            _.each(names, function(name, index) {
+                student.name = name;
+                studentNo = (index > 10) ? ''+index : '0' + index;
+                student.username = schoolCode + roomCode + index;
+                student.roles = ['student'];
+                createStudent(student).success(function(newStudent) {
+                        createdStudents.push(newStudent);
+                    }
+                ).error(function(error) {
+                        failedStudents.push(student);
+                    })
+
+            })
+
+        };
+
         return {
             getStudentsBySchool: getStudentsBySchool,
             getCountsOfStudentsBySchool: getCountsOfStudentsBySchool,
             createStudent: createStudent,
             createStudentBatch: createStudentBatch,
+            autoCreateAddStudents: autoCreateAddStudents,
             getStudent: getStudent,
             editStudent: editStudent,
             removeStudent: removeStudent,

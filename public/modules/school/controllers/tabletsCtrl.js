@@ -4,6 +4,7 @@ angular.module('schoolManage')
         function (tablets, TabletDataProvider, $scope, $location) {
             $scope.tablets = tablets;
             $scope.selectedTablet = [];
+            $scope.filterOptions = {filterText: ''};
 
             _.each($scope.tablets, function(tabletItem) {
 
@@ -29,15 +30,18 @@ angular.module('schoolManage')
                     {field: 'lastUpdate', displayName: '上次更新'},
                     //{field: 'school.name', displayName: '所属学校'},
                     {field: 'user.name', displayName: '正在使用',
-                        cellTemplate:'<div class="ngCellText" ng-class="col.colIndex()"><a href="/#/students/{{row.entity.user._id}}">{{row.getProperty(col.field)}}</a></div>'},
-                    {field: 'user', displayName: '', cellTemplate:'<button type="button" align="center" class="btn btn-default btn-sm" ng-click="showLogoutDialog(row)" ng-show="row.entity.user"><span class="glyphicon glyphicon-log-out"></span> 登出</button>'}
+                        cellTemplate:'<div class="ngCellText" ng-class="col.colIndex()" ng-show="user.name">' +
+                        '<a href="/#/students/{{row.entity.user._id}}">{{row.getProperty(col.field)}}</a></div>' +
+                        '<div ng-hide="user.name"><span class="badge">暂无</span></div>'},
+                    {field: 'user', displayName: '', cellTemplate:'<button type="button" align="center" class="btn btn-default btn-sm" ng-click="showLogoutDialog($event, row)" ng-show="row.entity.user"><span class="glyphicon glyphicon-log-out"></span> 登出</button>'}
 
                 ],
-                selectedItems: $scope.selectedTablet
-
+                selectedItems: $scope.selectedTablet,
+                filterOptions: $scope.filterOptions
             };
 
-            $scope.showLogoutDialog = function(row) {
+            $scope.showLogoutDialog = function(event, row) {
+                event.stopPropagation();
                 $('#logoutDialog').modal('show');
                 $scope.row = row;
             };
@@ -57,16 +61,13 @@ angular.module('schoolManage')
                 })
             };
 
-
-
-
-
             $scope.selectTablet = function () {
-                //console.log($scope.selectedItem);
-                //$state.transitionTo(roomView(roomId: $scope.gridOptions.selectedItems[0]._id))
                 $location.path('/tablets/' + $scope.gridOptions.selectedItems[0].machine_id);
             };
-
-
-
-        }]);
+        }
+    ])
+    .filter('tabletFilter', function() {
+        return function(input) {
+            return input ? input : '暂无';
+        }
+    });

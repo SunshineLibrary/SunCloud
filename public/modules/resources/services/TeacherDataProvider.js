@@ -66,7 +66,7 @@ angular.module('schoolManage')
             })
         };
 
-        var getTeacherRooms = function (teacherId) {
+        var getRoomsOfTeacher = function (teacherId) {
             return $http({
                 method: "GET",
                 url: "/rooms?teachers=" + teacherId
@@ -79,6 +79,6 @@ angular.module('schoolManage')
             getTeacher: getTeacher,
             editTeacher: editTeacher,
             deleteTeacher: deleteTeacher,
-            getTeacherRooms: getTeacherRooms
+            getRoomsOfTeacher: getRoomsOfTeacher
         };
     }]);

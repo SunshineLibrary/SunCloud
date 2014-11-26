@@ -8,23 +8,43 @@
         <li><a href="#room-tab-teachersList" data-toggle="tab" id="room-btn-teachersList" class="tableTitle">教师列表({{teachers.length}}人)</a></li>
     </ul>
     <div class="tab-pane fade in active" id="room-tab-studentsList">
-        <div class="pull-right">
-            <a class="btn btn-primary "  ng-click="toAddStudents()">从学生列表中添加</a>
-            <a class="btn btn-primary " id="room-btn-createStudents" href="#addStudentsBatchDialog" data-toggle="modal">批量创建并添加</a>
+
+        <div ng-show="students.length">
+            <div class="pull-right">
+                <a class="btn btn-primary "  ng-click="toAddStudents()">从学生列表中添加</a>
+                <a class="btn btn-primary " id="room-btn-createStudents" href="#addStudentsBatchDialog2" data-toggle="modal">批量创建并添加</a>
+            </div>
+            <br>
+            <div class="table">
+                <div class="gridStyle style1"  ng-grid="gridOptions1" ng-click="selectStudent()"></div>
+            </div>
         </div>
-        <br>
-        <div class="table">
-            <div class="gridStyle style1"  ng-grid="gridOptions1" ng-click="selectStudent()"></div>
+        <div ng-hide="students.length">
+            <h3 align="center">还没有任何学生，您可以</h3>
+            <div align="center">
+                <a class="btn btn-success "  href="#addStudentsBatchDialog" data-toggle="modal">批量创建并添加</a> 或者
+                <a class="btn btn-success "  ng-click="toAddStudents()">从学生列表中添加</a>
+            </div>
         </div>
+
 
     </div>
 
     <div class="tab-pane fade" id="room-tab-teachersList">
-        <a class="btn btn-primary pull-right fui-check" ng-click="toAddTeachers()">指派管理老师</a>
-        <br>
-        <div class="table">
-            <div class="gridStyle style1"  ng-grid="gridOptions3" ng-click="selectTeacher()"></div>
+        <div ng-show="teachers.length">
+            <a class="btn btn-primary pull-right fui-check" ng-click="toAddTeachers()">指派管理老师</a>
+            <br>
+            <div class="table">
+                <div class="gridStyle style1"  ng-grid="gridOptions3" ng-click="selectTeacher()"></div>
+            </div>
         </div>
+        <div ng-hide="teachers.length">
+            <h3 align="center">还没有任何老师，您可以</h3>
+            <div align="center">
+                <a class="btn btn-success" ng-click="toAddTeachers()">指派管理老师</a>
+            </div>
+        </div>
+
     </div>
 
 
@@ -46,15 +66,26 @@
                     <input type="search" class="form-control"  placeholder="搜索" ng-model="filterOptions.filterText"/>
                 </div>
                 <div class="table">
-                <div class="gridStyle style2"  ng-grid="gridOptions2"></div>
+                    <div class="gridStyle style2"  ng-grid="gridOptions2"></div>
                 </div>
-                <p class="pull-right">想添加的学生不在此列表中？
-                    <!--<button class="btn btn-default btn-info text-primary" ng-click="toCreateStudent()">创建学生</button>-->
-                    <a data-toggle="modal" href="#createStudentDialog" class="btn btn-primary">创建学生</a>
-
-                </p>
+                <div ng-if="!isCreatingStudent" class="pull-right">
+                    <button class="btn btn-success pull-right" ng-click="toCreateStudent()">创建学生</button>
+                    <p class="pull-right">想添加的学生不在此列表中?&nbsp;&nbsp;</p>
+                </div>
+                <div ng-if="isCreatingStudent">
+                    <form class="form-group form-inline pull-right" name="newStudentForm">
+                        <!--<label for="inputKey">Key</label>-->
+                        <input type="text" class="form-control" placeholder="*新学生姓名"  ng-model="newStudent.name" required >
+                        <!--<label for="inputValue">Value</label>-->
+                        <input type="text" class="form-control" placeholder="*新学生用户名"  ng-model="newStudent.username" required>
+                        <button class="btn btn-success" ng-click="createStudent()" ng-disabled="newStudentForm.$invalid">创建</button>
+                        <button class="btn btn-inverse" ng-click="cancelCreateStudent()">取消</button>
+                    </form>
+                </div>
+                <br>
+                <br>
+                <!--<br>-->
                 <button class="btn btn-primary  btn-block" ng-click="addStudentsToRoom()">添加</button>
-
             </div>
             <div class="modal-footer">
             </div>
@@ -95,7 +126,6 @@
                 </div>
                 <div ng-show="autoState" class="col-md-12">
                     <br>
-                    <form name="autoForm">
                         <li>请您把学生姓名逐行输入到下方的文本框中（也可以直接从电子文档中复制粘贴）</li>
                         <br>
                         <li>每行请只输入一个名字</li>
@@ -103,24 +133,70 @@
                         <li>我们会按照输入顺序自动生成学生用户名（推荐您按照学号顺序输入）</li>
                         <br>
                         <li>生成的学生用户名格式为：学校代号+班级代号+数字</li>
-                        <textarea class="form-control" rows="10" placeholder="学生姓名1
-学生姓名2" ng-model="temp.names" required></textarea>
+                        <br>
+                        <div ng-show="!room.code">
+                            <div ng-if="!isAddingCode">
+                                <button class="btn btn-warning pull-right" ng-click="toAddCode()">添加班级代号</button>
+                                <p class="pull-right" style="color:orangered">您还没有添加班级代号 &nbsp;</p>
+                                <br>
+                            </div>
+                            <div ng-show="isAddingCode">
+                                <form class="form-group form-inline pull-right" name="addCodeForm">
+                                    <input type="text" class="form-control" ng-model="newCode" placeholder="请输入班级代号" required>
+                                    <button class="btn btn-success" ng-click="addCode()" ng-disabled="addCodeForm.$invalid">添加</button>
+                                    <button class="btn btn-inverse" ng-click="cancelAddCode()">取消</button>
+                                </form>
+                            </div>
+                            <br>
+                        </div>
+                    <form name="autoForm">
+                    <textarea class="form-control" rows="10" placeholder="学生姓名1
+学生姓名2" ng-model="newNamesList" required></textarea>
                         <br>
                         <span style="color: red" ng-show="temp.student_count_max">班级人数不能超过100人</span>
-                        <!--<button class="btn btn-block btn-info" ng-click="generateStudents()" ng-disabled="buttonDisabled">-->
-                            <!--<span ng-if="!buttonDisabled">生成</span>-->
-                        <!--<span ng-if="buttonDisabled">-->
-                            <!--<img ng-if="buttonDisabled" width="19px" src="/modules/resources/css/loading.gif">&nbsp;生成中-->
-                        <!--</span>-->
-                        <!--</button>-->
                     </form>
                 </div>
                 <button ng-show="manualState" type="submit" class="btn btn-default btn-success btn-block" ng-click="manualCreateStudents()" ng-disabled="manualForm.$invalid">添加</button>
-                <button ng-show="autoState" type="submit" class="btn btn-default btn-success btn-block"  ng-click="autoCreateStudents()" ng-disabled="autoForm.$invalid">添加</button>
+                <button ng-show="autoState" type="submit" class="btn btn-default btn-success btn-block"  ng-click="autoCreateStudents()" ng-disabled="autoForm.$invalid || !room.code">生成</button>
             </div>
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="addStudentsBatchDialog2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class='modal-dialog'>
+        <div class='modal-content'>
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span></button>
+                <h4 class="modal-title">批量创建添加学生</h4>
+            </div>
+            <div class="modal-body">
+                <form name="manualForm">
+                        <li>请把学生姓名，用户名逐行输入到文本框中（也可以直接从电子文档中复制粘贴）</li>
+                        <br>
+                        <li>如果学生不存在，创建并加入班级; 如果学生已存在，则自动加入该班级</li>
+                        <br>
+                        <li>每行一个学生，请按照如下格式输入：</li>
+                        <br>
+                        <p style="color: green; font-weight: bold;">&nbsp;&nbsp;姓名1，用户名1 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 或 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 姓名1 &nbsp;  用户名1 </p>
+                        <p style="color: green; font-weight: bold;">&nbsp;&nbsp;姓名2，用户名2  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   姓名2 &nbsp; 用户名2 </p>
+                        <span style="color: red" ng-show="errorMessage">由于以下学生姓名-用户名与数据库中不一致，请修改后重试。</span>
+
+                        <textarea ng-model="newStudentsList" style="height: 200px" placeholder="姓名1， 用户名1
+姓名2， 用户名2" class="form-control" required></textarea>
+
+                        <p>提示：分隔符可以使用半角逗号、全角逗号和空格。</p>
+                    </form>
+                </div>
+
+                <button type="submit" class="btn btn-default btn-success btn-block" ng-click="manualCreateStudents()" ng-disabled="manualForm.$invalid">添加</button>
+            <br>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 
 
 
@@ -140,10 +216,22 @@
                 <div class="table">
                     <div class="gridStyle style2"  ng-grid="gridOptions4"></div>
                 </div>
-                <p class="pull-right">想添加的老师不在此列表中？
-                    <a data-toggle="modal" href="#createTeacherDialog" class="btn btn-primary">创建老师</a>
-
-                </p>
+                <div ng-if="!isCreatingTeacher" class="pull-right">
+                    <button class="btn btn-success pull-right" ng-click="toCreateTeacher()">创建老师</button>
+                    <p class="pull-right">想添加的老师不在此列表中?&nbsp;&nbsp;</p>
+                    <br>
+                    <br>
+                </div>
+                <div ng-if="isCreatingTeacher">
+                    <form class="form-group form-inline pull-right" name="newTeacherForm">
+                        <!--<label for="inputKey">Key</label>-->
+                        <input type="text" class="form-control" placeholder="*新老师姓名"  ng-model="newTeacher.name" required >
+                        <!--<label for="inputValue">Value</label>-->
+                        <input type="text" class="form-control" placeholder="*新老师用户名"  ng-model="newTeacher.username" required>
+                        <button class="btn btn-success" ng-click="createTeacher()" ng-disabled="newTeacherForm.$invalid">创建</button>
+                        <button class="btn btn-inverse" ng-click="cancelCreateTeacher()">取消</button>
+                    </form>
+                </div>
                 <button class="btn btn-primary  btn-block" ng-click="addTeachersToRoom()">添加</button>
             </div>
             <div class="modal-footer">
@@ -152,31 +240,6 @@
         </div>
     </div>
 </div>
-
-
-<div class="modal fade" id="createStudentDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class='modal-dialog'>
-        <div class='modal-content'>
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span></button>
-                <h4 class="modal-title">创建学生</h4>
-            </div>
-            <div class="modal-body">
-                <form  name="studentForm" class="form-group">
-                    <input type="text" class="form-control" placeholder="*新学生姓名" ng-model="newStudent.name" required>
-                    <br>
-                    <input type="text" class="form-control" placeholder="*新学生用户名" ng-model="newStudent.username" required>
-                </form>
-
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-defautl" data-dismiss="modal">取消</button>
-                <button class="btn btn-success" ng-click="createStudent()" ng-disabled="studentForm.$invalid">确定</button>
-            </div>
-        </div>
-    </div>
-</div>
-
 
 <div class="modal fade" id="editStudentDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class='modal-dialog'>

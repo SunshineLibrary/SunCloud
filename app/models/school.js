@@ -29,7 +29,9 @@ var SchoolSchema = new Schema({
         uuid: String,
         ts: String,
         address: String,
-        serverUrl: String,
+        serverUrl: {
+            type: String
+        },
         serverIP: String,
         template: {
             type: Schema.Types.ObjectId,

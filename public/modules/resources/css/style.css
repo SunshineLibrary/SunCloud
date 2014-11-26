@@ -47,7 +47,7 @@
 .style2 .ngViewport{
     height: auto !important;
     min-height:100px !important;
-    max-height: 500px !important;
+    max-height: 370px !important;
 }
 
 .style2 .ngRow {
@@ -78,7 +78,9 @@
 /******** Rows ********/
 .ngRow {
     position: absolute;
-    border-bottom: 1px solid rgb(229, 229, 229);
+    width: 100% !important;
+    border-bottom: none !important;
+    /*border-bottom: 1px solid rgb(229, 229, 229);*/
 }
 .ngRow.even {
     background-color: #f3f9f1;

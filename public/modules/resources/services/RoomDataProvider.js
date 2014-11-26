@@ -85,6 +85,20 @@ angular.module('schoolManage')
             });
             return thePromise;
         };
+        var getAdminRoomsMinBySchool = function (schoolId) {
+            var defered = $q.defer();
+            var thePromise = defered.promise;
+            $http({
+                method: "GET",
+                url: "/rooms?school=" + schoolId + "&type=admin"
+            }).success(function(rooms){
+                defered.resolve(rooms);
+            }).error(function(err){
+                defered.reject(err);
+            });
+            return thePromise;
+        };
+
 
 
 
@@ -94,6 +108,20 @@ angular.module('schoolManage')
             $http({
                 method: "GET",
                 url: "/rooms/?teachers=" + teacherId + "&populate=school"
+            }).success(function(rooms){
+                defered.resolve(rooms);
+            }).error(function(err){
+                defered.reject(err);
+            });
+            return thePromise;
+        };
+
+        var getRoomsMinByTeacher = function (teacherId) {
+            var defered = $q.defer();
+            var thePromise = defered.promise;
+            $http({
+                method: "GET",
+                url: "/rooms/?teachers=" + teacherId
             }).success(function(rooms){
                 defered.resolve(rooms);
             }).error(function(err){
@@ -132,6 +160,15 @@ angular.module('schoolManage')
                 method: "PUT",
                 url: "/rooms/" + room._id,
                 data: room
+            })
+        };
+        var editRoomCode = function (roomId, newCode) {
+            return $http({
+                method: "PUT",
+                url: "/rooms/" + roomId,
+                data: {
+                    code: newCode
+                }
             })
         };
 
@@ -201,10 +238,13 @@ angular.module('schoolManage')
             getRoomFull: getRoomFull,
             getRoomsBySchool: getRoomsBySchool,
             getAdminRoomsBySchool: getAdminRoomsBySchool,
+            getAdminRoomsMinBySchool: getAdminRoomsMinBySchool,
             getRoomsByTeacher: getRoomsByTeacher,
+            getRoomsMinByTeacher: getRoomsMinByTeacher,
             getRoomsByStudent: getRoomsByStudent,
             getCountsOfRoomsBySchool: getCountsOfRoomsBySchool,
             editRoom: editRoom,
+            editRoomCode: editRoomCode,
             deleteRoom: deleteRoom,
             removeStudentFromRoom: removeStudentFromRoom,
             removeTeacherFromRoom: removeTeacherFromRoom,
