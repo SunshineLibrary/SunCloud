@@ -4,19 +4,31 @@
 
         <div class="navbar-header">
 
-            <h4><span ng-if="!isEditingSchoolName">{{school.name}}</span>
-                <button id="school-btn-edit" class="btn btn-primary navbar-btn" ng-if="!isEditingSchoolName" ng-click="startEditSchool()"><span class="glyphicon glyphicon-edit"></span> 编辑</button>
+            <!--<h4><span ng-if="!isEditingSchoolName">{{school.name}}</span>-->
+                <!--<button id="school-btn-edit" class="btn btn-primary navbar-btn" ng-if="!isEditingSchoolName" ng-click="startEditSchool()"><span class="glyphicon glyphicon-edit"></span> 编辑</button>-->
 
 
 
-            <form id="school-edit-form" class="navbar-form" ng-if="isEditingSchoolName">
-                <div class="form-group">
-                    <input type="text" class="form-control"  ng-model="schoolNewName">
-                </div>
-                <button class="btn btn-primary" ng-click="editSchool()">确定</button>
-                <button id="school-edit-btn-cancel" class="btn btn-inverse" ng-click="cancelEdit()">取消</button>
-            </form>
-            </h4>
+            <!--<form id="school-edit-form" class="navbar-form" ng-if="isEditingSchoolName">-->
+                <!--<div class="form-group">-->
+                    <!--<input type="text" class="form-control"  ng-model="schoolNewName">-->
+                <!--</div>-->
+                <!--<button class="btn btn-primary" ng-click="editSchool()">确定</button>-->
+                <!--<button id="school-edit-btn-cancel" class="btn btn-inverse" ng-click="cancelEdit()">取消</button>-->
+            <!--</form>-->
+            <!--</h4>-->
+
+             <span ng-hide="editorEnabled">
+        <span class="h3">{{school.name}}
+            <a href="" ng-click="enableEditor()" class="glyphicon glyphicon-edit"></a>
+        </span>
+        </span>
+
+        <form ng-show="editorEnabled" class="form-inline">
+            <input type="text" class="form-control" style="color: black; font-size: large" ng-model="schoolNewName"/>
+            <a role="button" ng-click="save()" class="btn btn-primary btn-info glyphicon glyphicon-ok" >保存</a>
+            <a role="button" ng-click="disableEditor()" class="btn btn-primary btn-warning glyphicon glyphicon-remove" >取消</a>
+        </form>
 
 
         </div>

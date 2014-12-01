@@ -8,7 +8,6 @@
         <li><a href="#room-tab-teachersList" data-toggle="tab" id="room-btn-teachersList" class="tableTitle">教师列表({{teachers.length}}人)</a></li>
     </ul>
     <div class="tab-pane fade in active" id="room-tab-studentsList">
-
         <div ng-show="students.length">
             <div class="pull-right">
                 <a class="btn btn-primary "  ng-click="toAddStudents()">从学生列表中添加</a>
@@ -22,8 +21,8 @@
         <div ng-hide="students.length">
             <h3 align="center">还没有任何学生，您可以</h3>
             <div align="center">
-                <a class="btn btn-success "  href="#addStudentsBatchDialog" data-toggle="modal">批量创建并添加</a> 或者
-                <a class="btn btn-success "  ng-click="toAddStudents()">从学生列表中添加</a>
+                <a class="btn btn-warning "  href="#addStudentsBatchDialog" data-toggle="modal">批量创建并添加</a> 或者
+                <a class="btn btn-warning "  ng-click="toAddStudents()">从学生列表中添加</a>
             </div>
         </div>
 
@@ -32,7 +31,7 @@
 
     <div class="tab-pane fade" id="room-tab-teachersList">
         <div ng-show="teachers.length">
-            <a class="btn btn-primary pull-right fui-check" ng-click="toAddTeachers()">指派管理老师</a>
+            <a class="btn btn-primary pull-right" ng-click="toAddTeachers()">指派管理老师</a>
             <br>
             <div class="table">
                 <div class="gridStyle style1"  ng-grid="gridOptions3" ng-click="selectTeacher()"></div>
@@ -41,7 +40,7 @@
         <div ng-hide="teachers.length">
             <h3 align="center">还没有任何老师，您可以</h3>
             <div align="center">
-                <a class="btn btn-success" ng-click="toAddTeachers()">指派管理老师</a>
+                <a class="btn btn-info" ng-click="toAddTeachers()">指派管理老师</a>
             </div>
         </div>
 
@@ -68,15 +67,13 @@
                 <div class="table">
                     <div class="gridStyle style2"  ng-grid="gridOptions2"></div>
                 </div>
-                <div ng-if="!isCreatingStudent" class="pull-right">
+                <div ng-hide="isCreatingStudent" class="pull-right">
                     <button class="btn btn-success pull-right" ng-click="toCreateStudent()">创建学生</button>
                     <p class="pull-right">想添加的学生不在此列表中?&nbsp;&nbsp;</p>
                 </div>
-                <div ng-if="isCreatingStudent">
+                <div ng-show="isCreatingStudent">
                     <form class="form-group form-inline pull-right" name="newStudentForm">
-                        <!--<label for="inputKey">Key</label>-->
-                        <input type="text" class="form-control" placeholder="*新学生姓名"  ng-model="newStudent.name" required >
-                        <!--<label for="inputValue">Value</label>-->
+                        <input type="text" class="form-control" placeholder="*新学生姓名"  ng-model="newStudent.name" required>
                         <input type="text" class="form-control" placeholder="*新学生用户名"  ng-model="newStudent.username" required>
                         <button class="btn btn-success" ng-click="createStudent()" ng-disabled="newStudentForm.$invalid">创建</button>
                         <button class="btn btn-inverse" ng-click="cancelCreateStudent()">取消</button>
@@ -156,8 +153,8 @@
                         <span style="color: red" ng-show="temp.student_count_max">班级人数不能超过100人</span>
                     </form>
                 </div>
-                <button ng-show="manualState" type="submit" class="btn btn-default btn-success btn-block" ng-click="manualCreateStudents()" ng-disabled="manualForm.$invalid">添加</button>
-                <button ng-show="autoState" type="submit" class="btn btn-default btn-success btn-block"  ng-click="autoCreateStudents()" ng-disabled="autoForm.$invalid || !room.code">生成</button>
+                <button ng-show="manualState" type="submit" class="btn btn-success btn-block" ng-click="manualCreateStudents()" ng-disabled="manualForm.$invalid">添加</button>
+                <button ng-show="autoState" type="submit" class="btn btn-success btn-block"  ng-click="autoCreateStudents()" ng-disabled="autoForm.$invalid || !room.code">生成</button>
             </div>
         </div>
     </div>
@@ -186,11 +183,9 @@
 姓名2， 用户名2" class="form-control" required></textarea>
 
                         <p>提示：分隔符可以使用半角逗号、全角逗号和空格。</p>
-                    </form>
-                </div>
-
+                </form>
                 <button type="submit" class="btn btn-default btn-success btn-block" ng-click="manualCreateStudents()" ng-disabled="manualForm.$invalid">添加</button>
-            <br>
+                <br>
             </div>
         </div>
     </div>
@@ -216,17 +211,15 @@
                 <div class="table">
                     <div class="gridStyle style2"  ng-grid="gridOptions4"></div>
                 </div>
-                <div ng-if="!isCreatingTeacher" class="pull-right">
+                <div ng-hide="isCreatingTeacher" class="pull-right">
                     <button class="btn btn-success pull-right" ng-click="toCreateTeacher()">创建老师</button>
                     <p class="pull-right">想添加的老师不在此列表中?&nbsp;&nbsp;</p>
                     <br>
                     <br>
                 </div>
-                <div ng-if="isCreatingTeacher">
+                <div ng-show="isCreatingTeacher">
                     <form class="form-group form-inline pull-right" name="newTeacherForm">
-                        <!--<label for="inputKey">Key</label>-->
                         <input type="text" class="form-control" placeholder="*新老师姓名"  ng-model="newTeacher.name" required >
-                        <!--<label for="inputValue">Value</label>-->
                         <input type="text" class="form-control" placeholder="*新老师用户名"  ng-model="newTeacher.username" required>
                         <button class="btn btn-success" ng-click="createTeacher()" ng-disabled="newTeacherForm.$invalid">创建</button>
                         <button class="btn btn-inverse" ng-click="cancelCreateTeacher()">取消</button>

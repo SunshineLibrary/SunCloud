@@ -1,3 +1,12 @@
+/*.list-group-item.active {*/
+    /*background-color: red !important;*/
+/*}*/
+a.list-group-item-success.active, a.list-group-item-success.active:hover, a.list-group-item-success.active:focus {
+    /*background-image: none !important;*/
+    background-image: linear-gradient(to bottom, #32CD32 0%, #7CCD7C 100%) !important;
+    border-color: #ffffff !important;
+}
+
 /*style.css*/
 .gridStyle {
     border: none;
@@ -9,10 +18,14 @@
     color: #ff0000;
 }
 
-.badge {
+.badge.badgeStyle1 {
     background-color: #8ef13c;
 }
 
+.badge.badgeStyle2 {
+    background-color: lightgray;
+    color: black;
+}
 .myrooms {
     margin-top: 65px;
 }
@@ -51,10 +64,13 @@
 /*}*/
 
 .class-header{
-    background-color: #00A352;
+    /*background-color: #00A352;#f3f9f1;*/
+    background-color: #f0f0f4;
     padding: 5px 25px 10px;
     border-radius: 6px;
-    color: white;
+    color: darkgreen;
+    /*font-weight: 300;*/
+    max-font-size: 10;
     margin-top: 8px;
 }
 /*.remove-stu{*/

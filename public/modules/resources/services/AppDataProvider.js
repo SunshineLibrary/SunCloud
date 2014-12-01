@@ -140,12 +140,12 @@ angular.module('resources')
         };
 
         var addAppToRooms = function(app, rooms) {
-            var roomTemp = _.uniq(app.rooms.concat(rooms));
+            //var roomTemp = _.uniq(app.rooms.concat(rooms));
             return $http({
                 method: "PUT",
                 url: "/apps/" + app._id,
                 data: {
-                    rooms: roomTemp
+                    rooms: rooms
                 }
             })
         };

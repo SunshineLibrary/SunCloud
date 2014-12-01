@@ -8,23 +8,19 @@ angular.module('myRooms')
         '$location',
         'AuthService',
         function(myRooms, $scope, RoomDataProvider, DataAgent, UserDataProvider, $location, AuthService) {
+            $scope.rooms = myRooms;
+            var me = AuthService.me;
             $scope.temp = {};
 
-            var me = AuthService.me;
-
-            $scope.rooms = myRooms;
-            console.log(myRooms);
-
-
-
-            RoomDataProvider.getAdminRoomsBySchool(me.school).then(function(rooms){
-                $scope.roomList = rooms;
-                $scope.selectedRoom = $scope.roomList[0];
-                console.log(rooms);
-            });
-
-
             $scope.$watch('rooms', function(newRooms) {
+                RoomDataProvider.getAdminRoomsBySchool(me.school).then(function(rooms){
+                    $scope.roomList = _.filter(rooms, function(room) {
+                        return !_.find($scope.rooms, function(myRoom) {
+                            return myRoom._id === room._id;
+                        })
+                    });
+                    $scope.selectedRoom = $scope.roomList[0];
+                });
                 if (newRooms) {
                     $scope.rooms = newRooms;
                     for (var index = 0; index < $scope.rooms.length; index++) {
@@ -36,12 +32,31 @@ angular.module('myRooms')
                 }
             }, true);
 
+            $scope.$on('roomNameChange', function(event, data) {
+                console.log(data);
+                var theRoom = _.find($scope.rooms, function(room) {
+                    return room._id === data.id;
+                });
+                theRoom.name = data.name;
+            });
+            $scope.$on('removeRoom', function(event, data) {
+                $scope.rooms = _.filter($scope.rooms, function(room) {
+                    return room._id !== data.id;
+                });
+                $location.path('/myrooms/' + $scope.rooms[0]._id);
+            });
+            $scope.$on('changeStudents', function(event, data) {
+                var theRoom = _.find($scope.rooms, function(room) {
+                    return room._id === data.id;
+                });
+                theRoom.students.length = data.studentsNum;
+            });
+
             $scope.selectOneRoom = function(selectedRoom) {
-                //_.each($scope.rooms, function(eachItem) {
-                //    eachItem.isActive = false;
-                //});
-                //selectedRoom.isActive = true;
-              $location.path('/myRooms/' + selectedRoom._id);
+                _.each($scope.rooms, function(item) {
+                    item.isActive = selectedRoom._id === item._id ;
+                });
+              $location.path('/myrooms/' + selectedRoom._id);
             };
 
             $scope.createTeachingRoom = function() {
@@ -61,36 +76,33 @@ angular.module('myRooms')
                         return;
                     }
                 }
-                $('#createRoomDialog').modal('hide');
-                RoomDataProvider.createTeachingRoom($scope.newRoomName.trim(), me._id).success(function(newRoom) {
-                    var rooms = $scope.rooms;
-                    var found = false;
-                    for (var roomIndex = 0; roomIndex < rooms.length; roomIndex++) {
-                        if (rooms[roomIndex]._id == newRoom._id) {
-                            found = true;
-                            break;
-                        }
-                    }
-                    if (!found) {
-                        $scope.rooms.push(newRoom);
-                    }
+                var info = {};
+                info.name = $scope.newRoomName.trim();
+                info.school = me.school;
+                info.me = me._id;
+                RoomDataProvider.createTeachingRoom(info).success(function(newRoom) {
+                    $scope.rooms.push(newRoom);
                     $scope.newRoomName = '';
-                    $scope.temp.newRoomCode = newRoom.roomCode;
-                    $scope.temp.create_room_success = true;
+                    $('#createRoomDialog').modal('hide');
+                    swal({title: "创建成功", type: "success", timer: 1500});
+                    $location.path('/myrooms/' + newRoom._id);
                 }).error(function(err){
-
+                    console.error(err);
+                    swal({title: "创建失败", text: "请重试", type: "error", timer: 1500});
                 });
             };
 
-
             $scope.claimRoom = function() {
-                $('#claimRoomDialog').modal('hide');
-                RoomDataProvider.addTeachersToRoom($scope.selectedRoom, me._id)
+                RoomDataProvider.addTeachersToRoom($scope.selectedRoom._id, [me._id])
                     .success(function(newRoom){
                         $scope.rooms.push(newRoom);
+                        $('#claimRoomDialog').modal('hide');
+                        swal({title: "认领成功", type: "success", timer: 1500});
+                        $location.path('/myrooms/' + newRoom._id);
                     })
                     .error(function(err){
-
+                        console.error(err);
+                        swal({title: "认领失败", text: "请重试", type: "error", timer: 1500});
                     })
             };
         }

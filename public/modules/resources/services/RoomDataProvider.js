@@ -24,7 +24,7 @@ angular.module('schoolManage')
                     "school": info.school,
                     "type": 'teaching',
                     "students": [],
-                    "teachers": []
+                    "teachers": [info.me]
                 }
             })
         };
@@ -58,6 +58,20 @@ angular.module('schoolManage')
             return thePromise;
         };
 
+        var getStudentsOfRoom = function(roomId) {
+            var defered = $q.defer();
+            var thePromise = defered.promise;
+            $http({
+                method: "GET",
+                url: "/rooms/" + roomId + "?populate=students"
+            }).success(function(room){
+                defered.resolve(room);
+            }).error(function(err){
+                defered.reject(err);
+            });
+            return thePromise;
+        };
+
         var getRoomsBySchool = function (schoolId) {
             var defered = $q.defer();
             var thePromise = defered.promise;
@@ -77,19 +91,6 @@ angular.module('schoolManage')
             var thePromise = defered.promise;
             $http({
                 method: "GET",
-                url: "/rooms?school=" + schoolId + "&type=admin&populate=teachers"
-            }).success(function(rooms){
-                defered.resolve(rooms);
-            }).error(function(err){
-                defered.reject(err);
-            });
-            return thePromise;
-        };
-        var getAdminRoomsMinBySchool = function (schoolId) {
-            var defered = $q.defer();
-            var thePromise = defered.promise;
-            $http({
-                method: "GET",
                 url: "/rooms?school=" + schoolId + "&type=admin"
             }).success(function(rooms){
                 defered.resolve(rooms);
@@ -99,15 +100,26 @@ angular.module('schoolManage')
             return thePromise;
         };
 
-
-
+        var getAdminRoomsFullBySchool = function (schoolId) {
+            var defered = $q.defer();
+            var thePromise = defered.promise;
+            $http({
+                method: "GET",
+                url: "/rooms?school=" + schoolId + "&type=admin&populate=students"
+            }).success(function(rooms){
+                defered.resolve(rooms);
+            }).error(function(err){
+                defered.reject(err);
+            });
+            return thePromise;
+        };
 
         var getRoomsByTeacher = function (teacherId) {
             var defered = $q.defer();
             var thePromise = defered.promise;
             $http({
                 method: "GET",
-                url: "/rooms/?teachers=" + teacherId + "&populate=school"
+                url: "/rooms?teachers=" + teacherId + "&populate=students"
             }).success(function(rooms){
                 defered.resolve(rooms);
             }).error(function(err){
@@ -116,12 +128,12 @@ angular.module('schoolManage')
             return thePromise;
         };
 
-        var getRoomsMinByTeacher = function (teacherId) {
+        var getRoomsFullByTeacher = function (teacherId) {
             var defered = $q.defer();
             var thePromise = defered.promise;
             $http({
                 method: "GET",
-                url: "/rooms/?teachers=" + teacherId
+                url: "/rooms?teachers=" + teacherId + "&populate=students"
             }).success(function(rooms){
                 defered.resolve(rooms);
             }).error(function(err){
@@ -129,6 +141,21 @@ angular.module('schoolManage')
             });
             return thePromise;
         };
+
+        var getTeachingRoomsFullByTeacher = function (teacherId) {
+            var defered = $q.defer();
+            var thePromise = defered.promise;
+            $http({
+                method: "GET",
+                url: "/rooms?teachers=" + teacherId + "&type=teaching&populate=students"
+            }).success(function(rooms){
+                defered.resolve(rooms);
+            }).error(function(err){
+                defered.reject(err);
+            });
+            return thePromise;
+        };
+
 
         var getRoomsByStudent = function (studentId) {
             var defered = $q.defer();
@@ -172,6 +199,16 @@ angular.module('schoolManage')
             })
         };
 
+        var editRoomName = function(roomId, newName) {
+            return $http({
+                method: "PUT",
+                url: "/rooms/" + roomId,
+                data: {
+                    name: newName
+                }
+            })
+        };
+
         var deleteRoom = function (roomId) {
             return $http({
                 method: "DELETE",
@@ -179,54 +216,44 @@ angular.module('schoolManage')
             })
         };
 
-        var removeStudentFromRoom = function (room, studentId) {
-            var students = _.filter(room.students, function(student){
-                return student !== studentId;
-            });
-            console.log('studentsnow:'+ students.length);
+        var removeStudentFromRoom = function(roomId, studentId) {
             return $http({
                 method: "PUT",
-                url: "/rooms/" + room._id,
+                url: "/rooms/" + roomId,
                 data: {
-                    students: students
+                    $pull: {students: studentId}
                 }
             })
         };
 
-        var removeTeacherFromRoom = function (room, teacherId) {
-            var teachers = _.filter(room.teachers, function(teacher){
-                return teacher !== teacherId;
-            });
+        var removeTeacherFromRoom = function(roomId, teacherId) {
             return $http({
                 method: "PUT",
-                url: "/rooms/" + room._id,
+                url: "/rooms/" + roomId,
                 data: {
-                    teachers: teachers
-                }
-            })
-
-        };
-
-        var addStudentsToRoom = function(room, students) {
-            var studentsNow = room.students;
-                studentsNow = studentsNow.concat(students);
-            return $http({
-                method: "PUT",
-                url: "/rooms/" + room._id,
-                data: {
-                    "students" : studentsNow
+                    $pull: {teachers: teacherId}
                 }
             })
         };
 
-        var addTeachersToRoom = function(room, teachers) {
-            var teachersNow = room.teachers;
-                teachersNow = teachersNow.concat(teachers);
+        var addStudentsToRoom = function(roomId, students) {
             return $http({
                 method: "PUT",
-                url: "/rooms/" + room._id,
+                url: "/rooms/" + roomId,
                 data: {
-                    "teachers" : teachersNow
+                    $push: {students: {$each: students}}
+                }
+            })
+        };
+
+        var addTeachersToRoom = function(roomId, teachers) {
+            //var teachersNow = room.teachers;
+            //    teachersNow = teachersNow.concat(teachers);
+            return $http({
+                method: "PUT",
+                url: "/rooms/" + roomId,
+                data: {
+                    $push: {teachers: {$each: teachers}}
                 }
             })
         };
@@ -236,19 +263,22 @@ angular.module('schoolManage')
             createTeachingRoom: createTeachingRoom,
             getRoom: getRoom,
             getRoomFull: getRoomFull,
+            getStudentsOfRoom: getStudentsOfRoom,
             getRoomsBySchool: getRoomsBySchool,
             getAdminRoomsBySchool: getAdminRoomsBySchool,
-            getAdminRoomsMinBySchool: getAdminRoomsMinBySchool,
+            getAdminRoomsFullBySchool: getAdminRoomsFullBySchool,
             getRoomsByTeacher: getRoomsByTeacher,
-            getRoomsMinByTeacher: getRoomsMinByTeacher,
+            getRoomsFullByTeacher: getRoomsFullByTeacher,
+            getTeachingRoomsFullByTeacher: getTeachingRoomsFullByTeacher,
             getRoomsByStudent: getRoomsByStudent,
             getCountsOfRoomsBySchool: getCountsOfRoomsBySchool,
             editRoom: editRoom,
             editRoomCode: editRoomCode,
+            editRoomName: editRoomName,
             deleteRoom: deleteRoom,
             removeStudentFromRoom: removeStudentFromRoom,
             removeTeacherFromRoom: removeTeacherFromRoom,
             addStudentsToRoom: addStudentsToRoom,
-            addTeachersToRoom: addTeachersToRoom
+            addTeachersToRoom: addTeachersToRoom,
         };
     }]);

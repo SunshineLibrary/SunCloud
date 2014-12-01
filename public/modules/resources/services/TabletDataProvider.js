@@ -28,7 +28,7 @@ angular.module('schoolManage')
             return tabletsBySchoolPromise;
         };
 
-        var getTablet = function(tabletId, callBack) {
+        var getTablet = function(tabletId) {
             var defered = $q.defer();
             var tabletPromise = defered.promise;
             $http({
@@ -36,12 +36,9 @@ angular.module('schoolManage')
                 url: "/tablets?machine_id=" + tabletId + "&populate=school"
             }).success(function(tablet) {
                 defered.resolve(tablet);
-                console.log(tablet);
-                if(callBack) {
-                    callBack(tablet);
-                }
             }).error(function (err) {
                 console.error(err);
+                defered.reject(err);
             });
             return tabletPromise;
 
@@ -65,11 +62,19 @@ angular.module('schoolManage')
             return tabletPromise;
         };
 
+        var logout = function(userId, tabletId) {
+            return $http({
+                method: 'GET',
+                url: '/usertablet?userId=' + userId + '&tabletId=' + tabletId
+            })
+        };
+
         return {
             getXiaoshuBySchool: getXiaoshuBySchool,
             getTabletsBySchool: getTabletsBySchool,
             getTablet: getTablet,
-            getTabletUser: getTabletUser
+            getTabletUser: getTabletUser,
+            logout: logout
 
         };
     }]);

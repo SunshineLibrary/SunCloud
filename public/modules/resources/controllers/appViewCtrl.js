@@ -33,7 +33,7 @@ angular.module('resources')
             var getMyRooms= function() {
                 var defered = $q.defer();
                 if(me.roles.indexOf('teacher') > -1 && me.roles.indexOf('admin') > -1  ) {
-                    RoomDataProvider.getRoomsMinByTeacher(me._id)
+                    RoomDataProvider.getRoomsByTeacher(me._id)
                         .then(function(rooms) {
                             $scope.myRooms = rooms;
                             return  RoomDataProvider.getAdminRoomsMinBySchool(me.school);
@@ -45,7 +45,7 @@ angular.module('resources')
                             defered.resolve($scope.myRooms);
                         });
                 }else if(me.roles.indexOf('teacher') > -1){
-                    RoomDataProvider.getRoomsMinByTeacher(me._id).then(function(rooms) {
+                    RoomDataProvider.getRoomsByTeacher(me._id).then(function(rooms) {
                         $scope.myRooms = rooms;
                         defered.resolve($scope.myRooms);
                     });
@@ -60,13 +60,6 @@ angular.module('resources')
 
 
             getMyRooms().then(function(myRooms) {
-                //var myRoomsId = [];
-                //_.each(myRooms, function(room, i) {
-                //    myRoomsId[i] = room._id;
-                //});
-                //console.log(myRoomsId);
-                //$scope.myRoomsNotAssigned = _.difference(myRoomsId, theApp.rooms);
-                //console.log($scope.myRoomsNotAssigned);
                 $scope.myRoomsNotAssigned = _.filter(myRooms, function(room) {
                    return theApp.rooms.indexOf(room._id) === -1 ;
                 });
@@ -75,12 +68,10 @@ angular.module('resources')
                 });
                 console.log(theApp.rooms);
                 console.log($scope.myRoomsAssigned);
-                //$scope.selectedRooms = $scope.myRoomsAssigned;
-                $scope.gridOptions2.selectedItems = $scope.gridOptions2.selectedItems.concat($scope.myRoomsAssigned);
-                //$scope.selectedRooms = $scope.selectedRooms.concat($scope.myRoomsAssigned);
-                console.log('1');
-                console.log($scope.gridOptions2.selectedItems);
+                _.each($scope.myRooms, function(room, i) {
+                    $scope.selectedRooms[i] = theApp.rooms.indexOf(room._id) > -1;
 
+                });
             });
 
             $scope.save = function() {
@@ -103,12 +94,11 @@ angular.module('resources')
 
 
             $scope.uploader.onSuccessItem = function(item, response, status) {
-                //console.log(item);
-                //console.log(response);
                 $('#uploadApkDialog').modal('hide');
                 swal({title: " 上传成功",type: 'success', timer: 2000});
                 $scope.uploader.clearQueue();
                 $scope.app.apks.push(response);
+                $scope.app.package = response.package;
             };
 
             $scope.uploader.onErrorItem = function(item, response, status) {
@@ -158,50 +148,35 @@ angular.module('resources')
                 ]
             };
 
-            $scope.gridOptions2 =
-            {
-                data: 'myRooms',
-                multiSelect: true,
-                showSelectionCheckbox: true,
-                checkboxCellTemplate: '<div class="ngSelectionCell"><input tabindex="-1" class="ngSelectionCheckbox" type="checkbox" ng-checked="row.selected" /> &nbsp;</div>',
-                //checkboxCellTemplate: '<div class="ngSelectionCell"><input tabindex="-1" class="ngSelectionCheckbox" type="checkbox" ng-checked="row.selected" /></div>',
-                //checkboxHeaderTemplate: '<input class="ngSelectionHeader" type="checkbox" ng-show="multiSelect" ng-model="allSelected" ng-change="toggleSelectAll(allSelected, true)"/>',
-                enableColumnResize : true,
-                columnDefs: [
-                    {field: '_id', visible: false},
-                    {field: 'name', displayName: '班级名'}
-                ],
-                selectedItems: $scope.selectedRooms
+            $scope.checkAll = function() {
+               $scope.selectedRooms = $scope.selectedRooms.map(function(item) {return true});
+                console.log($scope.selectedRooms)
+
             };
+            $scope.uncheckAll = function() {
+                $scope.selectedRooms = $scope.selectedRooms.map(function(item) {return false});
 
+            };
             $scope.assignToRooms = function() {
-                console.log($scope.selectedRooms);
-                console.log($scope.gridOptions2.selectedItems);
-                var selectRooms = [];
-                _.each($scope.gridOptions2.selectedItems, function(room,i) {
-                    selectRooms[i] = room._id
+                var theSelectedRooms = _.filter($scope.myRooms, function(room, i) {
+                    return $scope.selectedRooms[i];
                 });
-                if(selectRooms.length) {
-                    AppDataProvider.addAppToRooms(theApp, selectRooms)
-                        .success(function(newApp) {
-                            $('#assignAppDialog').modal('hide');
-                            swal({title:"分配成功", type: "success", timer: 1000});
-                            //console.log($scope.myRoomsNotAssigned);
-                            //console.log(selectRooms);
-                            $scope.myRoomsNotAssigned = _.filter($scope.myRoomsNotAssigned, function(room) {
-                               return selectRooms.indexOf(room._id) === -1;
-                            });
-                            //console.log($scope.myRoomsNotAssigned);
-                        })
-                        .error(function(err){
-                            console.error(err);
-                            swal({title:"分配失败", text: "请重试", type: "error", timer: 2000})
-                        })
-                }else {
-                    swal({title: "您还没有选择任何班级", type: "warning", timer: 1500});
-                }
-
-
+                var theSelectedRoomsId = theSelectedRooms.map(function(item) {return item._id});
+                AppDataProvider.addAppToRooms(theApp, theSelectedRoomsId)
+                    .success(function(newApp) {
+                        $('#assignAppDialog').modal('hide');
+                        swal({title:"分配成功", type: "success", timer: 1000});
+                        $scope.myRoomsNotAssigned = _.filter($scope.myRoomsNotAssigned, function(room) {
+                           return  theSelectedRoomsId.indexOf(room._id) === -1;
+                        });
+                        $scope.myRoomsAssigned = _.filter($scope.myRooms, function(room) {
+                           return theSelectedRoomsId.indexOf(room._id) > -1;
+                        });
+                    })
+                    .error(function(err){
+                        console.error(err);
+                        swal({title:"分配失败", text: "请重试", type: "error", timer: 2000})
+                    })
             };
 
             $scope.deleteApk = function (row) {
@@ -242,11 +217,8 @@ angular.module('resources')
                             })
                     });
             }
-
-
-
-
-
         }
     ]
-);
+).filter('existFilter', function(input) {
+        return input.length? input: '暂无'
+    });

@@ -2,8 +2,6 @@ angular.module('resources')
     .controller('roomViewController',
     [
         'room',
-        //'teachers',
-        //'students',
         'RoomDataProvider',
         'StudentDataProvider',
         'TeacherDataProvider',
@@ -13,11 +11,8 @@ angular.module('resources')
         '$stateParams',
         'AuthService',
         '$location', function (
-        room, RoomDataProvider, StudentDataProvider, TeacherDataProvider, SchoolDataProvider,$scope, $state, $stateParams,AuthService, $location) {
+        room,RoomDataProvider, StudentDataProvider, TeacherDataProvider, SchoolDataProvider,$scope, $state, $stateParams,AuthService, $location) {
         var me = AuthService.me;
-        var allStudents = [];
-        //$scope.allTeachers = teachers;
-        //$scope.allStudents = students;
         $scope.room = room;
         $scope.selectedStudent = [];
         $scope.selectedStudents = [];
@@ -36,10 +31,13 @@ angular.module('resources')
         $scope.isCreatingStudent = false;
         $scope.isCreatingTeacher = false;
         $scope.isAddingCode = false;
-        var failList = [];
-        var waitingList = [];
         $scope.filterOptions = {filterText: ''};
         $scope.filterOptions4 = {filterText: ''};
+        $scope.teachers = $scope.room.teachers;
+        $scope.students = $scope.room.students;
+        var failList = [];
+        var waitingList = [];
+
         $scope.$watch('room', function (newRoom) {
             if (newRoom) {
                 room = newRoom;
@@ -48,22 +46,21 @@ angular.module('resources')
             }
         }, true);
 
-        RoomDataProvider.getRoom($scope.room._id).then(function(theRoom){
-            $scope.roomMin = theRoom;
-        });
-        StudentDataProvider.getStudentsBySchool(me.school).then(function(students) {
-            allStudents = students;
-        });
-
-        $scope.teachers = $scope.room.teachers;
-        $scope.students = $scope.room.students;
-
         $scope.$watch('students', function (newStudents) {
             if (newStudents) {
                 newStudents = newStudents.sort(function (a, b) {
                     return a.username.localeCompare(b.username);
                 });
                 $scope.students = newStudents;
+            }
+        }, true);
+
+        $scope.$watch('teachers', function (newTeachers) {
+            if (newTeachers) {
+                newTeachers = newTeachers.sort(function (a, b) {
+                    return a.username.localeCompare(b.username);
+                });
+                $scope.teachers = newTeachers;
             }
         }, true);
 
@@ -88,7 +85,6 @@ angular.module('resources')
             ],
             selectedItems: $scope.selectedStudent
         };
-
 
         $scope.gridOptions2 =
         {
@@ -145,66 +141,21 @@ angular.module('resources')
             filterOptions: $scope.filterOptions4
         };
 
-        $scope.gridOptions5 =
-        {
-            data: 'dupList',
-            multiSelect: true,
-            showSelectionCheckbox: true,
-            checkboxCellTemplate: '<div class="ngSelectionCell"><input tabindex="-1" class="ngSelectionCheckbox" type="checkbox" ng-checked="row.selected" /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>',
-            //checkboxCellTemplate: '<div class="ngSelectionCell"><input tabindex="-1" class="ngSelectionCheckbox" type="checkbox" ng-checked="row.selected" /></div>',
-            checkboxHeaderTemplate:'<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>',
-            columnDefs: [
-                {field: '_id', visible: false},
-                {field: 'now.name', displayName: '姓名'},
-                {field: 'now.username', displayName: '用户名'}
-            ],
-            selectedItems: $scope.selectednow
-        };
-
-        $scope.gridOptions6 =
-        {
-            data: 'dupList',
-            multiSelect: true,
-            showSelectionCheckbox: true,
-            checkboxCellTemplate: '<div class="ngSelectionCell"><input tabindex="-1" class="ngSelectionCheckbox" type="checkbox" ng-checked="row.selected" /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>',
-            //checkboxCellTemplate: '<div class="ngSelectionCell"><input tabindex="-1" class="ngSelectionCheckbox" type="checkbox" ng-checked="row.selected" /></div>',
-            checkboxHeaderTemplate:'<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>',
-            columnDefs: [
-                {field: '_id', visible: false},
-                {field: 'db.name', displayName: '姓名'},
-                {field: 'db.username', displayName: '用户名'}
-            ],
-            selectedItems: $scope.selecteddb
-        };
-        $scope.removeStudentFromRoom = function(index) {
-            RoomDataProvider.removeStudentFromRoom(room, students[index]._id, function(old){
-                $scope.students.splice($scope.students.indexOf(old),1);
-                $('#removeStudentFromRoomDialog').modal('hide');
-            })
-        };
-
-        $scope.removeTeacherFromRoom = function(index) {
-            //console.log(teachers[index]);
-            RoomDataProvider.removeTeacherFromRoom(room, teachers[index], function(old){
-                $scope.teachers.splice($scope.teachers.indexOf(old),1);
-                $('#removeTeacherFromRoomDialog').modal('hide');
-            })
-        };
-
         $scope.toAddStudents = function() {
-          $('#addStudentsDialog').modal('show');
             getStudentsNotInRoom();
+            $scope.gridOptions2.selectAll(false);
+            $('#addStudentsDialog').modal('show');
         };
         $scope.toAddTeachers = function() {
-            $('#addTeachersDialog').modal('show');
             getTeachersNotInRoom();
+            $scope.gridOptions4.selectAll(false);
+            $('#addTeachersDialog').modal('show');
         };
 
         $scope.toAddManual = function() {
             $scope.manualState = true;
             $scope.autoState = false;
         };
-
         $scope.toAddAuto = function() {
             $scope.manualState = false;
             $scope.autoState = true;
@@ -242,15 +193,9 @@ angular.module('resources')
                         swal({title: "添加失败", text: "请重试", type: "error", timer: 2000});
                     })
             }
-
-
         };
 
         $scope.createStudent = function () {
-            //if (!$scope.newStudent.username.match(/^[@\.a-zA-Z0-9_-]+$/)) {
-            //    alert('用户名只能包含字母、数字、“-”、“_”、“@”、“.”。');
-            //    return;
-            //}
             var info = {};
             info.name = $scope.newStudent.name;
             info.username = $scope.newStudent.username;
@@ -265,7 +210,6 @@ angular.module('resources')
                     $scope.studentsNotInRoom.push(newStudent);
                     $scope.selectedStudents.push(newStudent);
                     $scope.isCreatingStudent = false;
-
                 })
                 .error(function(err) {
                     console.error(err);
@@ -286,7 +230,6 @@ angular.module('resources')
             if($scope.newTeacher.isAdmin) {
                 info.roles.push('admin');
             }
-            console.log(info.school);
             info.password = 'xiaoshu';
             TeacherDataProvider.createTeacher(info)
                 .success(function(newTeacher){
@@ -314,85 +257,56 @@ angular.module('resources')
         };
 
         var getStudentsNotInRoom = function () {
-            //StudentDataProvider.getStudentsBySchool(me.school)
-            //    .then(function(students){
-            //        var allStudents = students;
-                    var studentIds = $scope.room.students;
-                    var studentsNotInRoom = [];
-                    for (var i = 0; i < allStudents.length; i++) {
-                        var found = false;
-                        for (var j = 0; j < studentIds.length; j++) {
-                            if (allStudents[i]._id === studentIds[j]._id) {
-                                found = true;
-                                break;
-                            }
-                        }
-                        if (!found) {
-                            studentsNotInRoom.push(allStudents[i]);
-                            studentsNotInRoom[studentsNotInRoom.length - 1].selected = false;
-                        }
-                    }
-                    $scope.studentsNotInRoom = studentsNotInRoom;
-                //})
-
+            StudentDataProvider.getStudentsBySchool(me.school).then(function(students) {
+                var allStudents = students;
+                var studentIds = _.map($scope.students, function(student) {return student._id});
+                $scope.studentsNotInRoom = _.filter(allStudents, function(student) {
+                    return studentIds.indexOf(student._id) === -1;
+                })
+            });
         };
 
         var getTeachersNotInRoom = function () {
             TeacherDataProvider.getTeachersBySchool(me.school)
-                .then(function(teachers){
+                .then(function(teachers) {
                     var allTeachers = teachers;
-                    var teacherIds = $scope.room.teachers;
-
-                    var teachersNotInRoom = [];
-                    for (var i = 0; i < allTeachers.length; i++) {
-                        var found = false;
-                        for (var j = 0; j < teacherIds.length; j++) {
-                            if (allTeachers[i]._id === teacherIds[j]._id) {
-                                found = true;
-                                break;
-                            }
-                        }
-                        if (!found) {
-                            teachersNotInRoom.push(allTeachers[i]);
-                        }
-                    }
-                    $scope.teachersNotInRoom = teachersNotInRoom;
+                    var teacherIds = _.map($scope.teacher, function(teacher) {return teacher._id});
+                    $scope.teachersNotInRoom = _.filter(allTeachers, function(teacher) {
+                        return teacherIds.indexOf(teacher._id) === -1;
+                    })
                 })
-
         };
 
         $scope.addStudentsToRoom = function() {
-            console.log($scope.selectedStudents);
-            console.log($scope.roomMin.students);
             if($scope.selectedStudents.length) {
-                RoomDataProvider.addStudentsToRoom($scope.room, $scope.selectedStudents)
-                    .success( function(room) {
+                //var oriIds = _.map($scope.students, function(student) {return student._id});
+                var newIds = _.map($scope.selectedStudents, function(student) {return student._id});
+                //var nowIds = _.uniq(oriIds.concat(newIds));
+                RoomDataProvider.addStudentsToRoom($scope.room._id, newIds)
+                    .success(function(room) {
                         $('#addStudentsDialog').modal('hide');
-                        $state.transitionTo($state.current, $stateParams, {
-                            reload: true,
-                            inherit: false,
-                            notify: true
-                        });
+                        $scope.students = $scope.students.concat($scope.selectedStudents);
+                        $scope.gridOptions2.selectAll(false);
                         swal({title: "添加成功", type: "success", timer: 1000})
                     }).error(function(err) {
                         console.log(err);
-                        swal({title: "添加失败", text: "请重试", timer: 2000});
+                        swal({title: "添加失败", text: "请重试", type: "error",timer: 2000});
                     });
             }else {
                 swal({title: "您还没有选择任何学生", type: "warning", timer: 2000});
             }
-
         };
 
         $scope.addTeachersToRoom = function() {
-
-            console.log($scope.selectedTeachers);
             if($scope.selectedTeachers.length) {
-                RoomDataProvider.addTeachersToRoom($scope.room, $scope.selectedTeachers)
+                //var oriIds = _.map($scope.teachers, function(teacher) {return teacher._id});
+                var newIds = _.map($scope.selectedTeachers, function(teacher) {return teacher._id});
+                //var nowIds = _.uniq(oriIds.concat(newIds));
+                RoomDataProvider.addTeachersToRoom($scope.room._id, newIds)
                     .success( function(room) {
                         $('#addTeachersDialog').modal('hide');
                         $scope.teachers = $scope.teachers.concat($scope.selectedTeachers);
-                        console.log($scope.teachers);
+                        $scope.gridOptions4.selectAll(false);
                         swal({title: "添加成功", type: "success", timer: 1000})
                     }).error(function(err) {
                         console.log(err);
@@ -415,7 +329,9 @@ angular.module('resources')
                     confirmButtonText: "确定",
                     closeOnConfirm: false },
                 function(){
-                    RoomDataProvider.removeStudentFromRoom($scope.roomMin, row.entity._id)
+                    var oriIds = _.map($scope.students, function(student) {return student._id});
+                    var newIds = _.filter(oriIds, function(student) {return student !== row.entity._id });
+                    RoomDataProvider.removeStudentFromRoom($scope.room._id, row.entity._id)
                         .success(function(student){
                             swal({title: "移出成功", type: "success", timer: 1000 });
                             $scope.students.splice($scope.students.indexOf(row.entity),1);
@@ -438,7 +354,7 @@ angular.module('resources')
                     confirmButtonText: "确定",
                     closeOnConfirm: false },
                 function(){
-                    RoomDataProvider.removeTeacherFromRoom($scope.roomMin, row.entity._id)
+                    RoomDataProvider.removeTeacherFromRoom($scope.room._id, row.entity._id)
                         .success(function(teacher){
                             swal({title: "移出成功", type: "success", timer: 1000 });
                             $scope.teachers.splice($scope.teachers.indexOf(row.entity),1);
@@ -520,7 +436,10 @@ angular.module('resources')
             console.log(failList);
             console.log($scope.dupList);
             if(waitingList.length) {
-                RoomDataProvider.addStudentsToRoom($scope.roomMin, waitingList)
+                //var oriIds = _.map($scope.students, function(student) {return student._id});
+                var newIds = _.map(waitingList, function(student) {return student._id});
+                //var nowIds = _.uniq(oriIds.concat(newIds));
+                RoomDataProvider.addStudentsToRoom($scope.room._id, newIds)
                     .success( function(room) {
                         if(failList.length) {
                             swal({title: "部分添加失败", text: "数据库错误，请重试", type: 'warning', timer: 2000});
@@ -558,7 +477,10 @@ angular.module('resources')
             console.log(waitingList);
             console.log(failList);
             if(waitingList.length) {
-                RoomDataProvider.addStudentsToRoom($scope.roomMin, waitingList)
+                //var oriIds = _.map($scope.students, function(student) {return student._id});
+                var newIds = _.map(waitingList, function(student) {return student._id});
+                //var nowIds = _.uniq(oriIds.concat(newIds));
+                RoomDataProvider.addStudentsToRoom($scope.room._id, newIds)
                     .success( function(room) {
                         if(failList.length) {
                             swal({title: "部分添加失败", text: "数据库错误，请重试", type: 'warning', timer: 2000});
@@ -644,22 +566,24 @@ angular.module('resources')
                         switcher();
                     }).error(function(err) {
                         var found = false;
-                        for (var i = 0; i < allStudents.length; i++) {
-                            if (allStudents[i].username === newStudent.username) {
-                                if(allStudents[i].name === newStudent.name) {
-                                    $scope.students.push(student);
-                                    waitingList.push(allStudents[i]._id);
-                                }else {
-                                    $scope.dupList.push({db: allStudents[i], now: newStudent});
+                        StudentDataProvider.getStudentsBySchool(me.school).then(function(allStudents) {
+                            for (var i = 0; i < allStudents.length; i++) {
+                                if (allStudents[i].username === newStudent.username) {
+                                    if(allStudents[i].name === newStudent.name) {
+                                        $scope.students.push(student);
+                                        waitingList.push(allStudents[i]._id);
+                                    }else {
+                                        $scope.dupList.push({db: allStudents[i], now: newStudent});
+                                    }
+                                    found = true;
+                                    break;
                                 }
-                                found = true;
-                                break;
                             }
-                        }
-                        if(!found) {
-                            failList.push(newStudent);
-                        }
-                        switcher();
+                            if(!found) {
+                                failList.push(newStudent);
+                            }
+                            switcher();
+                        });
                     });
             }
             MultipleCreate(0);
@@ -700,8 +624,6 @@ angular.module('resources')
                     }
                 }
             }
-            console.log(waitingList);
-            console.log(failList);
             addStudentsToRoom();
         };
 
@@ -753,12 +675,8 @@ angular.module('resources')
                         });
                 }
                 MultipleCreate(0);
-
             });
-
-
         };
-
 
         $scope.selectStudent = function () {
             $location.path('/students/' + $scope.selectedStudent[0]._id)
@@ -767,8 +685,5 @@ angular.module('resources')
         $scope.selectTeacher = function () {
             $location.path('/teachers/' + $scope.selectedTeacher[0]._id)
         };
-
-
-
     }
 ]);

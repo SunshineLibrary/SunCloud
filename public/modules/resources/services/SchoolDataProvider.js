@@ -37,10 +37,21 @@ angular.module('schoolManage')
                 url: "/schools/" + schoolId
             })
         };
+        var editSchoolName = function (schoolId, newName) {
+            return $http({
+                method: "PUT",
+                url: "/schools/" + schoolId,
+                data: {
+                    name: newName
+                }
+            })
+        };
+
         return {
             createSchool: createSchool,
             getSchool: getSchool,
             editSchool: editSchool,
-            deleteSchool: deleteSchool
+            deleteSchool: deleteSchool,
+            editSchoolName: editSchoolName
         };
     }]);

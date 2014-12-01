@@ -11,7 +11,7 @@ angular.module('schoolManage')
         'AuthService',
         function
             (SchoolDataProvider, TeacherDataProvider,RoomDataProvider,StudentDataProvider, TabletDataProvider,school,$scope, AuthService) {
-            $scope.isEditingSchoolName = false;
+            $scope.editorEnabled = false;
             $scope.school = school;
 
 
@@ -38,15 +38,14 @@ angular.module('schoolManage')
                 }
             }, true);
 
-
-            $scope.startEditSchool = function() {
-                $scope.isEditingSchoolName = true;
-
-            };
-            $scope.cancelEdit = function() {
-              $scope.isEditingSchoolName = false;
+            $scope.enableEditor = function() {
+                $scope.editorEnabled = true;
+                $scope.schoolNewName = $scope.school.name;
             };
 
+            $scope.disableEditor = function() {
+                $scope.editorEnabled = false;
+            };
 
             $scope.editSchool = function () {
                 if (($scope.schoolNewName == "") || ($scope.schoolNewName === undefined)) {
@@ -61,5 +60,18 @@ angular.module('schoolManage')
                 $scope.isEditingSchoolName = false;
             };
 
+            $scope.save = function() {
+                //var newSchool = $scope.school;
+                //newSchool.name = $scope.schoolNewName;
+                $scope.editorEnabled = false;
+                console.log(school._id);
+                SchoolDataProvider.editSchoolName(school._id, $scope.schoolNewName)
+                    .success(function(school){
+                        $scope.school.name = school.name;
+                    }).error(function(err){
+                        console.error(err);
+                        swal({title: "修改失败", text: "请重试", type: 'error'})
+                    })
+            };
 
         }]);

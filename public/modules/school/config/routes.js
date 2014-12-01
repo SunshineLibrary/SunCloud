@@ -61,7 +61,7 @@ angular.module('schoolManage').config(['$stateProvider',
                 resolve: {
                     rooms: ['RoomDataProvider','AuthService',
                         function(RoomDataProvider, AuthService) {
-                            return RoomDataProvider.getRoomsBySchool(AuthService.me.school);
+                            return RoomDataProvider.getAdminRoomsBySchool(AuthService.me.school);
                         }
                     ]
 

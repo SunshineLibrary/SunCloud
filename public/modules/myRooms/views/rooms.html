@@ -4,20 +4,23 @@
             <div class="page-box-white myclasses">
                 <h3 style="text-align:center;color: seagreen">我的班级</h3>
                 <ul id="roomsList" class="list-group">
-                    <li ng-repeat="roomItem in rooms" ng-class="{active: roomItem.isActive}" style="list-style-type:none" >
-                        <a ng-click="selectOneRoom(roomItem)" class="list-group-item list-group-item-success">
+                    <li ng-repeat="roomItem in rooms"  ng-class="{active: roomItem.isActive}" style="list-style-type:none" >
+                        <a ng-click="selectOneRoom(roomItem)" href="" class="list-group-item list-group-item-success" ng-class="{active: roomItem.isActive}">
                             {{roomItem.name}}
-                            <span class="badge">{{roomItem.students.length}}</span>
+                            <span class="badge badgeStyle1">{{roomItem.students.length}}</span>
                         </a>
                     </li>
                 </ul>
+                <!--<div class="list-group" ="roomItem in rooms">-->
+                    <!---->
+                <!--</div>-->
                 <div ng-if="!rooms || rooms.length === 0">
                     <h5  style="color:green">您还没有任何班级,您可以：</h5>
                 </div>
 
-                <a class="btn btn-primary btn-success center-block" role="button" href="#claimRoomDialog" data-toggle="modal"><span class="glyphicon glyphicon-shopping-cart"></span> 认领班级</a>
+                <a class="btn btn-primary btn-warning center-block" role="button" href="#claimRoomDialog" data-toggle="modal"><span class="glyphicon glyphicon-shopping-cart"></span> 认领班级</a>
                 <br>
-                <a class="btn btn-primary btn-success center-block" role="button" href="#createRoomDialog" data-toggle="modal"><span class="glyphicon glyphicon-plus"></span> 创建小组</a>
+                <a class="btn btn-primary btn-warning center-block" role="button" href="#createRoomDialog" data-toggle="modal"><span class="glyphicon glyphicon-plus"></span> 创建小组</a>
 
             </div>
         </div>
@@ -40,13 +43,14 @@
             </div>
             <div class='modal-body'>
                 <div class="form-group">
-                    <div class="input-group input-group-lg">
-                        <input class="form-control" placeholder="请输入小组名称" ng-model="newClassName">
+                    <p>小组可用于小班教学， 如果您想添加行政班， 请去“认领班级”。</p>
+                    <form name="newRoomForm"  class="form-group input-group input-group-lg">
+                        <input class="form-control" placeholder="请输入小组名称" ng-model="newRoomName" required>
                         <div class="input-group-btn">
                             <button type="button" class="btn  btn-success"
-                                    ng-click="createTeachingRoom()">创建</button>
+                                    ng-click="createTeachingRoom()" ng-disabled="newRoomForm.$invalid">创建 </button>
                         </div>
-                    </div>
+                    </form>
                     <span ng-show="temp.createRoomTip=='noName'" class="error-msg">请填写小组名称</span>
                     <span ng-show="temp.createRoomTip=='formatWrong'" class="error-msg">小组名称不可以超过15个字符，请修改名称</span>
                     <span ng-show="temp.createRoomTip=='alreadyHave'" class="error-msg">您已经用此名称创建过小组，请修改名称</span>

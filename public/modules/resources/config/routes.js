@@ -17,17 +17,6 @@ angular.module('resources').config(['$stateProvider',
                             return RoomDataProvider.getRoomFull($stateParams.roomId);
                         }
                     ]
-                    //],
-                    //teachers: ['TeacherDataProvider', 'AuthService',
-                    //    function(TeacherDataProvider, AuthService) {
-                    //        return TeacherDataProvider.getTeachersBySchool(AuthService.me.school);
-                    //    }
-                    //],
-                    //students: ['StudentDataProvider', 'AuthService',
-                    //    function(StudentDataProvider, AuthService) {
-                    //        return StudentDataProvider.getStudentsBySchool(AuthService.me.school);
-                    //    }
-                    //]
                 }
             }).
             state('studentView',{

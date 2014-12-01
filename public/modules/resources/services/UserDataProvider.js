@@ -6,23 +6,19 @@ angular.module('resources')
         function
             ($http, $q) {
 
-            var getTablet = function(studentId, callBack) {
+            var getTablet = function(studentId) {
                 var defered = $q.defer();
                 var tabletPromise = defered.promise;
                 $http({
                     method: "GET",
                     url: "/usertablets?userId=" + studentId + "&populate=tabletId"
                 }).success(function(theTablet){
-                    //console.log(theTablet);
-                    if(callBack){
-                        callBack(theTablet);
-                    }
                     defered.resolve(theTablet);
                 }).error(function(err){
                     console.error(err);
+                    defered.reject(err);
                 });
                 return tabletPromise;
-
             };
 
             var getUser = function(tabletId, callBack){

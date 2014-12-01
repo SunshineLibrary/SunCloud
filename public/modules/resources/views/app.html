@@ -6,8 +6,8 @@
         </span>
         </span>
 
-        <span ng-show="editorEnabled">
-            <input type="text" style="color: black; font-size: large" ng-model="editablename"/>
+        <span ng-show="editorEnabled" class="form-inline">
+            <input type="text" style="color: black; font-size: large" class="form-control" ng-model="editablename"/>
             <a role="button" ng-click="save()" class="btn btn-primary btn-info glyphicon glyphicon-ok" >保存</a>
             <a role="button" ng-click="disableEditor()" class="btn btn-primary btn-warning glyphicon glyphicon-remove" >取消</a>
         </span>
@@ -28,6 +28,20 @@
             <a role="button" ng-click="back()" class="btn btn-primary btn-info"> <i class=" glyphicon glyphicon-chevron-left"></i>返回</a>
         </span>
 
+        <h5>内部包名: <span ng-show="app.package" class="inline">{{app.package}}</span><span ng-hide="app.package"><i class="badge inline">暂无</i></span></h5>
+        <h5>分配班级:
+             <span ng-repeat="room in myRoomsAssigned" class="row-fluid" ng-show="myRoomsAssigned.length">
+            <a class="badge inline" href="">{{room.name}}</a>
+                 <!--<script>document.write("<a href='/#/rooms/'" +">"+"{{room.name}}"+"</a>")</script>-->
+            </span>
+            <span  ng-hide="myRoomsAssigned.length">
+                <i class="badge">暂无</i>
+            </span>
+        </h5>
+
+
+        <br>
+
 
         <!--</div>-->
     </div>
@@ -40,10 +54,7 @@
     <div ng-hide="app.apks.length" align="center">
         <h3>您还没有上传任何安装包</h3>
         <a role="button" class="btn btn-primary btn-success" href="#uploadApkDialog" data-toggle="modal"> 上传安装包</a>
-
-
     </div>
-
 
 
 </div>
@@ -58,14 +69,26 @@
                 <h4 class="modal-title">分配给班级</h4>
             </div>
             <div class='modal-body'>
-                    <div class="table">
-                        <div class="gridStyle style2" ng-grid="gridOptions2"></div>
-                    </div>
+                <!--<button ng-click="checkAll()">check all</button>-->
+                <!--<button ng-click="uncheckAll()">uncheck all</button>-->
+                <!--<label ng-repeat="room in myRooms">-->
+                    <!--<input type="checkbox" checklist-model="selectedRooms2" checklist-value="room._id"> {{ room.name}}-->
+                <!--</label>-->
+                <!--selected：{{selectedRooms2}}-->
+                <!--<!--<button class="btn btn-success pull-right" ng-click="assignToRooms()"> 分配</button>-->
+                <button class="btn btn-warning" ng-click="checkAll()">全选</button>
+                <button class="btn btn-inverse" ng-click="uncheckAll()">全不选</button>
+                <div ng-repeat="room in myRooms">
+                    <!--<br>-->
+                    <!--<input type="checkbox" ng-model="selectedRooms[$index]"> {{room.name}}         {{selectedRooms[$index]}}-->
+                    <checkbox large class="btn-primary" style="margin-top:7px" ng-model="selectedRooms[$index]"></checkbox> &nbsp;&nbsp;&nbsp;&nbsp;{{room.name}}
+                </div>
+
             </div>
+
             <div class="modal-footer">
                 <button class="btn btn-success pull-right" ng-click="assignToRooms()"> 分配</button>
                 <!--<button type="button" class="btn btn-warning btn-s pull-right" data-dismiss="modal" ng-hide="myRoomsNotAssigned.length">我知道了</button>-->
-
             </div>
         </div>
     </div>
@@ -133,7 +156,7 @@
                     <div>
                         上传进度:
                         <div class="progress" style="">
-                            <div class="progress-bar" role="progressbar" ng-style="{ 'width': uploader.progress + '%' }"></div>
+                            <div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" ng-style="{ 'width': uploader.progress + '%' }"></div>
                         </div>
                     </div>
                     </div>

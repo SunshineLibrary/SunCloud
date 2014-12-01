@@ -36,7 +36,9 @@ module.exports = {
 				'public/lib/moment/moment.js',
 				'public/lib/bootstrap/dist/js/bootstrap.min.js',
 				'public/lib/sweetalert/sweet-alert.min.js',
-				'public/lib/angular-file-upload/angular-file-upload.js'
+				'public/lib/angular-file-upload/angular-file-upload.js',
+				'public/lib/checklist-model/checklist-model.js',
+				'public/lib/angular-bootstrap-checkbox/angular-bootstrap-checkbox.js'
 				//'public/lib/ng-file-upload/angular-file-upload.js'
 
 

@@ -6,7 +6,7 @@ angular.module('myRooms').config(['$stateProvider',
 
         $stateProvider.
             state('myRoomsView', {
-                url: '/myRooms',
+                url: '/myrooms',
                 controller: 'myRoomsController',
                 templateUrl: __templates + 'rooms.html',
                 resolve: {
@@ -19,13 +19,13 @@ angular.module('myRooms').config(['$stateProvider',
             }).
             state('myRoomView',{
                 url: '/:roomId',
-                parent: 'roomsView',
+                parent: 'myRoomsView',
                 controller: 'myRoomController',
                 templateUrl: __templates + 'room.html',
                 resolve: {
                     theRoom: ['RoomDataProvider','$stateParams',
                         function(RoomDataProvider, $stateParams) {
-                            return RoomDataProvider.getRoom($stateParams.roomId)
+                            return RoomDataProvider.getRoomFull($stateParams.roomId)
                         }
                     ]
                 }
