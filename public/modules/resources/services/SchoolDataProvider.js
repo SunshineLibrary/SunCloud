@@ -47,11 +47,22 @@ angular.module('schoolManage')
             })
         };
 
+        var resetLauncherPassword = function(schoolId, newPassword) {
+            return $http({
+                method: "PUT",
+                url: "/schools/" + schoolId,
+                data: {
+                    launcherPassword: newPassword
+                }
+            })
+        };
+
         return {
             createSchool: createSchool,
             getSchool: getSchool,
             editSchool: editSchool,
             deleteSchool: deleteSchool,
-            editSchoolName: editSchoolName
+            editSchoolName: editSchoolName,
+            resetLauncherPassword: resetLauncherPassword
         };
     }]);

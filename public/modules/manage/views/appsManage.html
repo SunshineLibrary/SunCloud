@@ -1,0 +1,94 @@
+<!--<div class="container-fluid">-->
+    <!--<h4 class="tableTitle pull-left">所有应用程序 &nbsp;&nbsp;</h4>-->
+
+    <!--<div class=" pull-right" style="margin-top:10px">-->
+        <!--<a role="button" class="btn btn-primary btn-warning" href="#createAppDialog" data-toggle="modal"><i class="glyphicon glyphicon-plus"></i>添加应用程序</a>-->
+    <!--</div>-->
+
+    <!--<div class="inner-addon left-addon pull-left" style="margin-top:10px">-->
+        <!--<i class="glyphicon glyphicon-search"></i>-->
+        <!--<input type="search" class="form-control" style="width: 250px"  placeholder="搜索" ng-model="filterOptions.filterText"/>-->
+    <!--</div>-->
+    <!--<br>-->
+    <!--<br>-->
+
+    <!--<div class="table">-->
+        <!--<div class="gridStyle" ng-grid="gridOptions" ng-click="selectApp()"></div>-->
+    <!--</div>-->
+<!--</div>-->
+<div>
+    <div class="container-fluid" >
+        <div class="col-sm-3 col-md-3 col-lg-3" style="margin-top:30px">
+            <ul id="roomsList" class="list-group">
+                <li ng-repeat="roomItem in myRooms"  ng-class="{active: roomItem.isActive}" style="list-style-type:none" >
+                    <a ng-click="selectOneRoom(roomItem)" href="" class="list-group-item list-group-item-info" ng-class="{active: roomItem.isActive}">
+                        {{roomItem.name}}
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="col-sm-9 col-md-9 col-lg-9">
+            <h3 align="center">{{selectedRoom.name}}的应用程序</h3>
+            <table>
+                <caption>已经推送的应用程序</caption>
+                <th>应用程序名称</th>
+                <th>下载情况</th>
+                <th>操作</th>
+                <tr ng-repeat="app in appsOfRoom">
+                    <td>{{app.name}}</td>
+                    <td>{{app.package}}</td>
+                    <td>删除</td>
+                </tr>
+            </table>
+            <table>
+                <caption>候选应用</caption>
+                <th>应用程序名称</th>
+                <th>下载情况</th>
+                <th>操作</th>
+                <tr ng-repeat="app in otherApps">
+                    <td>{{app.name}}</td>
+                    <td>{{app.package}}</td>
+                    <td>删除</td>
+                </tr>
+            </table>
+            <!--<div class="table">-->
+                <!--<div class="gridStyle" ng-grid="gridOptions" ng-click="selectApp()"></div>-->
+            <!--</div>-->
+        </div>
+
+
+    </div>
+</div>
+
+
+
+
+
+<!--------------------------------Modal--------------------->
+
+<div class="modal fade" id="createAppDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true" style="overflow-y:scroll">
+    <div class='modal-dialog' style="left: auto">
+        <div class='modal-content'>
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span></button>
+                <h4 class="modal-title">添加应用程序</h4>
+            </div>
+            <div class='modal-body'>
+                <div class="form-group">
+                    <div class="input-group input-group-lg">
+                        <input class="form-control" placeholder="请输入应用程序中文名称" ng-model="newAppName">
+                        <div class="input-group-btn">
+                            <button type="button" class="btn  btn-success"
+                                    ng-click="createApp()">添加</button>
+                        </div>
+                    </div>
+                    <span ng-show="temp.error=='noName'" class="error-msg">请填写应用程序名称</span>
+                    <span ng-show="temp.error=='alreadyHave'" class="error-msg">已存在此应用程序，请修改名称</span>
+                    <span ng-show="temp.error=='failure'" class="error-msg">创建失败，可能由于此名称已存在，请重试</span>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

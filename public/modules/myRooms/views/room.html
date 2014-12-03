@@ -15,12 +15,13 @@
             <a href class="btn btn-warning btn-sm pull-right" style="margin:0 5px" ng-click="disclaimRoom()" ng-show="theRoom.type==='admin'"><span class="glyphicon glyphicon-leaf"></span>  取消认领</a>
             <a href class="btn btn-warning btn-sm pull-right" style="margin:0 5px" ng-click="deleteRoom()" ng-show="theRoom.type==='teaching'"><span class="glyphicon glyphicon-trash"></span>  删除小组</a>
             <!-- Single button -->
+            <!--<a href class="btn btn-warning btn-sm pull-right" style="margin:0 5px" ng-click="toInviteTeacher()" ng-show="theRoom.type==='teaching'"><span class="glyphicon glyphicon-plus-sign"></span>  添加管理老师</a>-->
             <div class="btn-group pull-right">
-                <button type="button" class="btn btn-warning btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                <button type="button" class="btn btn-warning btn-sm dropdown-toggle"  style="margin:0 5px" data-toggle="dropdown" aria-expanded="false">
                    <span class="glyphicon glyphicon-plus"></span> 添加学生 <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu" role="menu">
-                    <li><a href="" ng-click="toAddStudents()">从学生列表中添加</a></li>
+                    <li><a href="" ng-click="toAddStudents()">从学生列表添加</a></li>
                     <li><a href="#addStudentsBatchDialog2" data-toggle="modal">批量创建并添加</a></li>
                     <li><a href="" ng-click="toAddStudentsFromOtherRoom()">从其他班级添加</a></li>
                 </ul>

@@ -22,6 +22,10 @@ var SchoolSchema = new Schema({
             required: true,
             unique: true
         },
+        launcherPassword: {
+            type: String,
+            default: "xiaoshu815"
+        },
         //admin: {
         //    type: Schema.Types.ObjectId,
         //    ref: 'User'

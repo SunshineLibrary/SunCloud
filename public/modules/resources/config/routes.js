@@ -22,7 +22,14 @@ angular.module('resources').config(['$stateProvider',
             state('studentView',{
                 url: '/students/:studentId',
                 controller: 'studentViewController',
-                templateUrl: __templates + 'student.html'
+                templateUrl: __templates + 'student.html',
+                resolve: {
+                    student: ['StudentDataProvider','$stateParams',
+                        function(StudentDataProvider, $stateParams) {
+                            return StudentDataProvider.getStudent($stateParams.studentId);
+                        }
+                    ]
+                }
             }).
             state('teacherView',{
                 url: '/teachers/:teacherId',
@@ -32,7 +39,14 @@ angular.module('resources').config(['$stateProvider',
             state('tabletView',{
                 url: '/tablets/:tabletId',
                 controller: 'tabletViewController',
-                templateUrl: __templates + 'tablet.html'
+                templateUrl: __templates + 'tablet.html',
+                resolve: {
+                    theTablet: ['TabletDataProvider', '$stateParams',
+                        function(TabletDataProvider, $stateParams) {
+                            return TabletDataProvider.getTablet($stateParams.tabletId)
+                        }
+                    ]
+                }
             }).
             state('appView',{
                 url: '/apps/:appId',
@@ -63,7 +77,9 @@ angular.module('resources').config(['$stateProvider',
     });
     //back button function called from back button's ng-click="back()"
     $rootScope.back = function() {
-        $state.go($rootScope.previousState_name,$rootScope.previousState_params);
+        //$state.go($rootScope.previousState_name,$rootScope.previousState_params);
+        window.history.back();
+
     };
 });
 

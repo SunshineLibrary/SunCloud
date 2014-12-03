@@ -12,11 +12,12 @@ angular.module('manage')
                 {name: '锁屏管理', state: 'lockView'},
                 {name:'设置', state: 'mySetting'}];
 
-            $state.transitionTo('myDevice');
+            //$state.transitionTo('myDevice');
+            //$location.path('/manage/mydevice');
 
-            $scope.selectedState = $scope.items[0].state;
+            //$scope.selectedState = $scope.items[0].state;
             $scope.goto = function(state) {
-                $scope.selectedState = state;
+                //$scope.selectedState = state;
                 $state.transitionTo(state);
             };
         }

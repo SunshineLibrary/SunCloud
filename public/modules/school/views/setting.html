@@ -1,0 +1,28 @@
+<section>
+    <header class="setting-header"><h2>设置</h2></header>
+    <hr/>
+    <h3>应用程序</h3>
+    <checkbox median class="btn-default" style="margin-top:0px" ng-model="addApp"></checkbox> &nbsp;&nbsp;&nbsp;老师能添加应用程序
+    <br/>
+    <br/>
+    <checkbox median class="btn-default" style="margin-top:0px" ng-model="pushApp"></checkbox> &nbsp;&nbsp;&nbsp;老师能推送应用程序
+    <br/>
+    <br/>
+    <div style="margin-left: 200px">
+        <button class="btn btn-primary">保存</button>
+        <button class="btn btn-inverse">取消</button>
+    </div>
+
+    <hr/>
+    <h3>返回原生桌面密码</h3>
+    密码: {{school.launcherPassword}} &nbsp;&nbsp;&nbsp;
+         <span ng-hide="isResettingPassword">
+            <a href="" role="button" ng-click="enableEditor()" class="btn btn-info">重设密码</a>
+        </span>
+        <form ng-show="isResettingPassword" class="form-inline" name="resetForm">
+            <input type="text" class="form-control" style="color: black; font-size: large" ng-model="newPassword" placeholder="请输入新密码"/>
+            <a role="button" ng-click="save()" class="btn btn-primary btn-info glyphicon glyphicon-ok" ng-disabled="resetForm.$invalid" >保存</a>
+            <a role="button" ng-click="disableEditor()" class="btn btn-primary btn-warning glyphicon glyphicon-remove" >取消</a>
+        </form>
+    <hr/>
+</section>

@@ -103,7 +103,14 @@ angular.module('schoolManage').config(['$stateProvider',
                 url: '/setting',
                 parent: 'schoolNav',
                 controller: 'settingController',
-                templateUrl: __templates + 'setting.html'
+                templateUrl: __templates + 'setting.html',
+                resolve: {
+                    school: ['SchoolDataProvider','AuthService',
+                        function(SchoolDataProvider, AuthService) {
+                            return SchoolDataProvider.getSchool(AuthService.me.school);
+                        }
+                    ]
+                }
             })
         ;
     }

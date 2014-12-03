@@ -1,5 +1,5 @@
 <div>
-    <div class="app-header">
+    <div class="well well-sm" style="margin-top:20px">
         <span ng-hide="editorEnabled">
         <span class="h3">{{app.name}}
             <a href="" ng-click="enableEditor()" class="glyphicon glyphicon-edit"></a>
@@ -24,26 +24,20 @@
         </span>
         <span class="pull-right">
             <a role="button" class="btn btn-primary btn-warning" href="#uploadApkDialog" data-toggle="modal"><i class="glyphicon glyphicon-cloud-upload"></i> 上传安装包</a>
-            <a role="button" class="btn btn-primary btn-warning" href="#assignAppDialog" data-toggle="modal"><i class="glyphicon glyphicon-gift"></i> 分配给班级</a>
+            <a role="button" class="btn btn-primary btn-warning" href="" ng-click="toAssignApp()"><i class="glyphicon glyphicon-gift"></i> 分配给班级</a>
             <a role="button" ng-click="back()" class="btn btn-primary btn-info"> <i class=" glyphicon glyphicon-chevron-left"></i>返回</a>
         </span>
 
-        <h5>内部包名: <span ng-show="app.package" class="inline">{{app.package}}</span><span ng-hide="app.package"><i class="badge inline">暂无</i></span></h5>
+        <h5>内部包名: <span ng-show="app.package" class="inline">{{app.package}}</span><span ng-hide="app.package"><span class="label label-default inline">暂无</span></span></h5>
         <h5>分配班级:
              <span ng-repeat="room in myRoomsAssigned" class="row-fluid" ng-show="myRoomsAssigned.length">
-            <a class="badge inline" href="">{{room.name}}</a>
+            <a class="label label-success label-lg inline" href="">{{room.name}}</a>
                  <!--<script>document.write("<a href='/#/rooms/'" +">"+"{{room.name}}"+"</a>")</script>-->
             </span>
             <span  ng-hide="myRoomsAssigned.length">
                 <i class="badge">暂无</i>
             </span>
         </h5>
-
-
-        <br>
-
-
-        <!--</div>-->
     </div>
 
     <div ng-show="app.apks.length">
@@ -53,7 +47,7 @@
     </div>
     <div ng-hide="app.apks.length" align="center">
         <h3>您还没有上传任何安装包</h3>
-        <a role="button" class="btn btn-primary btn-success" href="#uploadApkDialog" data-toggle="modal"> 上传安装包</a>
+        <a role="button" class="btn btn-primary btn-success" href="#uploadApkDialog" data-toggle="modal"><span class="glyphicon glyphicon-cloud-upload"></span> 上传安装包</a>
     </div>
 
 
@@ -76,19 +70,31 @@
                 <!--</label>-->
                 <!--selected：{{selectedRooms2}}-->
                 <!--<!--<button class="btn btn-success pull-right" ng-click="assignToRooms()"> 分配</button>-->
-                <button class="btn btn-warning" ng-click="checkAll()">全选</button>
-                <button class="btn btn-inverse" ng-click="uncheckAll()">全不选</button>
-                <div ng-repeat="room in myRooms">
-                    <!--<br>-->
-                    <!--<input type="checkbox" ng-model="selectedRooms[$index]"> {{room.name}}         {{selectedRooms[$index]}}-->
-                    <checkbox large class="btn-primary" style="margin-top:7px" ng-model="selectedRooms[$index]"></checkbox> &nbsp;&nbsp;&nbsp;&nbsp;{{room.name}}
+                <div style="margin-left:180px">
+                    <button class="btn btn-warning" ng-click="checkAll()">全选</button>
+                    <button class="btn btn-inverse" ng-click="uncheckAll()">全不选</button>
                 </div>
+
+                <ul class="assign-class-list-long-{{myRooms.length > 5}}">
+                    <li  ng-repeat="room in myRooms">
+                        <checkbox median class="btn-primary" style="margin-top:7px" ng-model="selectedRooms[$index]"></checkbox> &nbsp;&nbsp;&nbsp;&nbsp;{{room.name}}
+
+                    </li>
+                </ul>
+                <!--<div ng-repeat="room in myRooms">-->
+                    <!--&lt;!&ndash;<br>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<input type="checkbox" ng-model="selectedRooms[$index]"> {{room.name}}         {{selectedRooms[$index]}}&ndash;&gt;-->
+                    <!--<checkbox large class="btn-primary" style="margin-top:7px" ng-model="selectedRooms[$index]"></checkbox> &nbsp;&nbsp;&nbsp;&nbsp;{{room.name}}-->
+                <!--</div>-->
 
             </div>
 
             <div class="modal-footer">
-                <button class="btn btn-success pull-right" ng-click="assignToRooms()"> 分配</button>
-                <!--<button type="button" class="btn btn-warning btn-s pull-right" data-dismiss="modal" ng-hide="myRoomsNotAssigned.length">我知道了</button>-->
+                <div class="pull-right">
+                    <button class="btn btn-inverse  " data-dismiss="modal">取消</button>&nbsp;&nbsp;
+                    <button class="btn btn-success " ng-click="assignToRooms()"> 分配</button>
+                </div>
+
             </div>
         </div>
     </div>

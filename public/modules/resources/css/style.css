@@ -20,6 +20,16 @@
     height: 100px;
 }
 
+.assign-class-list-long-false {
+    list-style-type: none;
+}
+.assign-class-list-long-true {
+    list-style-type: none;
+    columns: 2;
+    -webkit-columns: 2;
+    -moz-columns: 2;
+}
+
 
 /*.roomView {*/
     /*margin-top: 100px;*/

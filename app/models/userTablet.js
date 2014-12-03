@@ -58,22 +58,23 @@ userTabletSchema.statics.addRecord = function(userId, tabletId,callBack){
 };
 
 userTabletSchema.statics.removeRecord = function(userId, tabletId,callBack){
-    this.findOneAndRemove({userId: userId, tabletId: tabletId}, function(err, record){
-        if(err){
-            console.error(err);
-            return callBack(err);
-        }else{
-            if(record){
-                User.findOneAndUpdate({_id: userId},{$push:{xiaoshuHistory: {tablet: tabletId, logoutTime: Date.now()}} }, function(err, user){
-                    if(err){
-                        console.error(err);
-                        return callBack(err);
-                    }
-                });
-                return callBack(err, record);
-            }
-        }
-    })
+    this.findOneAndUpdate({userId: userId, tabletId: tabletId, logout_at: null}, {access_token: null, logout_at: Date.now()}, callBack);
+    //this.findOneAndRemove({userId: userId, tabletId: tabletId}, function(err, record){
+    //    if(err){
+    //        console.error(err);
+    //        return callBack(err);
+    //    }else{
+    //        if(record){
+    //            User.findOneAndUpdate({_id: userId},{$push:{xiaoshuHistory: {tablet: tabletId, logoutTime: Date.now()}} }, function(err, user){
+    //                if(err){
+    //                    console.error(err);
+    //                    return callBack(err);
+    //                }
+    //            });
+    //            return callBack(err, record);
+    //        }
+    //    }
+    //})
 };
 
 mongoose.model('UserTablet', userTabletSchema);

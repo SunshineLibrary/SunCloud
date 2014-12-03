@@ -33,7 +33,7 @@ angular.module('schoolManage')
             var tabletPromise = defered.promise;
             $http({
                 method: "GET",
-                url: "/tablets?machine_id=" + tabletId + "&populate=school"
+                url: "/tablets/"+tabletId + "?populate=school"
             }).success(function(tablet) {
                 defered.resolve(tablet);
             }).error(function (err) {
@@ -44,22 +44,11 @@ angular.module('schoolManage')
 
         };
 
-        var getTabletUser = function(tabletId, callBack) {
-            var defered = $q.defer();
-            var tabletPromise = defered.promise;
-            $http({
+        var getTabletUser = function(tabletId) {
+            return $http({
                 method: "GET",
-                url: "/usertablets?tabletId=" + tabletId + "&populate=userId"
-            }).success(function(record) {
-                defered.resolve(record);
-                console.log(record);
-                if(callBack) {
-                    callBack(record);
-                }
-            }).error(function (err) {
-                console.error(err);
-            });
-            return tabletPromise;
+                url: "/usertablets?tabletId="+tabletId+"&logout_at&populate=userId"
+            })
         };
 
         var logout = function(userId, tabletId) {

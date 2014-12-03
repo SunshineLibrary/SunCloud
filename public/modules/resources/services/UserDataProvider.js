@@ -11,7 +11,7 @@ angular.module('resources')
                 var tabletPromise = defered.promise;
                 $http({
                     method: "GET",
-                    url: "/usertablets?userId=" + studentId + "&populate=tabletId"
+                    url: "/usertablets?userId=" + studentId + "&logout_at&populate=tabletId"
                 }).success(function(theTablet){
                     defered.resolve(theTablet);
                 }).error(function(err){
@@ -21,12 +21,28 @@ angular.module('resources')
                 return tabletPromise;
             };
 
+            var getTabletHistory = function(studentId) {
+                var defered = $q.defer();
+                var tabletPromise = defered.promise;
+                $http({
+                    method: "GET",
+                    url: "/usertablets?userId=" + studentId + "&populate=tabletId"
+                }).success(function(theTablet){
+                    defered.resolve(theTablet);
+                }).error(function(err){
+                    console.error(err);
+                    defered.reject(err);
+                });
+                return tabletPromise;
+
+            };
+
             var getUser = function(tabletId, callBack){
                 var defered = $q.defer();
                 var userPromise = defered.promise;
                 $http({
                     method: "GET",
-                    url: "/usertablets?tabletId=" + tabletId + "&populate=userId"
+                    url: "/usertablets?tabletId=" + tabletId + "&logout_at&populate=userId"
                 }).success(function(theUser){
                     if(callBack){
                         callBack(theUser);
@@ -124,6 +140,7 @@ angular.module('resources')
             return {
                 login: login,
                 getTablet: getTablet,
+                getTabletHistory: getTabletHistory,
                 getUser: getUser,
                 autoCreateStudents: autoCreateStudents,
                 manualCreateStudents: manualCreateStudents,

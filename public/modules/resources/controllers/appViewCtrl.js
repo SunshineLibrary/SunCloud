@@ -36,7 +36,7 @@ angular.module('resources')
                     RoomDataProvider.getRoomsByTeacher(me._id)
                         .then(function(rooms) {
                             $scope.myRooms = rooms;
-                            return  RoomDataProvider.getAdminRoomsMinBySchool(me.school);
+                            return  RoomDataProvider.getAdminRoomsBySchool(me.school);
                         }).then(function(rooms) {
                             $scope.myRooms = _.filter($scope.myRooms, function(room) {
                                 return room.type = 'teaching';
@@ -50,7 +50,7 @@ angular.module('resources')
                         defered.resolve($scope.myRooms);
                     });
                 }else {
-                    RoomDataProvider.getAdminRoomsMinBySchool(me.school).then(function(rooms) {
+                    RoomDataProvider.getAdminRoomsBySchool(me.school).then(function(rooms) {
                         $scope.myRooms = rooms;
                         defered.resolve($scope.myRooms);
                     })
@@ -73,6 +73,24 @@ angular.module('resources')
 
                 });
             });
+
+            $scope.toAssignApp = function() {
+                getMyRooms().then(function(myRooms) {
+                    $scope.myRoomsNotAssigned = _.filter(myRooms, function(room) {
+                        return theApp.rooms.indexOf(room._id) === -1 ;
+                    });
+                    $scope.myRoomsAssigned = _.filter(myRooms, function(room) {
+                        return theApp.rooms.indexOf(room._id) !== -1 ;
+                    });
+                    console.log(theApp.rooms);
+                    console.log($scope.myRoomsAssigned);
+                    _.each($scope.myRooms, function(room, i) {
+                        $scope.selectedRooms[i] = theApp.rooms.indexOf(room._id) > -1;
+
+                    });
+                });
+                $('#assignAppDialog').modal('show');
+            };
 
             $scope.save = function() {
                 var newApp = $scope.app;
@@ -137,12 +155,13 @@ angular.module('resources')
                 multiSelect: false,
                 columnDefs: [
                     {field: '_id', visible: false},
-                    {field: 'versionName', displayName: '版本名称'},
-                    {field: 'versionCode', displayName: '版本号'},
+                    {field: 'id', displayName: 'ID', width: '20%'},
+                    {field: 'versionName', displayName: '版本名称', width: '10%'},
+                    {field: 'versionCode', displayName: '版本号', width: '10%'},
                     {field: 'package', displayName: '内部包名'},
                     {field: 'fileName', displayName: '安装包', cellTemplate:'<div class="ngCellText" ng-class="col.colIndex()"><a href="/download/apks/{{row.entity._id}}">{{row.getProperty(col.field)}}</a></div>'},
-                    {field: 'size', displayName: '大小', cellTemplate: '<div>{{row.entity[col.field]/1024/1024 | number:2}} MB</div>'},
-                    {field: '', displayName: '操作', cellTemplate:
+                    {field: 'size', displayName: '大小',width: '10%', cellTemplate: '<div>{{row.entity[col.field]/1024/1024 | number:2}} MB</div>'},
+                    {field: '', displayName: '操作', width: '10%',cellTemplate:
                     '<div class="ngCellText" ng-class="col.colIndex()">' +
                     '<a class="glyphicon glyphicon-remove text-primary" role="button" ng-click="deleteApk(row)"></a></div>'}
                 ]
@@ -189,31 +208,16 @@ angular.module('resources')
                         confirmButtonText: "删除",
                         closeOnConfirm: false },
                     function(){
-                        var newApp = $scope.app;
-                        newApp.apks.splice(newApp.apks.indexOf(row.entity),1);
-                        if(newApp.apks.length) {
-                            var max = newApp.apks[0];
-                            _.each(newApp.apks, function(apk) {
-                                max = (apk.versionCode > max.versionCode) ? apk: max ;
-                            });
-                            newApp.versionCode = max.versionCode;
-                            newApp.versionName = max.versionName;
-                            newApp.package = max.package;
-                            newApp.file_name =max.fileName;
-                        }else {
-                            newApp.versionCode = null;
-                            newApp.versionName = null;
-                            newApp.package = null;
-                            newApp.file_name = null;
-                        }
-                        AppDataProvider.updateApp(newApp)
+                        //var newApp = $scope.app;
+                        //newApp.apks.splice(newApp.apks.indexOf(row.entity),1);
+                        AppDataProvider.deleteApk($scope.app, row.entity._id)
                             .success(function(app){
                                 swal({title: "删除成功", type: "success", timer: 1000 });
                                 $scope.app = app;
                             })
                             .error(function(err){
                                 console.error(err);
-                                swal({title: "删除失败", text: "请重试", type: 'error'})
+                                swal({title: "删除失败", text: "请重试", type: 'error', timer: 1500})
                             })
                     });
             }

@@ -28,6 +28,17 @@ li .active {
     height:100px;
 }
 
+.setting-header{
+    /*background-color: #00A352;#f3f9f1;*/
+    background-color: #f0f0f4;
+    padding: 5px 25px 10px;
+    border-radius: 6px;
+    color: darkgreen;
+    /*font-weight: 300;*/
+    max-font-size: 10;
+    margin-top: 8px;
+}
+
 
 table.school-overview, th.school-overview, td.school-overview  {
     align-content: center;

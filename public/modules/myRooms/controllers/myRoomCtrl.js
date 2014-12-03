@@ -22,6 +22,9 @@ angular.module('myRooms').controller('myRoomController',
         var failList = [];
         var waitingList = [];
         var me = AuthService.me;
+        var allRoomsPromise = RoomDataProvider.getAdminRoomsFullBySchool(me.school);
+        var getMyTeachingRoomsPromise = RoomDataProvider.getTeachingRoomsFullByTeacher(me._id);
+        var allStudentsPromise = StudentDataProvider.getStudentsBySchool(me.school);
 
         $scope.$watch('theRoom', function (newRoom) {
             if (newRoom) {
@@ -50,6 +53,7 @@ angular.module('myRooms').controller('myRoomController',
         $scope.noTabletNum = 0;
         var updateTablet = function(student) {
             UserDataProvider.getTablet(student._id).then(function(record){
+                console.log(record);
                 if(record.length){
                     student.tabletId = record[0].tabletId._id;
                     student.tablet = record[0].tabletId.machine_id;
@@ -63,6 +67,7 @@ angular.module('myRooms').controller('myRoomController',
         _.each($scope.students, function(studentItem) {
            updateTablet(studentItem);
         });
+
 
         $scope.enableEditor = function() {
             $scope.editorEnabled = true;
@@ -218,8 +223,8 @@ angular.module('myRooms').controller('myRoomController',
         };
 
         var getOtherRooms = function() {
-            RoomDataProvider.getAdminRoomsFullBySchool(me.school).then(function(rooms) {
-                RoomDataProvider.getTeachingRoomsFullByTeacher(me._id).then(function(myRooms) {
+            allRoomsPromise.then(function(rooms) {
+                getMyTeachingRoomsPromise.then(function(myRooms) {
                     var allRooms = rooms.concat(myRooms);
                     //$scope.otherRooms = _.without(allRooms, _.findWhere(allRooms, {_id: myRooms._id}));
                     $scope.otherRooms = _.filter(allRooms, function(room) {
@@ -245,7 +250,7 @@ angular.module('myRooms').controller('myRoomController',
         };
 
         var getStudentsNotInRoom = function() {
-            StudentDataProvider.getStudentsBySchool(me.school).then(function(students) {
+            allStudentsPromise.then(function(students) {
                 var allStudents = students;
                 var studentIds = _.map($scope.students, function(student) {return student._id});
                 $scope.studentsNotInRoom = _.filter(allStudents, function(student) {
@@ -493,7 +498,7 @@ angular.module('myRooms').controller('myRoomController',
                         switcher();
                     }).error(function(err) {
                         var found = false;
-                        StudentDataProvider.getStudentsBySchool(me.school).then(function(allStudents) {
+                        allStudentsPromise.then(function(allStudents) {
                             for (var i = 0; i < allStudents.length; i++) {
                                 if (allStudents[i].username === newStudent.username) {
                                     if(allStudents[i].name === newStudent.name) {
@@ -617,7 +622,7 @@ angular.module('myRooms').controller('myRoomController',
             columnDefs: [
                 {field: 'username', displayName: '用户名', cellTemplate:'<div class="ngCellText" ng-class="col.colIndex()"><a href="/#/students/{{row.entity._id}}">{{row.getProperty(col.field)}}</a></div>'},
                 {field: 'name', displayName: '姓名'},
-                {field: 'tablet', displayName: '正在使用的晓书',cellTemplate:'<div class="ngCellText" ng-class="col.colIndex()"><a ng-show="row.entity.tablet" href="/#/tablets/{{row.entity.tablet}}">{{row.getProperty(col.field)}}</a><span ng-hide="row.entity.tablet" class="label label-default">暂无</span></div>'},
+                {field: 'tablet', displayName: '正在使用的晓书',cellTemplate:'<div class="ngCellText" ng-class="col.colIndex()"><a ng-show="row.entity.tablet" href="/#/tablets/{{row.entity.tabletId}}">{{row.getProperty(col.field)}}</a><span ng-hide="row.entity.tablet" class="label label-default">暂无</span></div>'},
                 {field: 'loginTime', displayName: '上次登录时间'},
                 {field: '', displayName: '操作', cellTemplate:
                 '<div class="ngCellText" ng-class="col.colIndex()"  ng-show="showedit">' +

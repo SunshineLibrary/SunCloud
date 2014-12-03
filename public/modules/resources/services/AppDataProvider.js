@@ -54,7 +54,7 @@ angular.module('resources')
         var getAppsBySchool = function (schoolId) {
             var defered = $q.defer();
             var appsPromise = defered.promise;
-            var query = {$or: [{create_by: 'root'}, {$and: [{create_by: 'admin'},{school: schoolId}]}]};
+            var query = {$or: [{create_by: 'root'}, {$and: [{shared: true},{school: schoolId}]}]};
             //$or=[{\"create_by\":\"root\"},{\"$and\",[{\"create_by\":\"admin\"},{\"school\":\"schoolId\"}]}]
             $http({
                 method: "GET",
@@ -70,31 +70,31 @@ angular.module('resources')
             return appsPromise;
         };
 
-        var getAppsByTeacher = function (teacherId, callBack) {
+        var getAppsByTeacher = function (teacherId, schoolId) {
             var defered = $q.defer();
             var appsPromise = defered.promise;
+            var query = {$or: [{create_by: 'root'},{$and: [{create_by: 'teacher', teacher: teacherId},{}]}, {$and: [{shared: true},{school: schoolId}]}]};
             $http({
                 method: "GET",
-                url: "/apps?$or=[{create_by=root},{create_by=admin},{$and=[{create_by=teacher},{teacher=teacherId}]}]"
+                url: "/apps",
+                qs: { query: encodeURIComponent(JSON.stringify(query))}
+                //url: "/apps?$or=[{create_by=root},{create_by=admin},{$and=[{create_by=teacher},{teacher=teacherId}]}]"
             }).success(function (apps) {
-                callBack(apps);
                 defered.resolve(apps);
             }).error(function (err) {
-                console.error(err)
+                console.error(err);
+                defered.reject(err);
             });
             return appsPromise;
         };
 
-        var getAppsByRooms = function (rooms, callBack) {
+        var getAppsByRooms = function (rooms) {
             var defered = $q.defer();
             var appsPromise = defered.promise;
             $http({
                 method: "GET",
                 url: "/apps?rooms=" + rooms
             }).success(function(apps) {
-                if(callBack){
-                    callBack(apps);
-                }
                 defered.resolve(apps);
             }).error(function(err){
                 console.error(err);
@@ -115,6 +115,7 @@ angular.module('resources')
                 appData.school = user.school;
             }else {
                 appData.create_by = 'teacher';
+                appData.school = user.school;
                 appData.teacher = user._id;
             }
             return $http({
@@ -161,6 +162,21 @@ angular.module('resources')
             })
         };
 
+        var deleteApk = function(app, apkId) {
+            var apks = _.filter(app.apks, function(apk) {
+                return apk._id !== apkId;
+            });
+            console.log(apks);
+            var packageName = (apks.length === 0) ? null: app.package;
+          return $http({
+              method: "PUT",
+              url: "/apps/" + app._id,
+              data: {
+                  apks: apks,
+                  package: packageName
+              }
+          })
+        };
         var editAppName = function(appId, newName) {
             $http({
                 method: "PUT",
@@ -184,6 +200,7 @@ angular.module('resources')
             updateApp: updateApp,
             deleteApp: deleteApp,
             addAppToRooms: addAppToRooms,
-            deleteAppFromRooms: deleteAppFromRooms
+            deleteAppFromRooms: deleteAppFromRooms,
+            deleteApk: deleteApk
         };
     }]);

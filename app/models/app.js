@@ -15,17 +15,26 @@ var AppSchema = new Schema({
         unique: true,
         required: true
     },
-    versionCode: Number,
-    versionName: String,
-    created_at: Date,
-    deleted_at: Date,
-    file_content_type: String,
-    file_file_name: String,
-    file_file_size: Number,
-    file_updated_at: Date,
-    package: String,
+    //versionCode: Number,
+    //versionName: String,
     file_path: String,
-    file_name: String,
+    package: String,
+    apks: [{
+        versionCode: Number,
+        versionName: String,
+        package: String,
+        fileName: String,
+        size: Number,
+        id: Number,
+        created_at: Date
+    }],
+    //created_at: Date,
+    //deleted_at: Date,
+    //file_content_type: String,
+    //file_file_name: String,
+    //file_file_size: Number,
+    //file_updated_at: Date,
+    //file_name: String,
     status: {
         type: String,
         enum: ['release', 'test']
@@ -41,13 +50,6 @@ var AppSchema = new Schema({
     url: {
         type: String
     },
-    apks: [{
-        versionCode: Number,
-        versionName: String,
-        package: String,
-        fileName: String,
-        size: Number
-    }],
     disableNetwork: {
         type: Boolean
 

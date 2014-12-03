@@ -12,25 +12,36 @@ angular.module('manage').config(['$stateProvider',
                 templateUrl: __templates + 'manageNav.html'
             }).
             state('myDevice', {
-                //url: '/manage',
+                url: '/mydevice',
                 parent: 'deviceManage',
                 controller: 'myDeviceController',
                 templateUrl: __templates + 'myDevice.html'
             }).
             state('appsManage', {
-                //url: '/manage',
+                url: '/apps',
                 parent: 'deviceManage',
                 controller: 'appsManageController',
-                templateUrl: __templates + 'appsManage.html'
+                templateUrl: __templates + 'appsManage.html',
+                resolve: {
+                    apps: ['AppDataProvider', 'AuthService',
+                        function(AppDataProvider, AuthService) {
+                            return AppDataProvider.getAppsByTeacher(AuthService.me._id,AuthService.me.school);
+                        }],
+                    myRooms: ['RoomDataProvider', 'AuthService',
+                        function(RoomDataProvider, AuthService) {
+                            return RoomDataProvider.getRoomsByTeacher(AuthService.me._id)
+                        }
+                    ]
+                }
             }).
             state('lockView', {
-                //url: '/manage',
+                url: '/lockview',
                 parent: 'deviceManage',
                 controller: 'lockViewController',
                 templateUrl: __templates + 'lockView.html'
             }).
             state('mySetting', {
-                //url: '/manage',
+                url: '/setting',
                 parent: 'deviceManage',
                 controller: 'mySettingController',
                 templateUrl: __templates + 'mySetting.html'
