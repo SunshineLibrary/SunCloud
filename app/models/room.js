@@ -49,13 +49,23 @@ var RoomSchema = new Schema({
                 index: true
             }
         ],
-        newStudents: [
+        apps: [
             {
-                type: Schema.Types.ObjectId,
-                ref: 'User',
-                index: true
+            type: Schema.Types.ObjectId,
+            ref: 'App'
             }
-        ]
+        ],
+        installation: [{
+            app: {
+                type: Schema.Types.ObjectId,
+                ref: 'App'
+            },
+            version: Number,
+            student: {
+                type: Schema.Types.ObjectId,
+                ref: 'User'
+            }
+        }]
     }
 );
 

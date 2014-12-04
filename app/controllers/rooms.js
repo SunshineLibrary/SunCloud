@@ -5,8 +5,9 @@
  */
 var mongoose = require('mongoose'),
     errorHandler = require('./errors'),
-    Room = mongoose.model('Room'),
-    _ = require('lodash');
+    Q = require('q'),
+    _ = require('underscore'),
+    Room = mongoose.model('Room');
 
 exports.getMyClasses = function(req, res){
     console.log('The teacher is: ' + req.query.teacher);
@@ -20,12 +21,7 @@ exports.getMyClasses = function(req, res){
             return res.status(200).send(rooms)
         }
     })
-
-
 };
-
-var mongoose = require('mongoose');
-var Room = mongoose.model('Room');
 
 exports.getRoomById = function (req, res, next, roomId) {
     Room.findOne(
@@ -65,5 +61,74 @@ exports.getCountBySchool = function (req, res) {
     }, function (err, result) {
         if (err) return res.json(500, err);
         return res.json(result);
+    })
+};
+
+var assignAppToRoom = function(appId, roomId) {
+    var deferred = Q.defer();
+    Room.findById(roomId, function(err, room) {
+        if(err) {
+            deferred.reject(err);
+        }else {
+            if(room.apps.indexOf(appId) === -1) {
+                room.apps.push(appId);
+                room.save(function(err) {
+                    if(err) {
+                        deferred.reject(err);
+                    }else {
+                        deferred.resolve(room);
+                    }
+                })
+            }
+            deferred.resolve(room);
+        }
+    });
+    return deferred.promise;
+};
+
+var removeAppFromRoom = function(appId, roomId) {
+    var deferred = Q.defer();
+    Room.findById(roomId, function(err, room) {
+        if(err) {
+            deferred.reject(err);
+        }else {
+            var index = room.apps.indexOf(appId);
+            if(index > -1) {
+                room.apps.splice(index, 1);
+                room.save(function(err) {
+                    if(err) {
+                        deferred.reject(err);
+                    }else {
+                        deferred.resolve(room);
+                    }
+                })
+            }
+            deferred.resolve(room);
+        }
+    });
+    return deferred.promise;
+};
+
+exports.assignApp = function(req, res) {
+    //console.log(req.body.assignments);
+    //console.log(req.body.appId);
+    var assignments = req.body.assignments;
+    var appId = req.body.appId;
+    var promises = [];
+    _.each(assignments, function(assignment) {
+        if(assignment.assigned) {
+            promises.push(assignAppToRoom(appId, assignment.roomId));
+        }else {
+            promises.push(removeAppFromRoom(appId, assignment.roomId));
+        }
+    });
+
+    console.log(promises);
+    Q.all(promises).then(function(data) {
+        console.log(data);
+        res.status(200).send(data);
+    }, function(err) {
+        console.error(err);
+        res.status(500).send({message: ""})
     })
 };

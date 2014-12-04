@@ -28,13 +28,6 @@ var AppSchema = new Schema({
         id: Number,
         created_at: Date
     }],
-    //created_at: Date,
-    //deleted_at: Date,
-    //file_content_type: String,
-    //file_file_name: String,
-    //file_file_size: Number,
-    //file_updated_at: Date,
-    //file_name: String,
     status: {
         type: String,
         enum: ['release', 'test']
@@ -78,6 +71,13 @@ var AppSchema = new Schema({
         type: Boolean,
         default: true
     }
+    //created_at: Date,
+    //deleted_at: Date,
+    //file_content_type: String,
+    //file_file_name: String,
+    //file_file_size: Number,
+    //file_updated_at: Date,
+    //file_name: String,
 });
 
 mongoose.model('App', AppSchema);

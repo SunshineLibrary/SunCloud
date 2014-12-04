@@ -57,6 +57,11 @@ angular.module('resources').config(['$stateProvider',
                         function(AppDataProvider, $stateParams) {
                             return AppDataProvider.getApp($stateParams.appId)
                         }
+                    ],
+                    myRooms: ['RoomDataProvider', 'AuthService',
+                        function(RoomDataProvider, AuthService) {
+                            return RoomDataProvider.getMyRooms(AuthService.me)
+                        }
                     ]
                 }
             }).

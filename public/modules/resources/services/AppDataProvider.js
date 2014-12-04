@@ -88,14 +88,14 @@ angular.module('resources')
             return appsPromise;
         };
 
-        var getAppsByRooms = function (rooms) {
+        var getAppsByRoom = function (roomId) {
             var defered = $q.defer();
             var appsPromise = defered.promise;
             $http({
                 method: "GET",
-                url: "/apps?rooms=" + rooms
-            }).success(function(apps) {
-                defered.resolve(apps);
+                url: "/rooms/" + roomId + "?populate=apps"
+            }).success(function(room) {
+                defered.resolve(room.apps);
             }).error(function(err){
                 console.error(err);
                 defered.reject(err);
@@ -140,16 +140,37 @@ angular.module('resources')
             })
         };
 
-        var addAppToRooms = function(app, rooms) {
-            //var roomTemp = _.uniq(app.rooms.concat(rooms));
+        var addAppToRooms = function(appId, assignment) {
             return $http({
                 method: "PUT",
-                url: "/apps/" + app._id,
+                url: "/assign/apps",
                 data: {
-                    rooms: rooms
+                    assignments: assignment,
+                    appId: appId
                 }
             })
         };
+
+        var addAppToRoom = function(appId, roomId) {
+            return $http({
+                method: "PUT",
+                url: "/rooms/" + roomId,
+                data: {
+                    $push: {apps: appId}
+                }
+            })
+        };
+
+        var removeAppFromRoom = function(appId, roomId) {
+            return $http({
+                method: "PUT",
+                url: "/rooms/" + roomId,
+                data: {
+                    $pull: {apps: appId}
+                }
+            })
+        };
+
 
         var deleteAppFromRooms = function(app, rooms) {
             var roomTemp = _.difference(app.rooms, rooms);
@@ -195,11 +216,13 @@ angular.module('resources')
             getAllRootApps: getAllRootApps,
             getAppsBySchool: getAppsBySchool,
             getAppsByTeacher: getAppsByTeacher,
-            getAppsByRooms: getAppsByRooms,
+            getAppsByRoom: getAppsByRoom,
             createApp: createApp,
             updateApp: updateApp,
             deleteApp: deleteApp,
             addAppToRooms: addAppToRooms,
+            addAppToRoom: addAppToRoom,
+            removeAppFromRoom: removeAppFromRoom,
             deleteAppFromRooms: deleteAppFromRooms,
             deleteApk: deleteApk
         };

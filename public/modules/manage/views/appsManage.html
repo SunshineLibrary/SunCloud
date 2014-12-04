@@ -29,26 +29,38 @@
         </div>
         <div class="col-sm-9 col-md-9 col-lg-9">
             <h3 align="center">{{selectedRoom.name}}的应用程序</h3>
-            <table>
-                <caption>已经推送的应用程序</caption>
-                <th>应用程序名称</th>
-                <th>下载情况</th>
-                <th>操作</th>
+            <!--<div class="list-group">-->
+                <!--<a href="" class="list-group-item" ng-repeat="app in appsOfRoom">-->
+                    <!--<span>-->
+                        <!--{{app.name}} <a href="" role="button" class="glyphicon glyphicon-minus-sign  text-danger" ng-click=""></a>-->
+                    <!--</span>-->
+                <!--</a>-->
+            <!--</div>-->
+            <!--<ul class="list-group">-->
+                <!--<li class="list-group-item" ng-repeat="app in appsOfRoom">-->
+                    <!--{{app.name}}-->
+                <!--</li>-->
+            <!--</ul>-->
+            <table class="myapps assigned">
+                <caption><h5 align="center">已经推送的应用程序</h5></caption>
+                <!--<th>应用程序名称</th>-->
+                <!--<th>安装情况</th>-->
+                <!--<th>操作</th>-->
                 <tr ng-repeat="app in appsOfRoom">
-                    <td>{{app.name}}</td>
-                    <td>{{app.package}}</td>
-                    <td>删除</td>
+                    <td><a href="" ng-click="goToApp(app._id)">{{app.name}}</a></td>
+                    <td></td>
+                    <td><div><a href="" role="button" class="glyphicon glyphicon-minus-sign  text-danger" ng-click="removeAppFromRoom(app)"></a></div></td>
                 </tr>
             </table>
-            <table>
-                <caption>候选应用</caption>
-                <th>应用程序名称</th>
-                <th>下载情况</th>
-                <th>操作</th>
+            <table class="myapps not-assigned">
+                <caption><h5 align="center">候选应用</h5></caption>
+                <!--<th>应用程序名称</th>-->
+                <!--<th>下载情况</th>-->
+                <!--<th>操作</th>-->
                 <tr ng-repeat="app in otherApps">
-                    <td>{{app.name}}</td>
-                    <td>{{app.package}}</td>
-                    <td>删除</td>
+                    <td><a href="" ng-click="goToApp(app._id)">{{app.name}}</a></td>
+                    <td></td>
+                    <td><div><a href="" role="button" class="glyphicon glyphicon-plus-sign  text-success" ng-click="addAppToRoom(app)"></a></div></td>
                 </tr>
             </table>
             <!--<div class="table">-->

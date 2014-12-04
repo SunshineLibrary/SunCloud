@@ -138,24 +138,31 @@ exports.getUpdate = function(req, res) {
 };
 
 exports.downloadApk = function(req, res) {
-
+    var access_token = req.query.access_token;
     var apkId = parseInt(req.param('apkId'));
-    console.log('downloading....' + apkId);
     App.findOne({'apks.id': apkId}, function(err, app) {
        if(err) {
            console.error(err);
            res.status(500).send({message: "数据库错误，请重试"});
        } else {
-           //console.log(app);
-           //console.log(app.apks);
            var apk = _.findWhere(app.apks, {id: apkId});
+           console.log('downloading....' + app.name);
            res.download(file_path+apk.fileName, function(err){
                if(err) {
                    console.error(err);
-                   //res.status(500).send({message: "下载失败，请重试"});
                }else {
-                   //res.status(200).send({message: "下载成功"});
-
+                   //Record.findOne({access_token: access_token}, function(err, record) {
+                   //    if(err) {
+                   //        console.error(err);
+                   //    }else {
+                   //        apk.downloadedStudents.push(record.userId);
+                   //        app.save(function(err) {
+                   //            if(err) {
+                   //                console.error(err);
+                   //            }
+                   //        })
+                   //    }
+                   //});
                }
            });
            //console.log(apk);

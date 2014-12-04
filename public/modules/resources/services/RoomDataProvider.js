@@ -10,7 +10,8 @@ angular.module('schoolManage')
                     "school": info.school,
                     "type": 'admin',
                     "students": [],
-                    "teachers": []
+                    "teachers": [],
+                    "apps": []
                 }
             })
         };
@@ -24,7 +25,8 @@ angular.module('schoolManage')
                     "school": info.school,
                     "type": 'teaching',
                     "students": [],
-                    "teachers": [info.me]
+                    "teachers": [info.me],
+                    "apps": []
                 }
             })
         };
@@ -156,6 +158,30 @@ angular.module('schoolManage')
             return thePromise;
         };
 
+        var getMyRooms = function(me) {
+            var defered = $q.defer();
+            //var myRooms = [];
+            var query;
+            if(me.roles.indexOf('teacher') > -1 && me.roles.indexOf('admin') > -1  ) {
+                query = {$or: [{school: me.school}, {$and: [{type: 'teaching'},{teachers: me._id}]}]};
+
+            }else if(me.roles.indexOf('admin') > -1) {
+                query = {school: me._id, type: 'admin'}
+            }else {
+                query = {teachers: me._id}
+            }
+            $http({
+                method: "GET",
+                url: "/rooms/",
+                qs: { query: encodeURIComponent(JSON.stringify(query))}
+            }).success(function(rooms) {
+                defered.resolve(rooms);
+            }).error(function(err) {
+                defered.reject(err);
+            });
+            return defered.promise;
+        };
+
 
         var getRoomsByStudent = function (studentId) {
             var defered = $q.defer();
@@ -280,5 +306,6 @@ angular.module('schoolManage')
             removeTeacherFromRoom: removeTeacherFromRoom,
             addStudentsToRoom: addStudentsToRoom,
             addTeachersToRoom: addTeachersToRoom,
+            getMyRooms: getMyRooms
         };
     }]);

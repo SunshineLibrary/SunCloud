@@ -13,3 +13,31 @@
     padding: 0 !important;
     margin: 0 !important;
 }
+
+.myapps {
+    width: 100%;
+}
+
+.myapps th td {
+    /*background-color: green;*/
+    /*color: white;*/
+    font-family: "Times New Roman", Times, serif;
+    font-size: xx-large;
+}
+
+/*.assigned-apps td {*/
+    /*background-color: limegreen;*/
+    /*color: white;*/
+/*}*/
+
+.myapps tr {
+    border-bottom: 1px solid black;
+    border-top: 1px solid black;
+    border-collapse: collapse;
+    line-height: 40px;
+}
+
+
+.not-assigned-apps {
+    width: 100%
+}

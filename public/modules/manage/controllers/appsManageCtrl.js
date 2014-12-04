@@ -7,44 +7,31 @@ angular.module('manage')
             $scope.temp = {};
             $scope.seletedApp = [];
             $scope.selectedRoom = $scope.myRooms[0];
+            $scope.myRooms[0].isActive = true;
             $scope.newAppName = '';
             $scope.filterOptions = {filterText: ''};
             var me = AuthService.me;
 
-            AppDataProvider.getAppsByRooms($scope.selectedRoom._id).then(function(appsOfTheRoom) {
+            AppDataProvider.getAppsByRoom($scope.selectedRoom._id).then(function(appsOfTheRoom) {
+                console.log(appsOfTheRoom);
                 $scope.appsOfRoom =  appsOfTheRoom;
                 $scope.otherApps = _.filter($scope.apps, function(app){
                     return !_.findWhere($scope.appsOfRoom, {_id: app._id})
                 })
             });
 
-            //getAppsOfRoom($scope.selectedRoom._id).then(function(apps) {
-            //    $scope.appsOfRoom = apps;
-            //});
-
-
-
             $scope.selectOneRoom = function(selectedRoom) {
                 $scope.selectedRoom  = selectedRoom;
-                AppDataProvider.getAppsByRooms($scope.selectedRoom._id).then(function(apps) {
-                    $scope.appsOfRoom =  apps;
+                AppDataProvider.getAppsByRoom($scope.selectedRoom._id).then(function(appsOfTheRoom) {
+                    $scope.appsOfRoom =  appsOfTheRoom;
+                    $scope.otherApps = _.filter($scope.apps, function(app){
+                        return !_.findWhere($scope.appsOfRoom, {_id: app._id})
+                    })
                 });
-
-
                 _.each($scope.myRooms, function(item) {
                     item.isActive = selectedRoom._id === item._id ;
                 });
             };
-
-
-
-
-
-
-
-
-
-
 
 
             $scope.createApp = function() {
@@ -69,6 +56,29 @@ angular.module('manage')
                         $scope.temp.error = 'failure';
                         console.error(err);
                     })
+            };
+
+            $scope.goToApp = function(appId) {
+                $location.path('/apps/' + appId);
+            };
+            $scope.addAppToRoom = function(app) {
+                AppDataProvider.addAppToRoom(app._id, $scope.selectedRoom._id)
+                    .success(function() {
+                        $scope.appsOfRoom.push(app);
+                        $scope.otherApps = _.reject($scope.otherApps, function(theApp) {
+                            return theApp._id === app._id;
+                        })
+                    })
+            };
+
+            $scope.removeAppFromRoom = function(app) {
+                AppDataProvider.removeAppFromRoom(app._id, $scope.selectedRoom._id)
+                    .success(function() {
+                        $scope.appsOfRoom = _.reject($scope.appsOfRoom, function(theApp) {
+                            return theApp._id === app._id});
+                        $scope.otherApps.push(app);
+                    })
+
             };
 
             $scope.gridOptions =
@@ -98,7 +108,6 @@ angular.module('manage')
                 event.stopPropagation();
                 swal({
                         title: "您确定要删除此应用程序吗?",
-                        //text: "",
                         type: "warning",
                         showCancelButton: true,
                         cancelButtonText: "取消",
