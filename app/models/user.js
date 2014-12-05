@@ -49,10 +49,6 @@ var UserSchema = new Schema({
 	salt: {
 		type: String
 	},
-	userType:{
-		type: String,
-		default: 'student'
-	},
 	provider: {
 		type: String,
 		default: 'local'
@@ -101,17 +97,7 @@ var UserSchema = new Schema({
 		type: String,
 		trim: true,
 		match: [/^\d{7,}$/, '电话号码格式不正确']
-	},
-	xiaoshuHistory:[{
-		tablet: {
-			type: Schema.Types.ObjectId,
-			ref: 'Tablet'
-		},
-		logoutTime: {
-			type: Date
-		}
-	}]
-
+	}
 });
 
 
@@ -128,7 +114,6 @@ UserSchema.virtual('profile').get(function () {
 		'school': this.school,
 		'gender': this.gender,
 		'grade': this.grade,
-		'userType': this.userType,
 		'roles': this.roles
 	};
 });
@@ -142,7 +127,6 @@ UserSchema.pre('save', function(next) {
 		this.salt = new Buffer(crypto.randomBytes(16).toString('base64'), 'base64');
 		this.password = this.hashPassword(this.password);
 	}
-
 	next();
 });
 

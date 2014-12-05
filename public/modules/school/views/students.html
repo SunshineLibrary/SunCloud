@@ -1,18 +1,17 @@
 <div class="container-fluid">
-    <h4 class="tableTitle pull-left">所有学生  &nbsp;&nbsp;</h4>
-    <div class=" pull-right" style="margin-top:10px">
-        <a role="button" class="btn btn-primary btn-warning" href="#createStudentDialog" data-toggle="modal"><i class="glyphicon glyphicon-plus"></i>创建学生</a>
-        <a role="button" class="btn btn-primary btn-warning" href="#createStudentBatchDialog" data-toggle="modal"><i class="glyphicon glyphicon-asterisk"></i>批量创建</a>
-    </div>
+    <!--<div class="jumbotron" style="margin-top:-40px">-->
+        <h4 class="tableTitle pull-left">所有学生  &nbsp;&nbsp;</h4>
+        <div class=" pull-right" style="margin-top:10px">
+            <a role="button" class="btn btn-primary btn-warning" href="#createStudentDialog" data-toggle="modal"><i class="glyphicon glyphicon-plus"></i>创建学生</a>
+            <a role="button" class="btn btn-primary btn-warning" href="#createStudentBatchDialog" data-toggle="modal"><i class="glyphicon glyphicon-asterisk"></i>批量创建</a>
+        </div>
 
-    <div class="inner-addon left-addon pull-left" style="margin-top:10px">
-        <i class="glyphicon glyphicon-search"></i>
-        <input type="search" class="form-control" style="width: 250px"  placeholder="搜索" ng-model="filterOptions.filterText"/>
-    </div>
-
-    <br>
-    <br>
-
+        <div class="inner-addon left-addon pull-left" style="margin-top:10px">
+            <i class="glyphicon glyphicon-search"></i>
+            <input type="search" class="form-control" style="width: 250px"  placeholder="搜索" ng-model="filterOptions.filterText"/>
+        </div>
+    <!--</div>-->
+    <br/><br/>
     <div class="table">
         <div class="gridStyle" ng-grid="gridOptions" ng-click="selectStudent()"></div>
     </div>

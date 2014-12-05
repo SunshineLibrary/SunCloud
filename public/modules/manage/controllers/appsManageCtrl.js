@@ -83,7 +83,7 @@ angular.module('manage')
 
             $scope.gridOptions =
             {
-                data: 'appsOfRoom',
+                data: 'apps',
                 multiSelect: false,
                 filterOptions: $scope.filterOptions,
                 rowTemplate: '<div  ng-mouseover="$parent.showedit=true" ng-mouseleave="$parent.showedit=false" ng-style="{\'cursor\': row.cursor, \'z-index\': col.zIndex() }" ' +

@@ -24,7 +24,6 @@ exports.update = function(req, res) {
 		// Merge existing user
 		user = _.extend(user, req.body);
 		user.updated = Date.now();
-		user.displayName = user.firstName + ' ' + user.lastName;
 
 		user.save(function(err) {
 			if (err) {
@@ -43,7 +42,7 @@ exports.update = function(req, res) {
 		});
 	} else {
 		res.status(400).send({
-			message: '您还没有输入'
+			message: 'User is not signed in'
 		});
 	}
 };

@@ -6,10 +6,6 @@
 var passport = require('passport');
 var mongoose = require('mongoose');
 var restify = require('express-restify-mongoose');
-var multer = require('multer');
-
-//var multipartMiddleware = multipart({uploadDir: __dirname+ '/../../upload/tmp'});
-var busboyMiddleware = multer({dest: __dirname+ '/../../upload/tmp'});
 
 module.exports = function(app) {
 	// User Routes
@@ -18,8 +14,6 @@ module.exports = function(app) {
 	var schools = require('../../app/controllers/schools');
 	var userTablets = require('../../app/controllers/userTablets');
 	var apps = require('../../app/controllers/apps');
-
-
 
 	// Setting up the users profile api
 	app.route('/me').get(users.me);
@@ -47,12 +41,8 @@ module.exports = function(app) {
 	app.route('/usertablet/').get(userTablets.logout);
 	app.route('/usertablet/count').get(userTablets.countBySchool);
 
-	app.route('/upload/app/:appId').post(busboyMiddleware, apps.upload);
 
 	//app.post('/users', user.requiresLogin, users.create);
-
-
-
 
 	var userOptions = {
 		strict: true,
