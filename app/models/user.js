@@ -97,6 +97,14 @@ var UserSchema = new Schema({
 		type: String,
 		trim: true,
 		match: [/^\d{7,}$/, '电话号码格式不正确']
+	},
+	canCreateApp: {
+		type: Boolean,
+		default: false
+	},
+	canAssignApp: {
+		type: Boolean,
+		default: true
 	}
 });
 

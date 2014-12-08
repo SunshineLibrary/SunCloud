@@ -30,7 +30,6 @@ exports.requiresLogin = function(req, res, next) {
 			message: '请先登录'
 		});
 	}
-
 	next();
 };
 
@@ -122,7 +121,28 @@ exports.requiresAuth = function (auth, action) {//action也是可配置的
 	}
 };
 
-//针对“restify”给“特定的资源”配置相应的权限
+
+
+exports.restifyUser = function(req, res, next) {
+	var isLoggedin = (function () {
+		return req.user !== undefined;
+	})();
+
+	var is = function (role) {
+		return (req.user && req.user.roles && _.contains(req.user.roles, role));
+	};
+
+	if(is('root')) {
+		return next();
+	}
+	if(isLoggedin) {
+		if(req.method === 'GET') {
+			return next();
+		}
+	}else {
+		return res.send(401, "Unauthorized");
+	}
+};
 exports.restify = function (req, res, next) {
 	var users = '/users';
 	var schools = '/schools';

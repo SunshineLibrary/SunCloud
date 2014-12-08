@@ -63,10 +63,10 @@ var AppSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'Room'
     }],
-    teacher: [{
+    teacher: {
         type: Schema.Types.ObjectId,
         ref: 'User'
-    }],
+    },
     shared: {
         type: Boolean,
         default: true

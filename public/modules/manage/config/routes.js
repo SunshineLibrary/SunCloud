@@ -15,7 +15,13 @@ angular.module('manage').config(['$stateProvider',
                 url: '/mydevice',
                 parent: 'deviceManage',
                 controller: 'myDeviceController',
-                templateUrl: __templates + 'myDevice.html'
+                templateUrl: __templates + 'myDevice.html',
+                resolve: {
+                    myDevice: ['UserDataProvider', 'AuthService',
+                        function(UserDataProvider, AuthService) {
+                            return UserDataProvider.getTablet(AuthService.me._id);
+                        }]
+                }
             }).
             state('appsManage', {
                 url: '/apps',

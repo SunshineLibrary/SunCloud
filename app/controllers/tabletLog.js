@@ -40,7 +40,7 @@ var getAllowedApps = function(callback) {
  */
 var findRoom = function (userId, user_type, callback) {
     var obj = { type: 'admin'};
-    obj[ user_type ] = userId;
+    obj[ user_type + 's' ] = userId;
     Room.findOne(obj, callback);
 };
 

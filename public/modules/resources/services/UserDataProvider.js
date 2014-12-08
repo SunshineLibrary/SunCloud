@@ -6,12 +6,12 @@ angular.module('resources')
         function
             ($http, $q) {
 
-            var getTablet = function(studentId) {
+            var getTablet = function(userId) {
                 var defered = $q.defer();
                 var tabletPromise = defered.promise;
                 $http({
                     method: "GET",
-                    url: "/usertablets?userId=" + studentId + "&logout_at&populate=tabletId"
+                    url: "/usertablets?userId=" + userId + "&logout_at&populate=tabletId"
                 }).success(function(theTablet){
                     defered.resolve(theTablet);
                 }).error(function(err){

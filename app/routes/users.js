@@ -31,8 +31,6 @@ module.exports = function(app) {
 	app.route('/auth/signin').post(users.signin);
 	app.route('/auth/signout').get(users.signout);
 
-	// Finish by binding the user middleware
-	app.param('userId', users.userByID);
 
 
 	app.route('/rooms').post(users.restify, rooms.createRoom);
@@ -48,7 +46,7 @@ module.exports = function(app) {
 		strict: true,
 		prefix: '',
 		version: '',
-		//middleware: [users.restify],
+		middleware: [users.restifyUser],
 		findOneAndUpdate: false
 	};
 
@@ -118,9 +116,8 @@ module.exports = function(app) {
 	restify.serve(app, AppModel, appOptions);
 
 
-
-
-	app.param('userId', users.user);
+	// Finish by binding the user middleware
+	app.param('userId', users.userByID);
 	app.param('roomId', rooms.getRoomById);
 	app.param('schoolId', schools.getSchoolById);
 

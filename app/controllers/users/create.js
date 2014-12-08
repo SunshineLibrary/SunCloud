@@ -34,7 +34,7 @@ exports.create = function(req, res, next) {
             //{username: xxx, hashed_password:xxx, have_profile}
             var response = {
                 _id:user._id,
-                username: user.username,
+                username: user.username
             };
             //TODO: modify the usernmae mechanism
             if (user.email) {

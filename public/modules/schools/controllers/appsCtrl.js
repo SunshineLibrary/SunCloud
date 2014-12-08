@@ -47,7 +47,9 @@ angular.module('schools')
                 columnDefs: [
                     {field: '_id', visible: false},
                     {field: 'name', displayName: '应用程序名称'},// cellTemplate:'<div class="ngCellText" ng-class="col.colIndex()"><a href="/#/apps/{{row.entity._id}}">{{row.getProperty(col.field)}}</a></div>'},
-                    {field: 'package', displayName: '应用的包名'},
+                    {field: 'package', displayName: '应用的包名', cellTemplate:'<div class="ngCellText" ng-class="col.colIndex()" ng-show="row.entity.package">' +
+                    '{{row.getProperty(col.field)}}</div>' +
+                    '<div ng-hide="row.entity.package"><span class="label label-default">暂无</span></div>'},
                     {field: '', displayName: '操作',cellTemplate:
                     '<div class="ngCellText" ng-class="col.colIndex()" ng-show="showedit">' +
                     '<a class="glyphicon glyphicon-remove text-success" role="button" ng-click="deleteApp($event, row)"></a></div>'}

@@ -134,16 +134,19 @@ angular.module('resources')
 
             $scope.uploader = new FileUploader({
                 url: "/upload/app/" + $stateParams.appId,
-                queueLimit: 1,
-                removeAfterUpload: true
+                queueLimit: 1
             });
 
 
             $scope.uploader.onSuccessItem = function(item, response, status) {
                 $('#uploadApkDialog').modal('hide');
-                swal({title: " 上传成功",type: 'success', timer: 2000});
+                if(status === 201) {
+                    swal({title: " 上传成功",text: "您之前已上传过此版本的APK文件，新上传文件已覆盖之前文件",type: 'success', timer: 4000});
+                }else if(status === 200) {
+                    swal({title: " 上传成功",type: 'success', timer: 2000});
+                    $scope.app.apks.push(response);
+                }
                 $scope.uploader.clearQueue();
-                $scope.app.apks.push(response);
                 $scope.app.package = response.package;
             };
 
@@ -184,11 +187,11 @@ angular.module('resources')
                 multiSelect: false,
                 columnDefs: [
                     {field: '_id', visible: false},
-                    {field: 'id', displayName: 'ID', width: '20%'},
+                    {field: 'id', displayName: 'ID', width: '15%'},
                     {field: 'versionName', displayName: '版本名称', width: '10%'},
                     {field: 'versionCode', displayName: '版本号', width: '10%'},
                     {field: 'package', displayName: '内部包名'},
-                    {field: 'fileName', displayName: '安装包', cellTemplate:'<div class="ngCellText" ng-class="col.colIndex()"><a href="/download/apks/{{row.entity._id}}">{{row.getProperty(col.field)}}</a></div>'},
+                    {field: 'fileName', displayName: '安装包', cellTemplate:'<div class="ngCellText" ng-class="col.colIndex()"><a href="/download/apks/{{row.entity.id}}">{{row.getProperty(col.field)}}</a></div>'},
                     {field: 'size', displayName: '大小',width: '10%', cellTemplate: '<div>{{row.entity[col.field]/1024/1024 | number:2}} MB</div>'},
                     {field: '', displayName: '操作', width: '10%',cellTemplate:
                     '<div class="ngCellText" ng-class="col.colIndex()">' +

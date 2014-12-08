@@ -51,7 +51,7 @@ angular.module('schoolManage')
             var thePromise = defered.promise;
             $http({
                 method: "GET",
-                url: "/rooms/" + roomId + "?populate=teachers,students"
+                url: "/rooms/" + roomId + "?populate=teachers,students&select=teachers.name,teachers.username,students.name,students.username"
             }).success(function(room){
                 defered.resolve(room);
             }).error(function(err){
@@ -65,7 +65,7 @@ angular.module('schoolManage')
             var thePromise = defered.promise;
             $http({
                 method: "GET",
-                url: "/rooms/" + roomId + "?populate=students"
+                url: "/rooms/" + roomId + "?populate=students&select=students.username,students.name"
             }).success(function(room){
                 defered.resolve(room);
             }).error(function(err){
@@ -79,7 +79,7 @@ angular.module('schoolManage')
             var thePromise = defered.promise;
             $http({
                 method: "GET",
-                url: "/rooms?school=" + schoolId + "&populate=teachers"
+                url: "/rooms?school=" + schoolId + "&populate=teachers&select=teachers.username,teachers.name"
             }).success(function(rooms){
                 defered.resolve(rooms);
             }).error(function(err){
@@ -107,7 +107,7 @@ angular.module('schoolManage')
             var thePromise = defered.promise;
             $http({
                 method: "GET",
-                url: "/rooms?school=" + schoolId + "&type=admin&populate=students"
+                url: "/rooms?school=" + schoolId + "&type=admin&populate=students&select=students.username,students.name"
             }).success(function(rooms){
                 defered.resolve(rooms);
             }).error(function(err){
@@ -121,7 +121,7 @@ angular.module('schoolManage')
             var thePromise = defered.promise;
             $http({
                 method: "GET",
-                url: "/rooms?teachers=" + teacherId + "&populate=students"
+                url: "/rooms?teachers=" + teacherId
             }).success(function(rooms){
                 defered.resolve(rooms);
             }).error(function(err){
@@ -135,7 +135,7 @@ angular.module('schoolManage')
             var thePromise = defered.promise;
             $http({
                 method: "GET",
-                url: "/rooms?teachers=" + teacherId + "&populate=students"
+                url: "/rooms?teachers=" + teacherId + "&populate=students&select=students.username,students.name"
             }).success(function(rooms){
                 defered.resolve(rooms);
             }).error(function(err){
@@ -149,7 +149,7 @@ angular.module('schoolManage')
             var thePromise = defered.promise;
             $http({
                 method: "GET",
-                url: "/rooms?teachers=" + teacherId + "&type=teaching&populate=students"
+                url: "/rooms?teachers=" + teacherId + "&type=teaching&populate=students&select=students.username,students.name"
             }).success(function(rooms){
                 defered.resolve(rooms);
             }).error(function(err){

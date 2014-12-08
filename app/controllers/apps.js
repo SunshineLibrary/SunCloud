@@ -30,7 +30,6 @@ exports.upload = function(req, res, next) {
         versionName: manifest.versionName,
         package: manifest.package,
         size: file.size,
-        id: parseInt(new Date().getTime() /1000) ,
         created_at: Date.now()
 };
 
@@ -50,19 +49,25 @@ exports.upload = function(req, res, next) {
                    fs.renameSync(file.path, file_path + new_fileName);
 
                    newApk.fileName = new_fileName;
-                   app.apks = _.filter(app.apks, function(apk) {
-                       return apk.fileName !== newApk.fileName;
-                   });
+                   var successCode = 200;
+                   if(_.findWhere(app.apks, {versionCode: newApk.versionCode})) {
+                       successCode = 201;
+                       app.apks = _.filter(app.apks, function(apk) {
+                           return apk.versionCode !== newApk.versionCode;
+                       });
+                   }
+                   newApk.id = parseInt(new Date().getTime() /1000);
                    app.apks = app.apks.concat(newApk);
+                   console.log('hello');
+                   console.log(app.apks);
                    app.package = newApk.package;
                    app.file_path = file_path;
-                   //app.file_name =max.fileName;
                    app.save(function(err){
                        if(err) {
                            console.error(err);
                            res.status(500).send({message: '数据库错误，请重试'});
                        }else{
-                           res.status(200).send(newApk);
+                           res.status(successCode).send(newApk);
                        }
                    });
                }

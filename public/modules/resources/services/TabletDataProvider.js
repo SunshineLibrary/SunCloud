@@ -47,7 +47,7 @@ angular.module('schoolManage')
         var getTabletUser = function(tabletId) {
             return $http({
                 method: "GET",
-                url: "/usertablets?tabletId="+tabletId+"&logout_at&populate=userId"
+                url: "/usertablets?tabletId="+tabletId+"&logout_at&populate=userId&select=userId.name,userId.username"
             })
         };
 

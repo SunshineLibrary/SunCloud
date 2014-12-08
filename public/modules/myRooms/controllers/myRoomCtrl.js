@@ -337,18 +337,18 @@ angular.module('myRooms').controller('myRoomController',
                 })
 
         };
+
         $scope.showEditStudentDialog = function(row) {
             $('#editStudentDialog').modal('show');
             $scope.row = row;
-            $scope.student.newName = row.entity.name;
-            $scope.student.newUsername = row.entity.username;
+            $scope.temp.newName = row.entity.name;
+            $scope.temp.newUsername = row.entity.username;
         };
-
         $scope.editStudent = function(row) {
             var info = {};
             info._id = row.entity._id;
-            info.name = $scope.student.newName;
-            info.username = $scope.student.newUsername;
+            info.name = $scope.temp.newName;
+            info.username = $scope.temp.newUsername;
             StudentDataProvider.editStudent(info)
                 .success(function(editedStudent) {
                     $scope.row.entity.name = editedStudent.name;
@@ -358,10 +358,11 @@ angular.module('myRooms').controller('myRoomController',
                 })
                 .error(function(err) {
                     console.error(err);
-                    $scope.editStudentError = true;
+                    $scope.error = true;
                     swal({title: "修改失败", text: "请重试", type: "error", timer: 2000 });
                 })
         };
+
 
         var addStudentsToRoom = function() {
             console.log(waitingList);

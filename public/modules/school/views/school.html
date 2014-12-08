@@ -1,24 +1,7 @@
 <div>
 
-    <div class="school-header">
-
-        <div class="navbar-header">
-
-            <!--<h4><span ng-if="!isEditingSchoolName">{{school.name}}</span>-->
-                <!--<button id="school-btn-edit" class="btn btn-primary navbar-btn" ng-if="!isEditingSchoolName" ng-click="startEditSchool()"><span class="glyphicon glyphicon-edit"></span> 编辑</button>-->
-
-
-
-            <!--<form id="school-edit-form" class="navbar-form" ng-if="isEditingSchoolName">-->
-                <!--<div class="form-group">-->
-                    <!--<input type="text" class="form-control"  ng-model="schoolNewName">-->
-                <!--</div>-->
-                <!--<button class="btn btn-primary" ng-click="editSchool()">确定</button>-->
-                <!--<button id="school-edit-btn-cancel" class="btn btn-inverse" ng-click="cancelEdit()">取消</button>-->
-            <!--</form>-->
-            <!--</h4>-->
-
-             <span ng-hide="editorEnabled">
+    <div class="well well-lg">
+        <span ng-hide="editorEnabled">
         <span class="h3">{{school.name}}
             <a href="" ng-click="enableEditor()" class="glyphicon glyphicon-edit"></a>
         </span>
@@ -29,16 +12,7 @@
             <a role="button" ng-click="save()" class="btn btn-primary btn-info glyphicon glyphicon-ok" >保存</a>
             <a role="button" ng-click="disableEditor()" class="btn btn-primary btn-warning glyphicon glyphicon-remove" >取消</a>
         </form>
-
-
-        </div>
     </div>
-
-
-    <!--<p>学生数: {{studentCount}}</p>-->
-    <!--<p>老师数: {{teacherCount}}</p>-->
-    <!--<p>登录晓书的人数: {{xiaoshuLogCount}}</p>-->
-    <!--<p>班级数: {{roomCount}}</p>-->
 
     <table class="school-overview" align="left">
         <caption style="text-align:center"> 概况</caption>
@@ -70,39 +44,4 @@
         </tr>
 
     </table>
-
-
-    <!--table#overview-->
-    <!--caption-->
-    <!--strong Overview-->
-    <!--colgroup-->
-    <!--col(span = "1" style = "background-color:#48cfad ; width:40% " )-->
-    <!--colgroup-->
-    <!--col(span = "1" style = "background-color:#F5FFFA ; width:60% " )-->
-    <!--tr-->
-    <!--td#hd Carriculum-->
-    <!--td#dd #{allData.carriculum}-->
-    <!--tr-->
-    <!--td#hd Date-->
-    <!--td#dd #{allData.date}-->
-    <!--tr-->
-    <!--td#hd School-->
-    <!--td#dd #{allData.school}-->
-    <!--tr-->
-    <!--td#hd Description-->
-    <!--td#dd #{allData.description}-->
-    <!--tr-->
-    <!--td#hd Number of Students-->
-    <!--td#dd  #{allData.studentNum}-->
-    <!--tr-->
-    <!--td#hd Number of Problems-->
-    <!--td#dd  #{allData.problemNum}-->
-    <!--tr-->
-    <!--td#hd Average Student Hours-->
-    <!--td#dd #{allData.averageStudentHours}-->
-    <!--tr-->
-    <!--td#hd Total Student Hours-->
-    <!--td#dd #{allData.totalStudentHours}-->
-
-
 </div>

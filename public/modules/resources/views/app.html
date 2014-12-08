@@ -1,9 +1,8 @@
 <div>
     <div class="well well-sm" style="margin-top:20px">
         <span ng-hide="editorEnabled">
-        <span class="h3">{{app.name}}
+            <span class="h3">{{app.name}}</span>
             <a href="" ng-click="enableEditor()" class="glyphicon glyphicon-edit"></a>
-        </span>
         </span>
 
         <span ng-show="editorEnabled" class="form-inline">
@@ -13,9 +12,8 @@
         </span>
 
         <span ng-hide="editor2Enabled">
-        <span class="h3">{{item.name}}
+            <span class="h3">{{item.name}}</span>
             <a href="" ng-click="editor2Enabled=!editor2Enabled" class="glyphicon glyphicon-edit"></a>
-        </span>
         </span>
 
         <span ng-show="editor2Enabled">
@@ -35,7 +33,7 @@
                  <!--<script>document.write("<a href='/#/rooms/'" +">"+"{{room.name}}"+"</a>")</script>-->
             </span>
             <span  ng-hide="myRoomsAssigned.length">
-                <i class="badge">暂无</i>
+                <span class="label label-default">暂无</span>
             </span>
         </h5>
     </div>
@@ -161,7 +159,7 @@
                     <div>
                         上传进度:
                         <div class="progress" style="">
-                            <div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" ng-style="{ 'width': uploader.progress + '%' }"></div>
+                            <div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" ng-style="{ 'width': uploader.queue[0].progress + '%' }"></div>
                         </div>
                     </div>
                     </div>
@@ -169,7 +167,7 @@
                         <button type="button" class="btn btn-warning btn-s" data-dismiss="modal">
                             <span class="glyphicon glyphicon-remove-circle"></span> 关闭
                         </button>
-                        <button type="button" class="btn btn-success btn-s" ng-click="uploader.uploadAll()" ng-disabled="!uploader.getNotUploadedItems().length">
+                        <button type="button" class="btn btn-success btn-s" ng-click="uploader.queue[0].upload()" ng-disabled="!uploader.getNotUploadedItems().length">
                             <span class="glyphicon glyphicon-upload"></span> 上传
                         </button>
                     </div>
