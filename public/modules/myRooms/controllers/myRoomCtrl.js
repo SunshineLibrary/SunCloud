@@ -3,6 +3,7 @@
 angular.module('myRooms').controller('myRoomController',
     ['theRoom', '$scope', '$rootScope','$stateParams', '$location', 'Authentication','RoomDataProvider', 'StudentDataProvider', 'UserDataProvider', 'TabletDataProvider','AuthService', '$state',
     function(theRoom, $scope, $rootScope, $stateParams, $location, Authentication, RoomDataProvider, StudentDataProvider,UserDataProvider, TabletDataProvider,AuthService, $state) {
+        console.log(theRoom);
         $scope.authentication = Authentication;
         $scope.theRoom = theRoom;
         $scope.editorEnabled = false;

@@ -6,6 +6,7 @@
 var passport = require('passport');
 var mongoose = require('mongoose');
 var restify = require('express-restify-mongoose');
+var multer = require('multer');
 
 module.exports = function(app) {
 	// User Routes
@@ -14,6 +15,9 @@ module.exports = function(app) {
 	var schools = require('../../app/controllers/schools');
 	var userTablets = require('../../app/controllers/userTablets');
 	var apps = require('../../app/controllers/apps');
+	var tabletLog = require('../../app/controllers/tabletLog');
+
+	var multerMiddleware = multer({dest: __dirname+ '/../../upload/tmp'});
 
 	// Setting up the users profile api
 	app.route('/me').get(users.me);
@@ -32,13 +36,23 @@ module.exports = function(app) {
 	app.route('/auth/signout').get(users.signout);
 
 
+	app.route('/rooms').post(users.restifyRoom, rooms.createRoom);
+	app.route('/rooms/:id').delete(users.restifyRoom, rooms.removeRoom);
+	app.route('/assign/apps').put(rooms.assignApp);
 
-	app.route('/rooms').post(users.restify, rooms.createRoom);
-	app.route('/rooms/:roomId').delete(users.restify, rooms.removeRoom);
 
 	app.route('/usertablet/').get(userTablets.logout);
 	app.route('/usertablet/count').get(userTablets.countBySchool);
 
+	//apk upload and download
+	app.route('/upload/app/:appId').post(multerMiddleware, apps.upload);
+	app.route('/download/apks/:apkId').get(apps.downloadApk);
+	app.route('/apks/get_updates').post(apps.getUpdate);
+
+	// xiaoshu login
+	app.route('/schools/get_all.json').get(tabletLog.getSchool);
+	app.route('/machines/sign_in.json').post(tabletLog.tabletLogin);
+	app.route('/machines/check_token').get(tabletLog.checkToken);
 
 	//app.post('/users', user.requiresLogin, users.create);
 
@@ -47,7 +61,11 @@ module.exports = function(app) {
 		prefix: '',
 		version: '',
 		middleware: [users.restifyUser],
-		findOneAndUpdate: false
+		lowercase: true,
+		access: users.userAccess,
+		findOneAndUpdate: false,
+		protected: "password,salt",
+		private: "password,salt"
 	};
 
 
@@ -55,7 +73,10 @@ module.exports = function(app) {
 		strict: true,
 		prefix: '',
 		version: '',
-		middleware: [users.restify],
+		lowercase: true,
+		middleware: [users.restifySchool],
+		access: users.schoolAccess,
+		private: "launcherPassword",
 		findOneAndUpdate: false
 	};
 
@@ -63,14 +84,16 @@ module.exports = function(app) {
 		strict: true,
 		prefix: '',
 		version: '',
-		//middleware: [users.restify],
+		lowercase: true,
+		middleware: [users.restifyRoom],
 		findOneAndUpdate: true
 	};
 	var userTabletOptions = {
 		strict: true,
 		prefix: '',
 		version: '',
-		middleware: [users.restify],
+		lowercase: true,
+		middleware: [users.restifyUserTablet],
 		findOneAndUpdate: false
 	};
 
@@ -78,7 +101,8 @@ module.exports = function(app) {
 		strict: true,
 		prefix: '',
 		version: '',
-		middleware: [users.restify],
+		lowercase: true,
+		middleware: [users.restifySubject],
 		findOneAndUpdate: false
 	};
 
@@ -86,7 +110,8 @@ module.exports = function(app) {
 		strict: true,
 		prefix: '',
 		version: '',
-		middleware: [users.restify],
+		lowercase: true,
+		middleware: [users.restifyTablet],
 		findOneAndUpdate: false
 	};
 
@@ -94,8 +119,9 @@ module.exports = function(app) {
 		strict: true,
 		prefix: '',
 		version: '',
-		middleware: [users.restify],
-		findOneAndUpdate: false
+		lowercase: true,
+		middleware: [users.restifyApp]
+		//findOneAndUpdate: false
 	};
 
 	var UserModel = mongoose.model('User');

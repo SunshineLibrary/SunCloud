@@ -71,6 +71,7 @@
 		"karma-chrome-launcher": "~0.1.2",
 		"karma-firefox-launcher": "~0.1.3",
 		"karma-phantomjs-launcher": "~0.1.2",
-	  	"frisby": "~0.8.3"
+	  	"frisby": "~0.8.3",
+	  	"jasmine-node": "~1.14.5"
 	}
 }

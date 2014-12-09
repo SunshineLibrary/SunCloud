@@ -26,10 +26,6 @@ var SchoolSchema = new Schema({
             type: String,
             default: "xiaoshu815"
         },
-        //admin: {
-        //    type: Schema.Types.ObjectId,
-        //    ref: 'User'
-        //},
         uuid: String,
         ts: String,
         address: String,

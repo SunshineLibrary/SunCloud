@@ -59,10 +59,6 @@ var AppSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'School'
     },
-    rooms: [{
-        type: Schema.Types.ObjectId,
-        ref: 'Room'
-    }],
     teacher: {
         type: Schema.Types.ObjectId,
         ref: 'User'
