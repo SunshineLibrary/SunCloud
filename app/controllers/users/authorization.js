@@ -4,6 +4,7 @@
  * Module dependencies.
  */
 var _ = require('underscore'),
+	async = require('async'),
 	mongoose = require('mongoose'),
 	User = mongoose.model('User'),
 	Room = mongoose.model('Room'),
@@ -134,11 +135,13 @@ exports.userAccess = function(req) {
 	if(req.method === 'GET') {
 		return 'public';
 	}
-	if(req.method === 'POST' || req.method === 'PUT') {
+	else if(req.method === 'POST' || req.method === 'PUT') {
 		return 'protected';
 	}
-	if(req.method === 'DELETE') {
+	else if(req.method === 'DELETE') {
 		return 'private';
+	}else {
+		return 'public';
 	}
 };
 
@@ -198,9 +201,9 @@ exports.restifyUser = function(req, res, next) {
 	}
 	if(isLoggedin) {
 		if(req.route.path === '/users') {
-			//if(req.method === 'GET') {
-			//	return next();
-			//}
+			if(req.method === 'GET') {
+				return next();
+			}
 
 			// teacher and admin can only create users of the same school
 			if(req.method === 'POST') {
@@ -210,15 +213,16 @@ exports.restifyUser = function(req, res, next) {
 					return res.status(403).send("Forbidden");
 				}
 			}
- 			return next();
 		}
-		if(req.route.path === '/users/:id') {
+		else if(req.route.path === '/users/count') {
+			return next();
+		}
+		else if(req.route.path === '/users/:id') {
 			if(req.method === 'GET') {
 				return next();
 			}else {
 				var id = req.params.id;
 				if(isSelf) {
-					console.log('----is self');
 					return next();
 				} else {
 					if(is('admin')) {
@@ -226,7 +230,7 @@ exports.restifyUser = function(req, res, next) {
 							if(err) {
 								return res.send(500);
 							}
-							if(user) {
+							else if(user) {
 								//console.log('---', user.school, typeof user.school);
 								//console.log('+++', req.user.school, typeof req.user.school);
 								if(user.school.toString() === req.user.school.toString()) {
@@ -255,6 +259,8 @@ exports.restifyUser = function(req, res, next) {
 					}
 				}
 			}
+		}else {
+			return res.status(406).send('Path Not Acceptable');
 		}
 	}else {
 		return res.status(401).send("Unauthorized");
@@ -273,53 +279,68 @@ exports.restifyRoom = function(req, res, next) {
 	if(is('root')) {
 		return next();
 	}
+	console.log('------------------------>',req.route.path);
 	if(isLoggedin) {
+		console.log('---->',req.path);
 		if(req.route.path === '/rooms') {
 			if(req.method === 'GET') {
 				return next();
 			}
-			if(req.method === 'POST') {
+			else if(req.method === 'POST') {
 				/**
 				 * Admins can only create rooms with same school.
 				 */
-				if(is('admin')) {
-					if(req.body.school.toString() === req.user.school.toString()) {
-						return next();
-					}else {
-						return res.status(403).send("Forbidden");
+				if(req.body.school&&req.body.name) {
+					if(is('admin')) {
+						if(req.body.school.toString() === req.user.school.toString()) {
+							return next();
+						}else {
+							return res.status(403).send("Forbidden");
+						}
 					}
-				}
-				/**
-				 * Teachers can only create rooms with same school and type must be 'teaching'.
-				 */
-				if(is('teacher')) {
-					if(req.body.school.toString() === req.user.school.toString() && req.body.type === 'teaching') {
-						return next();
-					}else {
-						return res.status(403).send("Forbidden");
+					/**
+					 * Teachers can only create rooms with same school and type must be 'teaching'.
+					 */
+					else if(is('teacher')) {
+						if(req.body.school.toString() === req.user.school.toString() && req.body.type === 'teaching') {
+							return next();
+						}else {
+							return res.status(403).send("Forbidden");
+						}
 					}
+					else {
+						return res.status(406).send("Role Not Accepted");
+					}
+				}else {
+					return res.status(406).send("POST Not Accepted");
 				}
+
+			} else {
+				return res.status(406).send("Method Not Accepted");
 			}
+		}
+		else if(req.route.path === '/rooms/count') {
 			return next();
 		}
-		console.log(req.route.path);
-		if(req.route.path === '/rooms/:id') {
-			var id = req.params.id;
+		else if(req.route.path === '/rooms/:roomId' || req.route.path === '/rooms/:id') {
+			var id = req.params.roomId || req.params.id;
 			console.log('-----',id);
 			Room.findById(id, function(err, room) {
 				if(err) {
 					return res.send(500);
 				}
-				if(room) {
+				else if(room) {
 					if(req.method === 'GET') {
 						return next();
 					}
 					/**
 					 * Admin and teachers can only edit classes of the same school.
 					 */
-					if(req.method === 'PUT') {
+					else if(req.method === 'PUT') {
 
 						if(room.school.toString() === req.user.school.toString()) {
+							console.log('same school, next');
+							console.log(req.body);
 							return next();
 						}else {
 							return res.status(403).send("Forbidden");
@@ -329,7 +350,7 @@ exports.restifyRoom = function(req, res, next) {
 					 * Admin can only delete classes of the same school.
 					 * Teacher can only delete classes of type 'teaching'.
 					 */
-					if(req.method === 'DELETE') {
+					else if(req.method === 'DELETE') {
 						if(is('admin')) {
 							if(room.school.toString() === req.user.school.toString()) {
 								return next();
@@ -337,7 +358,7 @@ exports.restifyRoom = function(req, res, next) {
 								return res.status(403).send("Forbidden");
 							}
 						}
-						if(is('teacher')) {
+						else if(is('teacher')) {
 							if(room.school.toString() === req.user.school.toString() && room.type === 'teaching') {
 								return next();
 							}else {
@@ -352,6 +373,51 @@ exports.restifyRoom = function(req, res, next) {
 				}
 
 			});
+		}
+		else if(req.route.path === '/assign/apps' && req.method === 'PUT') {
+			/**
+			 * admin can only assign apps to rooms of the same school.
+			 * teacher can only assign apps to rooms he/she is in.
+			 */
+			var roomIds = _.map(req.body.assignments, function(assignment) {
+				return assignment.roomId;
+			});
+			async.map(roomIds, function(id, callback) {
+				Room.findById(id, function(err, room) {
+					if(err) {
+						callback(err)
+					}else {
+						callback(null, room);
+					}
+				})
+			}, function(err, rooms) {
+				console.log(rooms);
+				var errList ;
+				if(is('admin')) {
+					errList = _.filter(rooms, function(room){
+						return room.school.toString() !== req.user.school.toString();
+					});
+					if(errList.length) {
+						return res.status(403).send('Forbidden');
+					}else {
+						return next();
+					}
+				}else if(is('teacher')) {
+					errList = _.filter(rooms, function(room) {
+						return room.teachers.indexOf(req.user._id) === -1;
+					});
+					if(errList.length) {
+						return res.status(403).send('Forbidden');
+					}else {
+						return next();
+					}
+				}else {
+					return res.status(406).send('Role Not Acceptable');
+				}
+			})
+		}
+		else {
+			return res.status(406).send('Path Not Acceptable');
 		}
 	}else {
 		return res.status(401).send("Unauthorized");
@@ -377,14 +443,14 @@ exports.restifyApp = function(req, res, next) {
 			if(req.method === 'GET') {
 				return next();
 			}
-			if(req.method === 'POST') {
+			else if(req.method === 'POST') {
 				if(is('admin')) {
 					return next();
 				}
 				/**
 				 * Teacher can create app if 'canCreateApp' field is true
 				 */
-				if(is('teacher')) {
+				else if(is('teacher')) {
 					if(req.user.canCreateApp) {
 						return next();
 					}else {
@@ -393,13 +459,16 @@ exports.restifyApp = function(req, res, next) {
 				}
 			}
 		}
-		if(req.route.path === '/apps/:id') {
-			var id = req.params.id;
-			App.findById(id, function(err, app) {
+		else if(req.route.path === '/apps/count') {
+			return next();
+		}
+		else if(req.route.path === '/apps/:id') {
+			var appid = req.params.id;
+			App.findById(appid, function(err, app) {
 				if(err) {
 					return res.send(500);
 				}
-				if(app) {
+				else if(app) {
 					if(req.method === 'GET') {
 						return next();
 					}
@@ -415,26 +484,65 @@ exports.restifyApp = function(req, res, next) {
 							if(is('admin')) {
 								return next();
 							}
-							if(is('teacher')) {
+							else if(is('teacher')) {
 								return res.status(403).send('Forbidden');
 							}
 						}else if(app.create_by === 'teacher') {
 							if(is('admin')) {
 								return next();
 							}
-							if(is('teacher')) {
+							else if(is('teacher')) {
 								if(app.teacher.toString() == req.user._id.toString()) {
 									return next();
 								}else {
 									return res.status(403).send('Forbidden');
 								}
 							}
+						}else {
+							return res.status(406).send('Path Not Acceptable');
 						}
 					}
 				}else {
 					return res.status(404).send('Not Found');
 				}
 			})
+		}
+		else if(req.route.path === '/upload/app/:appId') {
+			var id = req.params.appId;
+			App.findById(id, function(err, app) {
+				if(err) {
+					return res.send(500);
+				}
+				else if(app) {
+					if(app.create_by === 'root') {
+						return res.status(403).send('Forbidden');
+					}else if(app.create_by === 'admin') {
+						if(is('admin')) {
+							return next();
+						}
+						else if(is('teacher')) {
+							return res.status(403).send('Forbidden');
+						}
+					}else if(app.create_by === 'teacher') {
+						if(is('admin')) {
+							return next();
+						}
+						else if(is('teacher')) {
+							if(app.teacher.toString() == req.user._id.toString()) {
+								return next();
+							}else {
+								return res.status(403).send('Forbidden');
+							}
+						}
+					}else {
+						return res.status(406).send('Not Acceptable');
+					}
+				}else {
+					return res.status(404).send('App Not Found');
+				}
+			})
+		}else {
+			return res.status(406).send('Path Not Acceptable');
 		}
 	}else {
 		return res.status(401).send("Unauthorized");
@@ -457,16 +565,18 @@ exports.restifySchool = function(req, res, next) {
 		if(req.method === 'GET') {
 			return next();
 		}
-		if(req.method === 'POST' || req.method === 'DELETE') {
+		else if(req.method === 'POST' || req.method === 'DELETE') {
 			return res.status(403).send('Forbidden');
 		}
-		if(req.method === 'PUT') {
+		else if(req.method === 'PUT') {
 			var sameSchool = (req.user.school.toString() === req.params.id.toString());
 			if(is('admin') || sameSchool ) {
 				return next();
 			}else {
 				return res.status(403).send('Forbidden');
 			}
+		}else {
+			return res.status(406).send('Path Not Acceptable');
 		}
 	}
 };
@@ -480,6 +590,24 @@ exports.restifyUserTablet = function(req, res, next) {
 };
 
 exports.restifyTablet = function(req, res, next) {
-	return next();
-};
+	var isLoggedin = (function () {
+		return req.isAuthenticated();
+	})();
 
+	var is = function (role) {
+		return (req.user && req.user.roles && _.contains(req.user.roles, role));
+	};
+
+	var isSelf = (function () {
+		return req.query && req.query.username && req.user && req.query.username === req.user.username;
+	})();
+
+	if(is('root')) {
+		return next();
+	}
+	if(isLoggedin) {
+		return next();
+	}else {
+		return res.status(401).send("Unauthorized");
+	}
+};

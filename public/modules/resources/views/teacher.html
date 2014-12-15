@@ -1,12 +1,104 @@
 <div>
-    老师姓名： {{teacher.name}}
+    <div class="page-header">
+        <h3>{{teacher.name}}
+            <small> &nbsp;
+                <span class="label label-info">老师</span>
+                <span class="label label-info" ng-show="isAdmin">超级管理员</span>
+            </small>
+            <div class="pull-right">
+                <span class="sun-id">id: {{teacher._id}}</span>
+                <button class="btn btn-inverse" ng-click="back()"><span class="fui-arrow-left"></span>返回</button>
+            </div>
+        </h3>
+    </div>
 
-    <br>
-    用户名： {{teacher.username}}
+    <div>
+        <h4>个人信息
+            <div class="pull-right">
+                <button role="button" class="btn btn-primary" ng-click="showEditTeacherDialog()"><span class="glyphicon glyphicon-edit"></span> 编辑</button>
+                &nbsp;&nbsp;
+                <button class="btn btn-danger" ng-click="resetPassword()"><span class="glyphicon glyphicon-lock"></span> 重置密码</button>
+            </div>
+        </h4>
+        <table width="40%">
+            <tr>
+                <td><strong>姓名</strong></td>
+                <td>{{teacher.name}}</td>
+            </tr>
+            <tr>
+                <td><strong>用户名</strong></td>
+                <td>{{teacher.username}}</td>
+            </tr>
+            <tr>
+                <td><strong>学校</strong></td>
+                <td>{{teacher.school.name}}</td>
+            </tr>
+            <tr>
+                <td><strong>电话</strong></td>
+                <td><div ng-show="teacher.phone">{{teacher.phone}}</div><div ng-hide="teacher.phone"><span class="label label-default">暂无</span></div></td>
+            </tr>
+            <tr>
+                <td><strong>邮箱</strong></td>
+                <td><div ng-show="teacher.email">{{teacher.email}}</div><div ng-hide="teacher.email"><span class="label label-default">暂无</span></div></td>
+            </tr>
+        </table>
 
-    <br>
-    所教班级：{{rooms}}
+        <hr/>
+        <h4>所教班级</h4>
+        <div ng-hide="rooms.length">
+            <h4><span class="label label-default">暂无</span></h4>
+        </div>
+        <div ng-show="rooms.length">
+                <span ng-repeat="room in rooms">
+                    <a ng-href="/#/rooms/{{room._id}}" role="button" class="btn btn-info btn-lg">
+                        {{room.name}}
+                    </a>
+                    &nbsp;&nbsp;
+                </span>
+        </div>
+    </div>
+</div>
 
-    <br>
-    学校： {{teacher.school.name}}
+
+
+<div class="modal fade" id="editTeacherDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class='modal-dialog'>
+        <div class='modal-content'>
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span></button>
+                <h4 class="modal-title">编辑老师</h4>
+            </div>
+            <div class="modal-body">
+                <form name="editForm" class="form-group">
+                    <div class="input-group">
+                        <span class="input-group-btn"><button class="btn" type="button"><span class="fui-user">姓名</span></button></span>
+                        <input type="text" id="newName" class="form-control" placeholder="新姓名" ng-model="temp.newName" required>
+                    </div>
+                    <br>
+                    <div class="input-group">
+                        <span class="input-group-btn"><button class="btn" type="button"><span>用户名</span></button></span>
+                        <input type="text" id="newUsername" class="form-control" placeholder="新用户名" ng-model="temp.newUsername" required>
+                    </div>
+                    <br>
+                    <div class="input-group">
+                        <span class="input-group-btn"><button class="btn" type="button"><span class="glyphicon glyphicon-phone">电话</span></button></span>
+                        <input type="text" id="newPhone" class="form-control"  placeholder="电话号码" ng-model="temp.newPhone">
+                    </div>
+                    <br>
+                    <div class="input-group">
+                        <span class="input-group-btn"><button class="btn" type="button"><span class="glyphicon glyphicon-envelope">邮箱</span></button></span>
+                        <input type="text" id="newEmail" class="form-control"  placeholder="邮箱" ng-model="temp.newEmail">
+                    </div>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" ng-model="temp.isAdmin"/> &nbsp;&nbsp;&nbsp;是否具有超级管理员权限
+
+                </form>
+                <span style="color: red" ng-show="error">修改失败，可能由于用户名已存在。请修改用户名后重试。</span>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-defautl" data-dismiss="modal">取消</button>
+                <button class="btn btn-success btn-lg" ng-click="editTeacher(row)" ng-disabled="editForm.$invalid">确定</button>
+            </div>
+        </div>
+    </div>
 </div>

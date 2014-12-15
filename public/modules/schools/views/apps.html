@@ -2,7 +2,7 @@
     <h4 class="tableTitle pull-left">所有应用程序 &nbsp;&nbsp;</h4>
 
     <div class=" pull-right" style="margin-top:10px">
-        <a role="button" class="btn btn-primary btn-warning" href="#createAppDialog" data-toggle="modal"><i class="glyphicon glyphicon-plus"></i>添加应用程序</a>
+        <a role="button" class="btn btn-primary" href="#createAppDialog" data-toggle="modal"><i class="glyphicon glyphicon-plus"></i>添加应用程序</a>
     </div>
 
     <div class="inner-addon left-addon pull-left" style="margin-top:10px">
@@ -10,8 +10,10 @@
         <input type="search" class="form-control" style="width: 250px"  placeholder="搜索" ng-model="filterOptions.filterText"/>
     </div>
     <br>
-    <br>
-
+    <br/>
+    <p  class="pull-right" >显示 <a href="" ng-click="allApps()">【全部】</a> <a href=""ng-click="onlyRoot()">【Root创建的】</a>应用程序
+    </p>
+    <br/>
     <div class="table">
         <div class="gridStyle" ng-grid="gridOptions" ng-click="selectApp()"></div>
     </div>
@@ -29,19 +31,18 @@
                 <h4 class="modal-title">添加应用程序</h4>
             </div>
             <div class='modal-body'>
-                <div class="form-group">
+                <form class="form-group" name="createAppForm">
                     <div class="input-group input-group-lg">
-                        <input class="form-control" placeholder="请输入应用程序中文名称" ng-model="newAppName">
+                        <input class="form-control" placeholder="请输入应用程序中文名称" ng-model="newAppName" required>
                         <div class="input-group-btn">
                             <button type="button" class="btn  btn-success"
-                                    ng-click="createApp()">添加</button>
+                                    ng-click="createApp()" ng-disabled="createAppForm.$invalid">添加</button>
                         </div>
                     </div>
                     <span ng-show="temp.error=='noName'" class="error-msg">请填写应用程序名称</span>
                     <span ng-show="temp.error=='alreadyHave'" class="error-msg">已存在此应用程序，请修改名称</span>
                     <span ng-show="temp.error=='failure'" class="error-msg">创建失败，可能由于此名称已存在，请重试</span>
-
-                </div>
+                </form>
             </div>
         </div>
     </div>

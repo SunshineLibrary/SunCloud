@@ -8,6 +8,7 @@ angular.module('schoolManage')
                 data: {
                     "name": info.name,
                     "school": info.school,
+                    "code": info.code,
                     "type": 'admin',
                     "students": [],
                     "teachers": [],
@@ -51,7 +52,7 @@ angular.module('schoolManage')
             var thePromise = defered.promise;
             $http({
                 method: "GET",
-                url: "/rooms/" + roomId + "?populate=teachers,students&select=teachers.name,teachers.username,students.name,students.username"
+                url: "/rooms/" + roomId + "?populate=teachers,students"
             }).success(function(room){
                 defered.resolve(room);
             }).error(function(err){
@@ -65,7 +66,7 @@ angular.module('schoolManage')
             var thePromise = defered.promise;
             $http({
                 method: "GET",
-                url: "/rooms/" + roomId + "?populate=students&select=students.username,students.name"
+                url: "/rooms/" + roomId + "?populate=students"
             }).success(function(room){
                 defered.resolve(room);
             }).error(function(err){
@@ -79,7 +80,7 @@ angular.module('schoolManage')
             var thePromise = defered.promise;
             $http({
                 method: "GET",
-                url: "/rooms?school=" + schoolId + "&populate=teachers&select=teachers.username,teachers.name"
+                url: "/rooms?school=" + schoolId + "&populate=teachers"
             }).success(function(rooms){
                 defered.resolve(rooms);
             }).error(function(err){
@@ -107,7 +108,7 @@ angular.module('schoolManage')
             var thePromise = defered.promise;
             $http({
                 method: "GET",
-                url: "/rooms?school=" + schoolId + "&type=admin&populate=students&select=students.username,students.name"
+                url: "/rooms?school=" + schoolId + "&type=admin&populate=students"
             }).success(function(rooms){
                 defered.resolve(rooms);
             }).error(function(err){
@@ -135,7 +136,7 @@ angular.module('schoolManage')
             var thePromise = defered.promise;
             $http({
                 method: "GET",
-                url: "/rooms?teachers=" + teacherId + "&populate=students&select=students.username,students.name"
+                url: "/rooms?teachers=" + teacherId + "&populate=students"
             }).success(function(rooms){
                 defered.resolve(rooms);
             }).error(function(err){
@@ -149,7 +150,7 @@ angular.module('schoolManage')
             var thePromise = defered.promise;
             $http({
                 method: "GET",
-                url: "/rooms?teachers=" + teacherId + "&type=teaching&populate=students&select=students.username,students.name"
+                url: "/rooms?teachers=" + teacherId + "&type=teaching&populate=students"
             }).success(function(rooms){
                 defered.resolve(rooms);
             }).error(function(err){
@@ -188,7 +189,7 @@ angular.module('schoolManage')
             var thePromise = defered.promise;
             $http({
                 method: "GET",
-                url: "/rooms/?students=" + studentId + "&populate=school"
+                url: "/rooms/?students=" + studentId + "&type=admin"
             }).success(function(rooms){
                 defered.resolve(rooms);
             }).error(function(err){
@@ -202,17 +203,21 @@ angular.module('schoolManage')
                 method: "GET",
                 url: "/rooms/count?school=" + schoolId
             }).success(function(count){
-                callBack(count)
+                callBack(null, count.count)
             }).error(function(err){
                 console.log(err);
+                callBack(err);
             })
         };
 
-        var editRoom = function (room) {
+        var editRoomNameAndCode = function (room) {
             return $http({
                 method: "PUT",
                 url: "/rooms/" + room._id,
-                data: room
+                data: {
+                    name: room.name,
+                    code: room.code
+                }
             })
         };
         var editRoomCode = function (roomId, newCode) {
@@ -263,6 +268,7 @@ angular.module('schoolManage')
         };
 
         var addStudentsToRoom = function(roomId, students) {
+
             return $http({
                 method: "PUT",
                 url: "/rooms/" + roomId,
@@ -298,7 +304,7 @@ angular.module('schoolManage')
             getTeachingRoomsFullByTeacher: getTeachingRoomsFullByTeacher,
             getRoomsByStudent: getRoomsByStudent,
             getCountsOfRoomsBySchool: getCountsOfRoomsBySchool,
-            editRoom: editRoom,
+            editRoomNameAndCode: editRoomNameAndCode,
             editRoomCode: editRoomCode,
             editRoomName: editRoomName,
             deleteRoom: deleteRoom,

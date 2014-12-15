@@ -19,14 +19,11 @@ exports.logout = function(req, res){
         res.json(200,record);
 
     })
-
-
-
 };
 
 exports.countBySchool = function(req, res) {
     console.log('counting tablet by school');
-    UserTablet.find({}).populate({
+    UserTablet.find({logout_at: null}).populate({
         path: 'userId',
         match: {school: req.query.schoolId}
     }).exec(function(err,records){
@@ -35,7 +32,7 @@ exports.countBySchool = function(req, res) {
         }
         var count = 0;
         _.each(records, function(record){
-            if(record.userId !== null){
+            if(record.userId && _.contains(record.userId.roles, 'student')){
                 count += 1;
             }
         });

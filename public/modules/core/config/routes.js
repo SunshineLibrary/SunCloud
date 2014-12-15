@@ -11,6 +11,7 @@ angular.module('core').config(['$stateProvider', '$urlRouterProvider',
 		$stateProvider.
 		state('home', {
 			url: '/',
+				controller: 'HomeController',
             templateUrl: 'modules/core/views/home.html'
 			//templateUrl: 'modules/users/views/authentication/signin.html'
 		});

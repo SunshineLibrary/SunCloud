@@ -34,7 +34,14 @@ angular.module('resources').config(['$stateProvider',
             state('teacherView',{
                 url: '/teachers/:teacherId',
                 controller: 'teacherViewController',
-                templateUrl: __templates + 'teacher.html'
+                templateUrl: __templates + 'teacher.html',
+                resolve: {
+                    teacher: ['TeacherDataProvider','$stateParams',
+                        function(TeacherDataProvider, $stateParams) {
+                            return TeacherDataProvider.getTeacher($stateParams.teacherId);
+                        }
+                    ]
+                }
             }).
             state('tabletView',{
                 url: '/tablets/:tabletId',
@@ -67,8 +74,24 @@ angular.module('resources').config(['$stateProvider',
             }).
             state('schoolView',{
                 url: '/schools/:schoolId',
-                //controller: 'schoolViewController',
-                templateUrl: __templates + 'school.html'
+                controller: 'schoolViewController',
+                templateUrl: __templates + 'school.html',
+                resolve: {
+                    school: ['SchoolDataProvider', '$stateParams',
+                        function(SchoolDataProvider, $stateParams) {
+                            return SchoolDataProvider.getSchool($stateParams.schoolId)
+                        }
+                    ],
+                    schoolRooms: ['RoomDataProvider', '$stateParams',
+                        function(RoomDataProvider, $stateParams) {
+                            return RoomDataProvider.getRoomsBySchool($stateParams.schoolId)
+                        }
+                    ],
+                    admins:['TeacherDataProvider', '$stateParams',
+                        function(TeacherDataProvider, $stateParams) {
+                            return TeacherDataProvider.getAdminsBySchool($stateParams.schoolId)
+                        }]
+                }
             })
         ;
     }

@@ -6,6 +6,37 @@ var config = require('../../config/config');
 var classCodeCtl = require('../controllers/classCodes.js');
 var classCodeModel = mongoose.model('ClassCode');
 
+var validateRoomName = function(name) {
+    var Room = mongoose.model('Room');
+    console.log('~~~~~~~~~~validate name');
+    Room.findOne({name: this.name, school: this.school}, function(err, room) {
+        if(err) {
+            return false;
+        }else if(room) {
+            console.log('name must be unique within a school');
+            return false;
+        }else {
+            return true;
+        }
+    })
+};
+
+var validateRoomCode = function(code) {
+    var Room = mongoose.model('Room');
+    console.log('~~~~~~~~~~validate name');
+
+
+    Room.findOne({code: this.code, school: this.school}, function(err, room) {
+        if(err) {
+            return false;
+        }else if(room) {
+            console.log('name must be unique within a school');
+            return false;
+        }else {
+            return true;
+        }
+    })
+};
 var RoomSchema = new Schema({
         _id: { type: Schema.Types.ObjectId,
             index: true,
@@ -16,6 +47,7 @@ var RoomSchema = new Schema({
         name: {
             type: String,
             required: true
+            //validate: [validateRoomName, '已经存在此班级名， 请修改班级名后重试']
         },
         classCode: {
             //This is the Code of the classroom.
@@ -29,11 +61,12 @@ var RoomSchema = new Schema({
         },
         code: {
             type: String
+            //validate: [validateRoomCode, '已经存在此班级编号， 请修改班级名后重试']
         },
         school: {
             type: Schema.Types.ObjectId,
-            ref: 'School'//,
-            //required: true
+            ref: 'School',
+            required: true
         },
         students: [
             {
@@ -65,9 +98,26 @@ var RoomSchema = new Schema({
                 type: Schema.Types.ObjectId,
                 ref: 'User'
             }
+        }],
+        sunpack: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: 'Folder'
+            }
+        ],
+        download: [{
+            folder: {
+                type: Schema.Types.ObjectId,
+                ref: 'Folder'
+            },
+            student: {
+                type: Schema.Types.ObjectId,
+                ref: 'User'
+            }
         }]
-    }
+    } ,{ strict: true }
 );
+
 
 
 
@@ -116,5 +166,66 @@ RoomSchema.statics.removeRoom = function (roomInfo, callBack) {
     });
 };
 
-mongoose.model('Room', RoomSchema);
+//RoomSchema.pre('save', )
 
+RoomSchema.path('name').validate(function(value, respond) {
+    var Room = mongoose.model('Room');
+    console.log('~~~~~~~~~~validate name');
+
+
+    return Room.findOne({_id: {$ne: this._id} ,name: this.name, school: this.school}, function(err, room) {
+        if(err) {
+            respond(false);
+        }else if(room) {
+            console.log('name must be unique within a school');
+            respond(false);
+        }else {
+            respond(true);
+        }
+    })
+}, '已经存在此班级名， 请修改班级名后重试');
+
+RoomSchema.path('code').validate(function(value, respond) {
+    console.log('~~~~~~~~~~validate code', value);
+    var Room = mongoose.model('Room');
+
+    return Room.findOne({_id: {$ne: this._id}, code: this.code, school: this.school}, function(err, room) {
+        if(err) {
+            respond(false);
+        }else if(room) {
+            console.log('code must be unique within a school');
+            respond(false);
+        }else {
+            respond(true);
+        }
+    })
+}, '已存在此班级编号， 请修改后重试');
+
+
+RoomSchema.pre('save', function(next) {
+    console.log('~~~~~~~~~~');
+    var Room = mongoose.model('Room');
+    Room.findOne({_id: {$ne: this._id}, code: this.code, school: this.school}, function(err, room) {
+        if(err) {
+            next(err);
+        }else if(room) {
+            next('code must be unique')
+        }else {
+            next();
+        }
+    });
+
+    Room.findOne({_id: {$ne: this._id}, name: this.name, school: this.school}, function(err, room) {
+        if(err) {
+            next(err);
+        }else if(room) {
+            console.log('name must be unique within a school');
+            next('name must be unique within a school');
+        }else {
+            next();
+        }
+    });
+    next();
+});
+
+mongoose.model('Room', RoomSchema);

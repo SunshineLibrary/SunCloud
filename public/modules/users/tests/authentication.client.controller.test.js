@@ -61,14 +61,14 @@
 		it('$scope.signin() should fail to log in with nothing', function() {
 			// Test expected POST request
 			$httpBackend.expectPOST('/auth/signin').respond(400, {
-				'message': 'Missing credentials'
+				'message': '必须填写用户名和密码'
 			});
 
 			scope.signin();
 			$httpBackend.flush();
 
 			// Test scope value
-			expect(scope.error).toEqual('Missing credentials');
+			expect(scope.error).toEqual('必须填写用户名和密码');
 		});
 
 		it('$scope.signin() should fail to log in with wrong credentials', function() {

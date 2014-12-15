@@ -3,7 +3,7 @@
     <h4 class="tableTitle pull-left">所有班级 &nbsp;&nbsp;</h4>
 
     <div class=" pull-right" style="margin-top:10px">
-        <a role="button" class="btn btn-primary btn-warning" href="#createRoomDialog" data-toggle="modal"><i class="glyphicon glyphicon-plus"></i>创建班级</a>
+        <a role="button" class="btn btn-primary btn-primary" href="#createRoomDialog" data-toggle="modal"><i class="glyphicon glyphicon-plus"></i>创建班级</a>
     </div>
 
     <div class="inner-addon left-addon pull-left" style="margin-top:10px">
@@ -57,16 +57,17 @@
             </div>
             <div class="modal-body">
                 <form name="editForm" class="form-group">
-                    <div class="form-inline">
-                        <label for="newName">&nbsp;&nbsp;&nbsp;班级名</label>
-                        <input type="text" id="newName" class="form-control" style="width:400px"  ng-model="room.newName" required>
+                    <div class="input-group">
+                        <span class="input-group-btn"><button class="btn" type="button"><span class="fui-tag">班级名</span></button></span>
+                        <input type="text" id="newName" class="form-control"  ng-model="room.newName" required>
                     </div>
                     <br>
-                    <div class="form-inline">
-                        <label for="newCode">班级编号</label>
-                        <input type="text" id="newCode" class="form-control" style="width:400px"  ng-model="room.newCode">
-                        <p style="color: green">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;班级编号全校唯一，可用于自动生成班级学生账号.</p>
+                    <div class="input-group">
+                        <span class="input-group-btn"><button class="btn" type="button">班级编号</button></span>
+                        <input type="text" id="newCode" class="form-control" ng-model="room.newCode">
                     </div>
+                    <p style="color: green">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;班级编号全校唯一，可用于自动生成班级学生账号.</p>
+
                 </form>
                 <span style="color: red" ng-show="room.nameError">班级名已存在，请修改后重试</span>
                 <span style="color: red" ng-show="room.codeError">班级编号已存在，请修改后重试</span>

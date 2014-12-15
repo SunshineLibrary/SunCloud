@@ -5,6 +5,18 @@ angular.module('users').config(['$stateProvider','$urlRouterProvider',
 	function($stateProvider, $urlRouterProvider) {
 		// Users state routing
 		$stateProvider.
+		state('myProfile', {
+			url: '/profile',
+			templateUrl: 'modules/users/views/settings/myprofile.html',
+				controller: 'SettingsController',
+			resolve: {
+				myRooms: ['RoomDataProvider', 'AuthService',
+					function(RoomDataProvider, AuthService) {
+						return RoomDataProvider.getRoomsByTeacher(AuthService.me._id);
+					}
+				]
+			}
+		}).
 		state('profile', {
 			url: '/settings/profile',
 			templateUrl: 'modules/users/views/settings/edit-profile.html'

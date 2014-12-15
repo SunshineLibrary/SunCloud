@@ -21,10 +21,11 @@ angular.module('schoolManage')
                 url: "/users/count?roles=student&school=" + schoolId
             }).success(function(counts) {
                 if(callBack) {
-                    callBack(counts);
+                    callBack(null, counts.count);
                 }
             }).error(function(err) {
                 console.error(err);
+                callBack(err);
             })
         };
 
@@ -88,6 +89,18 @@ angular.module('schoolManage')
             })
         };
 
+        var editStudentNameBirthday = function (student) {
+            return $http({
+                method: "PUT",
+                url: "/users/" + student._id,
+                data: {
+                    name: student.name,
+                    username: student.username,
+                    birthday: student.birthday
+                }
+            })
+        };
+
         var removeStudent = function (studentId) {
             return $http({
                 method: "DELETE",
@@ -131,6 +144,7 @@ angular.module('schoolManage')
             createStudentBatch: createStudentBatch,
             autoCreateAddStudents: autoCreateAddStudents,
             getStudent: getStudent,
+            editStudentNameBirthday: editStudentNameBirthday,
             editStudent: editStudent,
             removeStudent: removeStudent,
             getStudentRoom: getStudentRoom

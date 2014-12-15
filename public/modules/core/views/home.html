@@ -1,3 +1,58 @@
-<section data-ng-controller="HomeController">
-<h1>Hello world!</h1>
+<section>
+<!--<h1>Hello world!</h1>-->
+    <div ng-show="user">
+        <br/>
+        <div ng-hide="isRoot">
+            <div class="jumbotron jumbotron-sm" ng-hide="user.resetPassword">
+                <h3>请先修改密码</h3>
+                <p>您还在使用初始的密码“xiaoshu”，可能会导致您的账户不安全，请尽快修改您的密码。</p>
+                <a class="btn btn-danger btn-lg" href="#resetPasswordDialog" data-toggle="modal" role="button">立即修改密码</a>
+            </div>
+
+            <div class="jumbotron jumbotron-sm">
+                <h3>开始使用阳光书包</h3>
+                <p>阳光书包可以让您方便地为学生推送学习资源，您可以自己上传或从网络资源库中选择与课程相关的资源，为每个班级创建文件夹，并将这些内容分配给班级，让学生在自己的晓书上看到！还等什么？开始试用吧！</p>
+                <a class="btn btn-success btn-lg" href="/#/sunpack" role="button">开始使用阳光书包</a>
+            </div>
+        </div>
+
+        <div ng-show="isRoot">
+
+        </div>
+    </div>
 </section>
+
+
+<div class="modal fade" id="resetPasswordDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class='modal-dialog'>
+        <div class='modal-content'>
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span></button>
+                <h4 class="modal-title">重设密码</h4>
+            </div>
+            <div class="modal-body">
+                <form name="resetPasswordForm" class="form-group">
+                    <div class="input-group">
+                        <span class="input-group-btn"><button class="btn" type="button"><span class="fui-lock">&nbsp;原密码</span></button></span>
+                        <input type="text" id="currentPassword" class="form-control" placeholder="请输入当前密码"  ng-model="passwordDetails.currentPassword" required>
+                    </div>
+                    <br>
+                    <div class="input-group">
+                        <span class="input-group-btn"><button class="btn" type="button"><span class="fui-lock">&nbsp;新密码</span></button></span>
+                        <input type="text" id="newPassword" class="form-control" placeholder="请输入新密码"  ng-model="passwordDetails.newPassword" required>
+                    </div>
+                    <br>
+                    <div class="input-group">
+                        <span class="input-group-btn"><button class="btn" type="button"><span class="">确认新密码</span></button></span>
+                        <input type="text" id="verifyPassword" class="form-control" placeholder="确认新密码" ng-model="passwordDetails.verifyPassword" required>
+                    </div>
+                </form>
+                <span style="color: red" ng-show="error">{{error}}</span>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-defautl" data-dismiss="modal">取消</button>
+                <button class="btn btn-primary" ng-click="resetPassword()" ng-disabled="resetPasswordForm.$invalid">确定</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -12,6 +12,11 @@ angular.module('manage')
             $scope.filterOptions = {filterText: ''};
             var me = AuthService.me;
             $scope.me = me;
+            // Tabs
+            $('.nav-tabs a').on('click', function (e) {
+                e.preventDefault();
+                $(this).tab('show');
+            });
 
             $scope.$watch('apps', function(newApps) {
                 if(newApps) {

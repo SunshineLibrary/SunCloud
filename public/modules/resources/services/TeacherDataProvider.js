@@ -17,14 +17,46 @@ angular.module('schoolManage')
             return teachersBySchoolPromise;
         };
 
+
+        var getAdminsBySchool = function(schoolId) {
+            var defered = $q.defer();
+            var thePromise = defered.promise;
+            $http({
+                method: "GET",
+                url: "/users?school=" + schoolId + '&roles=admin'
+            }).success(function (school) {
+                defered.resolve(school);
+            }).error(function (err) {
+                console.error(err);
+                defered.reject(err);
+            });
+            return thePromise;
+        };
+        //
+        //var getNotAdminsBySchool = function(schoolId) {
+        //    var defered = $q.defer();
+        //    var thePromise = defered.promise;
+        //    $http({
+        //        method: "GET",
+        //        url: "/users?school=" + schoolId + '&roles=admin'
+        //    }).success(function (school) {
+        //        defered.resolve(school);
+        //    }).error(function (err) {
+        //        console.error(err);
+        //        defered.reject(err);
+        //    });
+        //    return thePromise;
+        //};
+
         var getCountsOfTeachersBySchool = function(schoolId, callBack){
             $http({
                 method: "GET",
                 url: "/users/count?roles=teacher&school=" + schoolId
             }).success(function(counts){
-                callBack(counts);
+                callBack(null, counts.count);
             }).error(function(err){
                 console.error(err);
+                callBack(err);
             });
         };
 
@@ -59,6 +91,27 @@ angular.module('schoolManage')
                 data: teacher
             })
         };
+
+        var editTeacherPermission = function(teacherId, canCreateApp) {
+            return $http({
+                method: "PUT",
+                url: "/users/" + teacherId,
+                data: {
+                    canCreateApp: canCreateApp
+                }
+            })
+        };
+
+        var editTeacherRole = function(teacherId, roles) {
+            return $http({
+                method: "PUT",
+                url: "/users/" + teacherId,
+                data: {
+                    roles: roles
+                }
+            })
+        };
+
         var deleteTeacher = function (teacherId) {
             return $http({
                 method: "DELETE",
@@ -72,13 +125,32 @@ angular.module('schoolManage')
                 url: "/rooms?teachers=" + teacherId
             })
         };
+
+        /**
+         * reset password to xiaoshu
+         * @param teacherId
+         * @returns {*}
+         */
+        var resetPassword = function(teacherId) {
+          return $http({
+              method: "POST",
+              url: "/password/reset",
+              data: {
+                  teacherId: teacherId
+              }
+          })
+        };
         return {
             getTeachersBySchool: getTeachersBySchool,
+            getAdminsBySchool: getAdminsBySchool,
             getCountsOfTeachersBySchool: getCountsOfTeachersBySchool,
             createTeacher: createTeacher,
             getTeacher: getTeacher,
             editTeacher: editTeacher,
+            editTeacherPermission: editTeacherPermission,
+            editTeacherRole: editTeacherRole,
             deleteTeacher: deleteTeacher,
-            getRoomsOfTeacher: getRoomsOfTeacher
+            getRoomsOfTeacher: getRoomsOfTeacher,
+            resetPassword: resetPassword
         };
     }]);

@@ -1,24 +1,137 @@
 <section>
-    <div class="class-header">
-        <h2>
-            {{student.name}}
-        </h2>
+    <!--<div class="sun-header">-->
+        <!--<span class="sun-name">{{student.name}}</span>-->
+        <!--<div class="pull-right">-->
+            <!--<p class="navbar-text watermark">id:{{student._id}}</p>-->
+            <!--<a role="button" ng-click="back()" class="btn btn-primary btn-info "> <i class=" glyphicon glyphicon-chevron-left"></i>返回</a>-->
+        <!--</div>-->
+    <!--</div>-->
+    <div class="page-header">
+        <h4>{{student.name}}
+            <small> &nbsp;
+                <span class="label label-success">学生</span>
+            </small>
+            <div class="pull-right">
+                <span class="sun-id">id: {{student._id}}</span>
+                <button class="btn btn-inverse" ng-click="back()"> <i class="glyphicon glyphicon-chevron-left"></i>返回 &nbsp;&nbsp;</button>
+            </div>
+        </h4>
+    </div>
+
+
+    <div>
+        <h4>个人信息
+            <div class="pull-right">
+                <button role="button" class="btn btn-primary" ng-click="showEditStudentDialog()"><span class="glyphicon glyphicon-edit"></span> 编辑</button>
+                &nbsp;&nbsp;
+            </div>
+        </h4>
+        <table width="500px">
+            <tr>
+                <td><strong>姓名</strong></td>
+                <td>{{student.name}}</td>
+            </tr>
+            <tr>
+                <td><strong>用户名</strong></td>
+                <td>{{student.username}}</td>
+            </tr>
+            <tr>
+                <td><strong>学校</strong></td>
+                <td>{{student.school.name}}</td>
+            </tr>
+            <tr>
+                <td><strong>生日</strong></td>
+                <td><div ng-show="student.birthday">{{student.birthday}}</div><div ng-hide="student.birthday"><span class="label label-default">暂无</span></div></td>
+            </tr>
+
+            <tr>
+                <td><strong>所在班级</strong></td>
+                <td>
+                    <span ng-hide="rooms.length">
+                        <span class="label label-default">暂无</span>
+                    </span>
+                    <span ng-show="rooms.length">
+                        <span ng-repeat="room in rooms">
+                            <a ng-href="/#/rooms/{{room._id}}" role="button" class="btn btn-info btn-sm">{{room.name}}</a>&nbsp;&nbsp;
+                        </span>
+                    </span>
+                </td>
+            </tr>
+        </table>
+
+        <br/>
+        <hr/>
+        <h4>正在使用的晓书</h4>
+        <div ng-hide="tablet">
+            <h4><span class="label label-default">暂无</span></h4>
         </div>
+        <table width="500px" ng-show="tablet">
+            <tr>
+                <td><strong>晓书Id</strong></td>
+                <td><a href="/#/tablets/{{tablet._id}}">{{tablet.machine_id}}</a></td>
+            </tr>
+            <tr>
+                <td><strong>上次同步</strong></td>
+                <td>{{tablet.lastUpdate}}</td>
+            </tr>
+        </table>
+
+        <br/>
+
+        <hr/>
+        <h4>晓书使用记录</h4>
+        <table class="table table-striped" ng-show="xiaoshuHistory.length">
+            <th>晓书ID</th>
+            <th>登出时间</th>
+            <tr ng-repeat="record in xiaoshuHistory">
+                <td><a ng-href="/#/tablets/{{record.tabletId._id}}">{{record.tabletId.machine_id}}</a></td>
+                <td>{{record.logout_at}}</td>
+            </tr>
+        </table>
+        <div ng-hide="xiaoshuHistory.length">
+            <h4><span class="label label-default">暂无</span></h4>
+        </div>
+    </div>
 </section>
-<div>
-    学生姓名： {{student.name}}
 
-    <br>
-    用户名： {{student.username}}
 
-    <br>
-    所在班级：{{rooms}}
 
-    <br>
-    学校： {{student.school.name}}
-    <br>
-    正在使用的晓书：{{tablet}}
-    <br>
-    晓书使用记录： {{xiaoshuHistory}}
+
+<div class="modal fade" id="editStudentDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class='modal-dialog'>
+        <div class='modal-content'>
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span></button>
+                <h4 class="modal-title">编辑学生</h4>
+            </div>
+            <div class="modal-body">
+                <form name="editForm" class="form-group">
+                    <div class="input-group">
+                        <span class="input-group-btn">
+                            <button class="btn" type="button"><span class="fui-user">姓名</span></button></span>
+                        <input type="text" class="form-control" id="newName" placeholder="新姓名" ng-model="temp.newName" required/>
+                    </div>
+                    <br>
+                    <div class="input-group">
+                        <span class="input-group-btn">
+                            <button class="btn" type="button"><span>用户名</span></button></span>
+                        <input type="text" class="form-control" id="newUsername" placeholder="新用户名" ng-model="temp.newUsername" required/>
+                    </div>
+                    <br/>
+                    <div class="input-group">
+                        <span class="input-group-btn">
+                            <button class="btn" type="button"><span class="fui-calendar">生日</span></button></span>
+                        <input type="text" class="form-control" name="birthday" placeholder="yyyy-mm-dd  (如 2000-01-01)" ng-model="temp.newBirthday" ng-pattern="/^(\d{4})\-(\d{2})\-(\d{2})$/"/>
+                    </div>
+                    <span class="sun-error" ng-show="editForm.birthday.$error.pattern">生日格式应为 yyyy-mm-dd，如 2000-01-01.<br/>如果只知道月份不知道是哪天，请统一使用1号</span>
+
+                </form>
+                <span style="color: red" ng-show="error">修改失败，可能由于用户名已存在。请修改用户名后重试。</span>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-defautl" data-dismiss="modal">取消</button>
+                <button class="btn btn-success btn-lg" ng-click="editStudent()" ng-disabled="editForm.$invalid">确定</button>
+            </div>
+        </div>
+    </div>
 </div>
-

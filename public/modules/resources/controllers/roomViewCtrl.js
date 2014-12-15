@@ -4,6 +4,7 @@ angular.module('resources')
         'room',
         'RoomDataProvider',
         'StudentDataProvider',
+        'UserDataProvider',
         'TeacherDataProvider',
         'SchoolDataProvider',
         '$scope',
@@ -11,7 +12,7 @@ angular.module('resources')
         '$stateParams',
         'AuthService',
         '$location', function (
-        room,RoomDataProvider, StudentDataProvider, TeacherDataProvider, SchoolDataProvider,$scope, $state, $stateParams,AuthService, $location) {
+        room,RoomDataProvider, StudentDataProvider, UserDataProvider, TeacherDataProvider, SchoolDataProvider,$scope, $state, $stateParams,AuthService, $location) {
         var me = AuthService.me;
         $scope.room = room;
         $scope.selectedStudent = [];
@@ -35,6 +36,7 @@ angular.module('resources')
         $scope.filterOptions4 = {filterText: ''};
         $scope.teachers = $scope.room.teachers;
         $scope.students = $scope.room.students;
+        $scope.isAdminOrRoot = (_.intersection(me.roles, ['admin', 'root'])).length ? true: false;
         var failList = [];
         var waitingList = [];
 
@@ -64,6 +66,22 @@ angular.module('resources')
             }
         }, true);
 
+        var updateTablet = function(student) {
+            UserDataProvider.getTablet(student._id).then(function(record){
+                if(record.length){
+                    student.tabletId = record[0].tabletId._id;
+                    student.tablet = record[0].tabletId.machine_id;
+                    student.loginTime = record[0].loginTime;
+                }
+            });
+        };
+
+        _.each($scope.students, function(studentItem) {
+            updateTablet(studentItem);
+        });
+
+        console.log($scope.students);
+
         $scope.gridOptions1 =
         {
             data: 'students',
@@ -75,13 +93,14 @@ angular.module('resources')
                 {field: '_id', visible: false},
                 {field: 'name', displayName: '姓名'},
                 {field: 'username', displayName: '用户名'},
-                {field: 'tablet', displayName: '正在使用的晓书',cellTemplate:'<div class="ngCellText" ng-class="col.colIndex()"><a href="/#/tablets/{{row.entity.tablet}}">{{row.getProperty(col.field)}}</a></div>'},
+                {field: 'birthday', displayName: '生日'},
+                {field: 'tablet', displayName: '正在使用的晓书',cellTemplate:'<div class="ngCellText" ng-class="col.colIndex()" ng-show="row.entity.tablet"><a href="/#/tablets/{{row.entity.tabletId}}">{{row.getProperty(col.field)}}</a></div><div ng-hide="row.entity.tablet"><span class="label label-default">暂无</span></div>'},
                 {field: 'gender', displayName: '性别', width: 60},
                 {field: 'grade', displayName: '年级', width: 50},
-                {field: '', displayName: '编辑', cellTemplate:
+                {field: '', displayName: '编辑', visible: $scope.isAdminOrRoot,cellTemplate:
                 '<div class="ngCellText" ng-class="col.colIndex()" ng-show="showedit">' +
-                '<a class="glyphicon glyphicon-edit text-success" ng-click="showEditStudentDialog($event, row)"></a> &nbsp;&nbsp;' +
-                '<a class="glyphicon glyphicon-remove text-success" ng-click="removeStudentFromRoom($event, row)"></a></div>'}
+                '<a class="fui-new text-success" ng-click="showEditStudentDialog($event, row)"></a> &nbsp;&nbsp;' +
+                '<a class="fui-cross-circle text-danger" ng-click="removeStudentFromRoom($event, row)"></a></div>'}
             ],
             selectedItems: $scope.selectedStudent
         };
@@ -116,10 +135,10 @@ angular.module('resources')
                 {field: '_id', visible: false},
                 {field: 'name', displayName: '姓名'},
                 {field: 'username', displayName: '用户名'},
-                {field: '', displayName: '编辑', cellTemplate:
+                {field: '', displayName: '编辑', visible: $scope.isAdminOrRoot,cellTemplate:
                 '<div class="ngCellText" ng-class="col.colIndex()" ng-show="showedit">' +
-                '<a class="glyphicon glyphicon-edit text-success" ng-click="showEditTeacherDialog($event, row)"></a> &nbsp;&nbsp;' +
-                '<a class="glyphicon glyphicon-remove text-success" ng-click="removeTeacherFromRoom($event, row)"></a></div>'}
+                '<a class="fui-new text-success" ng-click="showEditTeacherDialog($event, row)"></a> &nbsp;&nbsp;' +
+                '<a class="fui-cross-circle text-danger" ng-click="removeTeacherFromRoom($event, row)"></a></div>'}
             ],
             selectedItems: $scope.selectedTeacher
         };
@@ -321,7 +340,8 @@ angular.module('resources')
         $scope.removeStudentFromRoom = function (event, row) {
             event.stopPropagation();
             swal({
-                    title: "您确定要将学生"+row.entity.name+"移出班级吗?",
+                    title: "移出班级",
+                    text: "您确定要将学生"+row.entity.name+"移出班级吗?",
                     type: "warning",
                     showCancelButton: true,
                     cancelButtonText: "取消",
@@ -346,7 +366,8 @@ angular.module('resources')
         $scope.removeTeacherFromRoom = function (event, row) {
             event.stopPropagation();
             swal({
-                    title: "您确定要将老师"+row.entity.name+"移出班级吗?",
+                    title: "移出班级",
+                    text: "您确定要将老师"+row.entity.name+"移出班级吗?",
                     type: "warning",
                     showCancelButton: true,
                     cancelButtonText: "取消",
@@ -372,16 +393,19 @@ angular.module('resources')
             $scope.row = row;
             $scope.student.newName = row.entity.name;
             $scope.student.newUsername = row.entity.username;
+            $scope.student.newBirthday = row.entity.birthday;
         };
         $scope.editStudent = function(row) {
             var info = {};
             info._id = row.entity._id;
             info.name = $scope.student.newName;
             info.username = $scope.student.newUsername;
-            StudentDataProvider.editStudent(info)
+            info.birthday = $scope.student.newBirthday;
+            StudentDataProvider.editStudentNameBirthday(info)
                 .success(function(editedStudent) {
                     $scope.row.entity.name = editedStudent.name;
                     $scope.row.entity.username = editedStudent.username;
+                    $scope.row.entity.birthday = editedStudent.birthday;
                     $('#editStudentDialog').modal('hide');
                     swal({title: "修改成功", type: "success", timer: 1000 });
                 })
@@ -685,5 +709,25 @@ angular.module('resources')
         $scope.selectTeacher = function () {
             $location.path('/teachers/' + $scope.selectedTeacher[0]._id)
         };
+
+        $('[data-toggle="checkbox"]').radiocheck();
+        // Table: Toggle all checkboxes
+        $('.table .toggle-all :checkbox').on('click', function () {
+            var $this = $(this);
+            var ch = $this.prop('checked');
+            $this.closest('.table').find('tbody :checkbox').radiocheck(!ch ? 'uncheck' : 'check');
+        });
+
+        // Table: Add class row selected
+        $('.table tbody :checkbox').on('change.radiocheck', function () {
+            var $this = $(this);
+            var check = $this.prop('checked');
+            var checkboxes = $this.closest('.table').find('tbody :checkbox');
+            var checkAll = checkboxes.length === checkboxes.filter(':checked').length;
+
+            $this.closest('tr')[check ? 'addClass' : 'removeClass']('selected-row');
+            $this.closest('.table').find('.toggle-all :checkbox').radiocheck(checkAll ? 'check' : 'uncheck');
+        });
+
     }
 ]);

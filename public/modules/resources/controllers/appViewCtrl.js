@@ -5,6 +5,7 @@ angular.module('resources')
             $scope.app = theApp;
             //$scope.rooms = $scope.app.rooms;
             var me = AuthService.me;
+            console.log(me);
             $scope.roles = AuthService.me.roles;
             $scope.myRooms = myRooms;
             $scope.rooms = [];
@@ -14,6 +15,22 @@ angular.module('resources')
             $scope.selectedRooms = [];
             $scope.selected = [];
             $scope.pushOptions = [{value: false, name: '需要手动分配给班级'},{value: true, name: '默认分配给所有班级'}];
+            console.log('share',$scope.app.shared);
+            $scope.isSelf = theApp.owner !== null && theApp.owner !== undefined && (theApp.owner.toString() === me._id.toString());
+            $scope.isRootOrAdminOrSelf = me.roles.indexOf('root') > -1 || (me.roles.indexOf('admin') > -1 && me.school.toString() === theApp.school.toString()) || $scope.isSelf;
+
+            $('input[name="pushAppSwitch"]').on('switchChange.bootstrapSwitch', function(event, state) {
+                console.log(this); // DOM element
+                console.log(event); // jQuery event
+                console.log(state); // true | false
+            });
+
+
+            $('input[name="shareSwitch"]').on('switchChange.bootstrapSwitch', function(event, state) {
+                console.log(this); // DOM element
+                console.log(event); // jQuery event
+                console.log(state); // true | false
+            });
 
             $scope.$watch('app', function(newApp) {
                 if(newApp) {
@@ -36,11 +53,15 @@ angular.module('resources')
             };
             $scope.enableEditor2 = function() {
                 $scope.editor2Enabled = true;
-                $scope.editablename = $scope.app.name;
             };
             $scope.disableEditor2 = function() {
                 $scope.editor2Enabled = false;
             };
+
+            $('#pushAppSelect').on('change', function(){
+                console.log($scope.default_installed);
+                console.log()
+            });
 
             var hasTheApp = function(roomId) {
                 var deferred = $q.defer();
@@ -193,9 +214,9 @@ angular.module('resources')
                     {field: 'package', displayName: '内部包名'},
                     {field: 'fileName', displayName: '安装包', cellTemplate:'<div class="ngCellText" ng-class="col.colIndex()"><a href="/download/apks/{{row.entity.id}}">{{row.getProperty(col.field)}}</a></div>'},
                     {field: 'size', displayName: '大小',width: '10%', cellTemplate: '<div>{{row.entity[col.field]/1024/1024 | number:2}} MB</div>'},
-                    {field: '', displayName: '操作', width: '10%',cellTemplate:
+                    {field: '', displayName: '操作', visible: $scope.isRootOrAdminOrSelf, cellTemplate:
                     '<div class="ngCellText" ng-class="col.colIndex()">' +
-                    '<a class="glyphicon glyphicon-remove text-primary" role="button" ng-click="deleteApk(row)"></a></div>'}
+                    '<a class="fui-cross-circle text-danger" role="button" ng-click="deleteApk(row)"></a></div>'}
                 ]
             };
 
@@ -220,7 +241,23 @@ angular.module('resources')
                                 swal({title: "删除失败", text: "请重试", type: 'error', timer: 1500})
                             })
                     });
+            };
+
+
+            if ($('[data-toggle="switch"]').length) {
+                $('[data-toggle="switch"]').bootstrapSwitch();
             }
+            $("#pushAppSwitch").bootstrapSwitch();
+            $("[name='pushAppSwitch']").bootstrapSwitch();
+            // Custom Selects
+            if ($('[data-toggle="select"]').length) {
+                $('[data-toggle="select"]').select2();
+            }
+            $("select").select2({dropdownCssClass: 'dropdown-inverse'});
+
+            //$('#change-color-switch').bootstrapSwitch('onColor', 'success');
+            //$('#change-color-switch').bootstrapSwitch('offColor', 'danger');
+
         }
     ]
 ).filter('existFilter', function(input) {

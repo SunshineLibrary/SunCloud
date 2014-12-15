@@ -29,18 +29,30 @@ angular.module('schools')
             });
 
             _.each($scope.schools, function(school) {
-                RoomDataProvider.getCountsOfRoomsBySchool(school._id, function(counts){
-                    school.roomCount = counts.count;
+                RoomDataProvider.getCountsOfRoomsBySchool(school._id, function(err, counts){
+                    if(err) {
+                        console.error(err);
+                    }
+                    school.roomCount = counts;
                 });
-                StudentDataProvider.getCountsOfStudentsBySchool(school._id, function(counts){
-                    school.studentCount = counts.count;
+                StudentDataProvider.getCountsOfStudentsBySchool(school._id, function(err, counts){
+                    if(err) {
+                        console.error(err);
+                    }
+                    school.studentCount = counts;
                 });
-                TeacherDataProvider.getCountsOfTeachersBySchool(school._id, function(counts){
-                    school.teacherCount = counts.count;
+                TeacherDataProvider.getCountsOfTeachersBySchool(school._id, function(err, counts){
+                    if(err) {
+                        console.error(err);
+                    }
+                    school.teacherCount = counts;
                 });
-                TabletDataProvider.getXiaoshuBySchool(school._id, function(counts){
-                    school.xiaoshuLogCount = counts.count;
-                })
+                TabletDataProvider.getXiaoshuLogCountBySchool(school._id, function(err, counts){
+                    if(err) {
+                        console.error(err);
+                    }
+                    school.xiaoshuLogCount = counts;
+                });
             });
 
             $scope.gridOptions =
@@ -60,8 +72,8 @@ angular.module('schools')
                     {field: 'xiaoshuLogCount', displayName: '登录晓书人数'},
                     {field: '', displayName: '编辑', cellTemplate:
                     '<div class="ngCellText" ng-class="col.colIndex()" ng-show="showedit">' +
-                    '<a class="glyphicon glyphicon-edit text-success" ng-click="showEditSchoolDialog($event, row)"></a> &nbsp;&nbsp;' +
-                    '<a class="glyphicon glyphicon-remove text-success" ng-click="deleteSchool($event,row)"></a></div>'}
+                    '<a class="fui-new text-success" ng-click="showEditSchoolDialog($event, row)"></a> &nbsp;&nbsp;' +
+                    '<a class="fui-cross text-danger" ng-click="deleteSchool($event,row)"></a></div>'}
                 ],
                 filterOptions: $scope.filterOptions,
                 selectedItems: $scope.selectedSchool
@@ -173,7 +185,14 @@ angular.module('schools')
             };
 
             $scope.selectSchool = function () {
-                console.log($scope.gridOptions.selectedItems);
                 $location.path('/schools/' + $scope.gridOptions.selectedItems[0]._id);
             };
+
+
+            // Focus state for append/prepend inputs
+            $('.input-group').on('focus', '.form-control', function () {
+                $(this).closest('.input-group, .form-group').addClass('focus');
+            }).on('blur', '.form-control', function () {
+                $(this).closest('.input-group, .form-group').removeClass('focus');
+            });
         }]);

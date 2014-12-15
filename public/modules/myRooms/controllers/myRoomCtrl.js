@@ -3,7 +3,6 @@
 angular.module('myRooms').controller('myRoomController',
     ['theRoom', '$scope', '$rootScope','$stateParams', '$location', 'Authentication','RoomDataProvider', 'StudentDataProvider', 'UserDataProvider', 'TabletDataProvider','AuthService', '$state',
     function(theRoom, $scope, $rootScope, $stateParams, $location, Authentication, RoomDataProvider, StudentDataProvider,UserDataProvider, TabletDataProvider,AuthService, $state) {
-        console.log(theRoom);
         $scope.authentication = Authentication;
         $scope.theRoom = theRoom;
         $scope.editorEnabled = false;
@@ -11,9 +10,7 @@ angular.module('myRooms').controller('myRoomController',
         $scope.isAddingCode = false;
         $scope.filterOptions = {filterText: ''};
         $scope.filterOptions2 = {filterText: ''};
-        $scope.filterOptions3 = {filterText: ''};
         $scope.selectedStudents = [];
-        $scope.selectedStudents3 = [];
         $scope.selectednow = [];
         $scope.selecteddb = [];
         $scope.dupList = [];
@@ -54,7 +51,6 @@ angular.module('myRooms').controller('myRoomController',
         $scope.noTabletNum = 0;
         var updateTablet = function(student) {
             UserDataProvider.getTablet(student._id).then(function(record){
-                console.log(record);
                 if(record.length){
                     student.tabletId = record[0].tabletId._id;
                     student.tablet = record[0].tabletId.machine_id;
@@ -167,9 +163,6 @@ angular.module('myRooms').controller('myRoomController',
         };
         $scope.toAddStudentsFromOtherRoom = function() {
             getOtherRooms();
-            $scope.gridOptions3.selectAll(false);
-            //console.log($scope.gridOptions3.selectedItems);
-            //console.log($scope.selectedStudents3);
             $('#addStudentsFromOtherRoomDialog').modal('show');
         };
         $scope.toCreateStudent = function() {
@@ -227,27 +220,35 @@ angular.module('myRooms').controller('myRoomController',
             allRoomsPromise.then(function(rooms) {
                 getMyTeachingRoomsPromise.then(function(myRooms) {
                     var allRooms = rooms.concat(myRooms);
-                    //$scope.otherRooms = _.without(allRooms, _.findWhere(allRooms, {_id: myRooms._id}));
-                    $scope.otherRooms = _.filter(allRooms, function(room) {
-                        return room._id !== theRoom._id;
+                    $scope.otherRooms = _.reject(allRooms, function(room) {
+                        return room._id === theRoom._id;
                     });
-                    //$scope.otherRooms.splice();
                     var studentIds = _.map($scope.students, function(student) {return student._id});
-                    $scope.studentsOfOtherRoom = _.filter($scope.otherRooms[0].students, function(student) {
-                        return studentIds.indexOf(student._id) === -1;
+                    _.each($scope.otherRooms, function(otherRoom) {
+                        otherRoom.checkall = true;
+                       otherRoom.studentsNotInRoom = _.filter(otherRoom.students, function(student) {
+                           return studentIds.indexOf(student._id) === -1;
+                       });
+                        _.each(otherRoom.studentsNotInRoom, function(student) {
+                            student.selected = false;
+                        });
                     });
                 })
             });
         };
 
-        $scope.getStudentsOfRoom = function(roomId) {
-            var otherRoom = _.find($scope.otherRooms, function(room) {
-                return room._id === roomId;
-            });
-            var studentIds = _.map($scope.students, function(student) {return student._id});
-            $scope.studentsOfOtherRoom = _.filter(otherRoom.students, function(student) {
-                return studentIds.indexOf(student._id) === -1;
-            });
+        $scope.checkAll = function(room) {
+            if(room.checkall) {
+                _.each(room.studentsNotInRoom, function(student) {
+                    student.selected = true;
+                })
+            }else {
+                _.each(room.studentsNotInRoom, function(student) {
+                    student.selected = false;
+                })
+            }
+            room.checkall = !room.checkall;
+
         };
 
         var getStudentsNotInRoom = function() {
@@ -286,23 +287,27 @@ angular.module('myRooms').controller('myRoomController',
         };
 
         $scope.addStudentsOfOtherRoomToRoom = function() {
-            console.log($scope.gridOptions3.selectedItems);
-            console.log($scope.selectedStudents3);
-            if($scope.gridOptions3.selectedItems.length) {
-                //var oriIds = _.map($scope.students, function(student) {return student._id});
-                $scope.gridOptions3.selectedItems = _.uniq($scope.gridOptions3.selectedItems, '_id');
-                var newIds = _.map($scope.gridOptions3.selectedItems, function(student) {return student._id});
-                console.log(newIds);
-                RoomDataProvider.addStudentsToRoom($scope.theRoom._id, newIds)
+            var selectedStudents = [];
+            _.each($scope.otherRooms, function(otherRoom) {
+                _.each(otherRoom.studentsNotInRoom, function(student) {
+                    if(student.selected) {
+                        selectedStudents.push(student);
+                    }
+                })
+            });
+            selectedStudents = _.uniq(selectedStudents, '_id');
+            var selectedStudentsId = _.map(selectedStudents, function(student) {
+                return student._id;
+            });
+            if(selectedStudents.length) {
+                RoomDataProvider.addStudentsToRoom($scope.theRoom._id, selectedStudentsId)
                     .success(function(room) {
                         console.log('success');
-                        console.log($scope.gridOptions3.selectedItems);
                         $('#addStudentsFromOtherRoomDialog').modal('hide');
-                        _.each($scope.gridOptions3.selectedItems, function(student) {
+                        _.each(selectedStudents, function(student) {
                             updateTablet(student);
                         });
-                        $scope.students = $scope.students.concat($scope.gridOptions3.selectedItems);
-                        $scope.gridOptions3.selectAll(false);
+                        $scope.students = $scope.students.concat(selectedStudents);
                         $rootScope.$broadcast('changeStudents', {id: $scope.theRoom._id,studentsNum:$scope.students.length});
                         swal({title: "添加成功", type: "success", timer: 1500});
                     }).error(function(err) {
@@ -326,8 +331,8 @@ angular.module('myRooms').controller('myRoomController',
                 function(){
                     RoomDataProvider.removeStudentFromRoom(theRoom._id, row.entity._id)
                         .success(function(room) {
-                            $scope.students = _.filter($scope.students, function(student) {
-                                return student._id !== row.entity._id;
+                            $scope.students = _.reject($scope.students, function(student) {
+                                return student._id === row.entity._id;
                             });
                             swal({title: "移出成功", type: 'success', timer: 1500});
                             $rootScope.$broadcast('changeStudents', {id: $scope.theRoom._id,studentsNum:$scope.students.length});
@@ -624,14 +629,14 @@ angular.module('myRooms').controller('myRoomController',
             columnDefs: [
                 {field: 'username', displayName: '用户名', cellTemplate:'<div class="ngCellText" ng-class="col.colIndex()"><a href="/#/students/{{row.entity._id}}">{{row.getProperty(col.field)}}</a></div>'},
                 {field: 'name', displayName: '姓名'},
-                {field: 'tablet', displayName: '正在使用的晓书',cellTemplate:'<div class="ngCellText" ng-class="col.colIndex()"><a ng-show="row.entity.tablet" href="/#/tablets/{{row.entity.tabletId}}">{{row.getProperty(col.field)}}</a><span ng-hide="row.entity.tablet" class="label label-default">暂无</span></div>'},
-                {field: 'loginTime', displayName: '上次登录时间'},
+                {field: 'tablet', displayName: '正在使用的晓书', width: '25%',cellTemplate:'<div class="ngCellText" ng-class="col.colIndex()"><a ng-show="row.entity.tablet" href="/#/tablets/{{row.entity.tabletId}}">{{row.getProperty(col.field)}}</a><span ng-hide="row.entity.tablet" class="label label-default">暂无</span></div>'},
+                {field: 'loginTime', displayName: '上次登录'},
                 {field: '', displayName: '操作', cellTemplate:
                 '<div class="ngCellText" ng-class="col.colIndex()"  ng-show="showedit">' +
-                '<a class="glyphicon glyphicon-edit text-primary" ng-click="showEditStudentDialog(row)"></a> &nbsp;&nbsp;' +
-                '<a class="glyphicon glyphicon-remove text-primary" ng-click="removeStudentFromRoom(row)"></a></div>'},
+                '<a class="fui-new text-success" ng-click="showEditStudentDialog(row)"></a> &nbsp;&nbsp;' +
+                '<a class="fui-cross-circle text-danger" ng-click="removeStudentFromRoom(row)"></a></div>'},
                 {field: 'tablet', displayName: '',
-                    cellTemplate:'<button type="button" style="align-items: center" class="btn btn-default btn-sm" ng-click="logout(row)" ng-show="row.entity.tablet"><span class="glyphicon glyphicon-log-out"></span> 登出晓书</button>'}
+                    cellTemplate:'<button type="button" style="align-items: center" class="btn btn-inverse btn-sm" ng-click="logout(row)" ng-show="row.entity.tablet"><span class="glyphicon glyphicon-log-out"></span> 登出晓书</button>'}
             ]
         };
         $scope.gridOptions2 =
@@ -651,21 +656,6 @@ angular.module('myRooms').controller('myRoomController',
             selectedItems: $scope.selectedStudents,
             filterOptions: $scope.filterOptions2
         };
-        $scope.gridOptions3 =
-        {
-            data: 'studentsOfOtherRoom',
-            multiSelect: true,
-            showSelectionCheckbox: true,
-            rowTemplate: '<div  ng-mouseover="$parent.showedit=true" ng-mouseleave="$parent.showedit=false" ng-style="{\'cursor\': row.cursor, \'z-index\': col.zIndex() }" ' +
-            'ng-repeat="col in renderedColumns" ng-class="col.colIndex()" ' +
-            'class="ngCell {{col.cellClass}}" ng-cell></div>',
-            checkboxCellTemplate: '<div class="ngSelectionCell"><input tabindex="-1" class="ngSelectionCheckbox" type="checkbox" ng-checked="row.selected" /> &nbsp;</div>',
-            columnDefs: [
-                {field: 'name', displayName: '姓名', width:'50%'},
-                {field: 'username', displayName: '用户名', width: '50%'}
-            ],
-            selectedItems: $scope.selectedStudents3,
-            filterOptions: $scope.filterOptions3
-        };
+
     }
 ]);

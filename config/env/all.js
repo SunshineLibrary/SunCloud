@@ -21,7 +21,7 @@ module.exports = {
 		secure: false,
 		// Only set the maxAge to null if the cookie shouldn't be expired
 		// at all. The cookie will expunge when the browser is closed.
-		maxAge: null,
+		maxAge: null
 		// To set the cookie in a specific domain uncomment the following
 		// setting:
 		// domain: 'yourdomain.com'
@@ -41,10 +41,13 @@ module.exports = {
 		lib: {
 			css: [
 				'public/lib/bootstrap/dist/css/bootstrap.css',
-				'public/lib/bootstrap/dist/css/bootstrap-theme.css',
+				//'public/lib/bootstrap/dist/css/bootstrap-theme.css',
+				'public/lib/flat-ui-pro/dist/css/flat-ui-pro.css',
                 'public/lib/angular-ui-grid/ui-grid.min.css',
 				'public/lib/ng-grid/ng-grid.css',
-				'public/lib/sweetalert/sweet-alert.css'
+				'public/lib/sweetalert/sweet-alert.css',
+				'public/lib/font-awesome/css/font-awesome.css',
+				//'public/lib/bootstrap-switch/dist/css/bootstrap3/bootstrap-switch.css'
 			],
 			js: [
 				//'public/lib/ng-file-upload/angular-file-upload-shim.js',
@@ -56,17 +59,32 @@ module.exports = {
 				'public/lib/angular-ui-utils/ui-utils.js',
 				'public/lib/angular-bootstrap/ui-bootstrap-tpls.js',
 				'public/lib/jquery/dist/jquery.min.js',
+				'public/lib/js/datepickerzh.js',
 				'public/lib/underscore/underscore-min.js',
 				//'cdnjs.cloudflare.com/ajax/libs/underscore.js/1.7.0/underscore.js',
 				'public/lib/angular-ui-grid/ui-grid.min.js',
 				'public/lib/ng-grid/ng-grid-2.0.13.min.js',
 				'public/lib/moment/moment.js',
-				'public/lib/bootstrap/dist/js/bootstrap.min.js',
+				//'public/lib/bootstrap/dist/js/bootstrap.min.js',
 				'public/lib/sweetalert/sweet-alert.min.js',
 				'public/lib/angular-file-upload/angular-file-upload.js',
 				'public/lib/checklist-model/checklist-model.js',
-				'public/lib/angular-bootstrap-checkbox/angular-bootstrap-checkbox.js'
-				//'public/lib/ng-file-upload/angular-file-upload.js'
+				'public/lib/angular-bootstrap-checkbox/angular-bootstrap-checkbox.js',
+				'public/lib/async/lib/async.js',
+				'public/lib/flat-ui-pro/dist/js/flat-ui-pro.js',
+				'public/lib/flat-ui-pro/docs/assets/js/application.js',
+				'public/lib/bootstrap-switch/dist/js/bootstrap-switch.js',
+				'public/lib/angular-breadcrumb/dist/angular-breadcrumb.js'
+				//'public/lib/angular-bootstrap-switch/dist/angular-bootstrap-switch.js',
+				//'public/lib/angular-bootstrap-switch/src/directives/bsSwitch.js'
+                //
+
+
+
+				//'http://d3js.org/d3.v3.min.js" charset="utf-8"'
+
+
+//'public/lib/ng-file-upload/angular-file-upload.js'
 
 
 

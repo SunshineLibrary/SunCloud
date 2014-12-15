@@ -4,6 +4,7 @@
  * Module dependencies.
  */
 var mongoose = require('mongoose'),
+	_ = require('underscore'),
 	Schema = mongoose.Schema,
 	crypto = require('crypto');
 
@@ -45,6 +46,10 @@ var UserSchema = new Schema({
 		type: String,
 		default: 'xiaoshu',
 		validate: [validateLocalStrategyPassword, '密码太短啦']
+	},
+	resetPassword: {
+		type: Boolean,
+		default: false
 	},
 	salt: {
 		type: String
@@ -131,11 +136,34 @@ UserSchema.virtual('profile').get(function () {
  * Hook a pre save method to hash the password
  */
 UserSchema.pre('save', function(next) {
-	if (this.password && this.password.length > 6) {
+	if (this.password && this.password.length > 5) {
 		this.salt = new Buffer(crypto.randomBytes(16).toString('base64'), 'base64');
 		this.password = this.hashPassword(this.password);
 	}
 	next();
+});
+
+UserSchema.pre('remove', function(next) {
+	console.log('------pre remove');
+	var Room = mongoose.model('Room');
+	var thisUserId = this._id;
+	Room.find({students: thisUserId}, function(err, rooms) {
+		if(err) {
+			next(err);
+		}else {
+			if(rooms.length) {
+				_.each(rooms, function(room) {
+					room.students = _.reject(room.students, function(student) {
+						return student === thisUserId;
+					});
+					room.save(function(err) {
+						next(err);
+					})
+				})
+			}
+			next();
+		}
+	})
 });
 
 /**

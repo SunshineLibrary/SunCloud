@@ -4,15 +4,15 @@
         <p class="xiaoshu2">您的登录用户名为：<strong>{{me.username}}</strong></p>
     </div>
     <div ng-show="mytablet">
-        <ul class="nav nav-tabs" style="margin-top:50px">
-            <li class="active" ><a href="#details" data-toggle="tab" >晓书详情</a></li>
-            <li ><a href="#myApps" data-toggle="tab">安装的应用程序</a></li>
-            <li ><a href="#myFiles" data-toggle="tab">文件</a></li>
-        </ul>
-        <div id="subtab-container">
-            <div id="subtab-tab-content" class="tab-content">
-                <div class="tab-pane fade in active col-md-12" id="details">
-                    <br/>
+
+        <div class="tabbable" style="margin-top:40px">
+            <ul class="nav nav-tabs nav-append-content">
+                <li class="active"><a href="#details">晓书详情</a></li>
+                <li><a href="#myApps">安装的应用程序</a></li>
+                <li><a href="#myFiles">文件</a></li>
+            </ul> <!-- /tabs -->
+            <div class="tab-content">
+                <div class="tab-pane active" id="details">
                     <br/>
                     <table width="40%">
                         <tr>
@@ -35,18 +35,14 @@
                             <td>上次更新</td>
                             <td>{{mytablet.lastUpdate}}</td>
                         </tr>
-                    </table>
-
+                    </table>                </div>
+                <div class="tab-pane" id="myApps">
+                    <p>Howdy, I'm in Section 2.</p>
                 </div>
-                <div class="tab-pane fade col-md-12" id="myApps">
-
+                <div class="tab-pane" id="myFiles">
+                    <p>Howdy, I'm in Section 3.</p>
                 </div>
-
-                <div class="tab-pane fade col-md-12" id="myFiles">
-
-                </div>
-
-            </div>
+            </div> <!-- /tab-content -->
         </div>
     </div>
 </div>

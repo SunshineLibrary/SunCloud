@@ -7,10 +7,27 @@
     background-image:linear-gradient(to bottom left, #8cc540,#009f5d);
     border-radius: 6px;
     height: 50px;
-
 }
 
+.sun-name {
+    font-size: xx-large;
+    color: #006400;
+}
 
+.bootstrap-switch {
+    overflow: visible !important;
+    /*data-handle-width: 100px !important;*/
+    /*data-label-width: 100px !important;*/
+}
+
+.sun-id {
+    font-size: small;
+    color: #30dff3;
+}
+
+.sun-error {
+    color: #ff0000;
+}
 .app-header{
     background-color: #00A352;
     padding: 5px 25px 10px;
@@ -20,6 +37,16 @@
     height: 100px;
 }
 
+.sun-header{
+    /*background-color: #00A352;#f3f9f1;*/
+    background-color: #f0f0f4;
+    padding: 5px 25px 10px;
+    border-radius: 6px;
+    color: darkgreen;
+    margin-top: 10px;
+    height: 70px;
+    vertical-align: text-bottom;
+}
 .assign-class-list-long-false {
     list-style-type: none;
 }
@@ -71,6 +98,10 @@
 
 .style1 .ngRow.hover {
     background-color: red !important;
+}
+
+.style1 {
+    width: 100%;
 }
 
 .ngHeaderCell {

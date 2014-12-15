@@ -1,0 +1,157 @@
+<section class="row" >
+    <div class="container">
+        <div class="col-xs-offset-1 col-xs-10 col-md-offset-1 col-md-10 col-lg-offset-1 col-lg-10">
+            <h3 class="sun-name">{{user.name}}
+            </h3>
+            <hr/>
+            <h4>个人信息
+                <div class="pull-right">
+                    <a role="button" class="btn btn-primary" href="#editProfileDialog" data-toggle="modal"><span class="glyphicon glyphicon-edit"></span> 编辑</a>
+                    &nbsp;&nbsp;
+                    <a role="button" class="btn btn-danger" href="#resetPasswordDialog" data-toggle="modal"><span class="glyphicon glyphicon-lock"></span> 重设密码</a>
+                </div>
+            </h4>
+
+            <table width="50%">
+                <tr>
+                    <td><strong>姓名</strong></td>
+                    <td>{{user.name}}</td>
+                </tr>
+                <tr>
+                    <td><strong>用户名</strong></td>
+                    <td>{{user.username}}</td>
+                </tr>
+                <tr>
+                    <td><strong>电话</strong></td>
+                    <td><div ng-show="user.phone">{{user.phone}}</div><div ng-hide="user.phone"><span class="label label-default">暂无</span></div></td>
+                </tr>
+                <tr>
+                    <td><strong>邮箱</strong></td>
+                    <td><div ng-show="user.email">{{user.email}}</div><div ng-hide="user.email"><span class="label label-default">暂无</span></div></td>
+                </tr>
+            </table>
+            <hr/>
+            <h4>我教授的班级
+                <a class="btn btn-primary pull-right" role="button" href="#claimRoomDialog" data-toggle="modal"><span class="glyphicon glyphicon-shopping-cart"></span> 认领班级</a>
+            </h4>
+            <div ng-hide="myRooms.length" align="center">
+                     <p>您还没有任何班级</p>
+                <a class="btn btn-primary" role="button" href="#claimRoomDialog" data-toggle="modal"><span class="glyphicon glyphicon-shopping-cart"></span> 认领班级</a>
+            </div>
+            <div ng-show="myRooms.length">
+                <span ng-repeat="room in myRooms">
+                    <a ng-href="/#/myrooms/{{room._id}}" role="button" class="btn btn-info btn-lg">
+                        {{room.name}}
+                    </a>
+                    &nbsp;&nbsp;
+                </span>
+            </div>
+            <hr/>
+
+        </div>
+
+    </div>
+</section>
+
+
+
+<div class="modal fade" id="editProfileDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class='modal-dialog'>
+        <div class='modal-content'>
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span></button>
+                <h4 class="modal-title">编辑个人信息</h4>
+            </div>
+            <div class="modal-body">
+                <form name="editProfileForm" class="form-group">
+                    <div class="input-group">
+                        <span class="input-group-btn"><button class="btn" type="button"><span class="fui-user">&nbsp;姓名</span></button></span>
+                        <input type="text" id="name" name="name" class="form-control"  placeholder="请输入您的中文姓名" data-ng-model="user.name" required>
+                    </div>
+                    <br>
+                    <div class="input-group">
+                        <span class="input-group-btn"><button class="btn" type="button"><span class="">用户名</span></button></span>
+                        <input type="text" id="username" name="username" class="form-control" placeholder="请输入您的新用户名" data-ng-model="user.username" required>
+                    </div>
+                    <br>
+                    <div class="input-group">
+                        <span class="input-group-btn"><button class="btn" type="button"><span class="glyphicon glyphicon-phone">电话</span></button></span>
+                        <input type="text" id="phone" name="phone" class="form-control" placeholder="请输入您的电话号码" data-ng-model="user.phone">
+                    </div>
+                    <br>
+                    <div class="input-group">
+                        <span class="input-group-btn"><button class="btn" type="button"><span class="fui-mail">&nbsp;邮箱</span></button></span>
+                        <input type="text" id="email" name="email" class="form-control" placeholder="请输入您的邮箱" data-ng-model="user.email">
+                    </div>
+                </form>
+                <!--<span style="color: red" ng-show="error">修改失败，可能由于用户名已存在。请修改用户名后重试。</span>-->
+                <div data-ng-show="error" class="text-center text-danger">
+                    <strong data-ng-bind="error"></strong>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-defautl" data-dismiss="modal">取消</button>
+                <button class="btn btn-success btn-lg" ng-click="updateUserProfile(editProfileForm.$valid)" ng-disabled="editProfileForm.$invalid">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="modal fade" id="resetPasswordDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class='modal-dialog'>
+        <div class='modal-content'>
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span></button>
+                <h4 class="modal-title">重设密码</h4>
+            </div>
+            <div class="modal-body">
+                <form name="resetForm" class="form-group">
+                    <div class="input-group">
+                        <span class="input-group-btn"><button class="btn" type="button"><span class="fui-lock">&nbsp;原密码</span></button></span>
+                        <input type="text" id="originalPassword" class="form-control" placeholder="请输入当前密码"  ng-model="passwordDetails.currentPassword" required>
+                    </div>
+                    <br>
+                    <div class="input-group">
+                        <span class="input-group-btn"><button class="btn" type="button"><span class="fui-lock">&nbsp;新密码</span></button></span>
+                        <input type="text" id="newPassword" class="form-control" placeholder="请输入新密码"  ng-model="passwordDetails.newPassword" required>
+                    </div>
+                    <br>
+                    <div class="input-group">
+                        <span class="input-group-btn"><button class="btn" type="button"><span class="">确认新密码</span></button></span>
+                        <input type="text" id="again" class="form-control" placeholder="确认新密码" ng-model="passwordDetails.verifyPassword" required>
+                    </div>
+                </form>
+                <span style="color: red" ng-show="error">{{error}}</span>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-defautl" data-dismiss="modal">取消</button>
+                <button class="btn btn-success btn-lg" ng-click="changeUserPassword()" ng-disabled="resetForm.$invalid">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="claimRoomDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" ng-click="close('Cancel')" data-dismiss="modal" aria-hidden="true">&times</button>
+                <h4 class="modal-title">认领班级</h4>
+            </div>
+            <div class="modal-body">
+                <form name="newRoomForm"  class="form-group inline input-group input-group-lg">
+                    <select class="form-control select-primary" id="selectRoom" data-ng-options="room.name for room in roomList" data-ng-model="selectedRoom" required></select>
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-success" ng-click="claimRoom()"><span>认领</span></button>
+                    </span>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+

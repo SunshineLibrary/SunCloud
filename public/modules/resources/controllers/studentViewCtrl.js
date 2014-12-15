@@ -3,27 +3,56 @@ angular.module('resources')
     ['student','StudentDataProvider', '$scope', 'AuthService', 'UserDataProvider','RoomDataProvider', '$location', '$stateParams',
         function (student,StudentDataProvider, $scope, AuthService, UserDataProvider, RoomDataProvider,$location, $stateParams) {
             $scope.student = student;
-            $scope.rooms = [];
+            $scope.temp = {};
 
 
             RoomDataProvider.getRoomsByStudent($stateParams.studentId).then(function(rooms) {
-                _.each(rooms, function(room) {
-                    $scope.rooms.push(room.name)
-                })
+                $scope.rooms = rooms;
             });
 
             UserDataProvider.getTablet($stateParams.studentId).then(function(record) {
                 if(record.length){
-                    $scope.tablet = record[0].tabletId.machine_id;
+                    $scope.tablet = record[0].tabletId;
                 }else{
-                    $scope.tablet = "暂无"
+                    $scope.tablet = null;
                 }
             });
 
             UserDataProvider.getTabletHistory($stateParams.studentId).then(function(history) {
                 $scope.xiaoshuHistory = history;
 
-            })
+            });
+
+
+            $scope.showEditStudentDialog = function() {
+                $('#editStudentDialog').modal('show');
+                $scope.temp.newName = $scope.student.name;
+                $scope.temp.newUsername = $scope.student.username;
+                $scope.temp.newBirthday = $scope.student.birthday;
+            };
+            $scope.editStudent = function() {
+                var info = {};
+                info._id = student._id;
+                info.name = $scope.temp.newName;
+                info.username = $scope.temp.newUsername;
+                info.birthday = $scope.temp.newBirthday;
+                StudentDataProvider.editStudentNameBirthday(info)
+                    .success(function(editedStudent) {
+                        $scope.student.name = editedStudent.name;
+                        $scope.student.username = editedStudent.username;
+                        $scope.student.birthday = editedStudent.birthday;
+                        $('#editStudentDialog').modal('hide');
+                        swal({title: "修改成功", type: "success", timer: 1000 });
+                        $scope.error = false;
+                    })
+                    .error(function(err) {
+                        console.error(err);
+                        $scope.error = true;
+                        swal({title: "修改失败", text: "请重试", type: "error", timer: 2000 });
+                    })
+            };
+
+
 
 
 

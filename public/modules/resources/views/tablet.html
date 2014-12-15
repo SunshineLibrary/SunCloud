@@ -1,14 +1,56 @@
-<div>
-    晓书编号： {{tablet.machine_id}}
-    <br>
-    操作系统： {{tablet.OS_type}}
-    <br>
-    操作系统版本： {{tablet.OS_version}}
-    <br>
-    上次更新： {{tablet.lastUpdate}}
-    <br>
-    所属学校：{{tablet.school.name}}
-    <br>
-    正在使用： {{user}}
+<section>
+    <div class="page-header">
+        <h4>{{tablet.machine_id}}
+            <small> &nbsp;
+                <span class="label label-success">晓书</span>
+            </small>
+            <div class="pull-right">
+                <span class="sun-id">id: {{tablet._id}}</span>
+                <button class="btn btn-inverse" ng-click="back()"> <i class="glyphicon glyphicon-chevron-left"></i>返回 &nbsp;&nbsp;</button>
+            </div>
+        </h4>
+    </div>
 
-</div>
+    <div>
+        <h4>晓书信息
+            <div class="pull-right" ng-show="user">
+                <button role="button" class="btn btn-danger" ng-click="logout()"><span class="glyphicon glyphicon-log-out"></span> 登出</button>
+                &nbsp;&nbsp;
+            </div>
+        </h4>
+        <table width="500px">
+            <tr>
+                <td><strong>晓书编号</strong></td>
+                <td>{{tablet.machine_id}}</td>
+            </tr>
+            <tr>
+                <td><strong>操作系统</strong></td>
+                <td>{{tablet.OS_type}}</td>
+            </tr>
+            <tr>
+                <td><strong>系统版本</strong></td>
+                <td>{{tablet.OS_version}}</td>
+            </tr>
+            <tr>
+                <td><strong>所属学校</strong></td>
+                <td>{{tablet.school.name}}</td>
+            </tr>
+            <tr>
+                <td><strong>上次更新</strong></td>
+                <td>{{tablet.lastUpdate}}</td>
+            </tr>
+            <tr>
+                <td><strong>正在使用</strong></td>
+                <td>
+                    <div ng-show="user">
+                        <a ng-href="#/{{role}}/{{user._id}}">{{user.name}}</a>
+                    </div>
+                    <div ng-hide="user">
+                        <span class="label label-default">暂无</span>
+                    </div>
+                </td>
+            </tr>
+        </table>
+
+        </div>
+</section>

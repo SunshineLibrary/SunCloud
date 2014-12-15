@@ -116,7 +116,7 @@ angular.module('resources')
             }else {
                 appData.create_by = 'teacher';
                 appData.school = user.school;
-                appData.teacher = user._id;
+                appData.owner = user._id;
             }
             return $http({
                 method: "POST",

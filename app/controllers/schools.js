@@ -6,6 +6,9 @@
 var mongoose = require('mongoose'),
     errorHandler = require('./errors'),
     School = mongoose.model('School'),
+    Room = mongoose.model('Room'),
+    User = mongoose.model('User'),
+    async = require('async'),
     _ = require('lodash');
 
 /**
@@ -67,7 +70,53 @@ exports.delete = function(req, res) {
         }
     });
 };
+/**
+ * After delete a school, also delete the rooms, teachers, students in the school.
+ * @param res
+ * @param result
+ * @param done
+ */
+exports.deleteSchool = function(res, result, done) {
+    var school = result[0];
+    Room.find({school: school._id}, function(err, rooms) {
+        if(err) {
+            done(err);
+        }
+        if(rooms.length) {
+            async.each(rooms, function(room, callback) {
+                room.remove(function(err) {
+                    if(err) {
+                        callback(err);
+                    }
+                })
+            }, function(err) {
+                if(err) {
+                    done(err);
+                }
+            });
+        }
+    });
 
+    User.find({school: school._id}, function(err, users) {
+        if(err) {
+            done(err);
+        }
+        if(users.length) {
+            async.each(users, function(user, callback) {
+                user.remove(function(err) {
+                    if(err) {
+                        callback(err);
+                    }
+                })
+            }, function(err) {
+                if(err) {
+                    done(err);
+                }
+            })
+        }
+    });
+    done();
+};
 
 
 exports.getSchoolById = function (req, res, next, schoolId) {

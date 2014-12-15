@@ -26,26 +26,27 @@ module.exports = function(app) {
 
 	// Setting up the users password api
 	app.route('/users/password').post(users.changePassword);
+	app.route('/password/reset').post(users.resetPassword);
 	app.route('/auth/forgot').post(users.forgot);
 	app.route('/auth/reset/:token').get(users.validateResetToken);
 	app.route('/auth/reset/:token').post(users.reset);
 
 	// Setting up the users authentication api
-	app.route('/auth/signup').post(users.signup);
+	//app.route('/auth/signup').post(users.signup);
 	app.route('/auth/signin').post(users.signin);
 	app.route('/auth/signout').get(users.signout);
 
 
 	app.route('/rooms').post(users.restifyRoom, rooms.createRoom);
-	app.route('/rooms/:id').delete(users.restifyRoom, rooms.removeRoom);
-	app.route('/assign/apps').put(rooms.assignApp);
+	app.route('/rooms/:roomId').delete(users.restifyRoom, rooms.removeRoom);
+	app.route('/assign/apps').put(users.restifyRoom, rooms.assignApp);
 
 
 	app.route('/usertablet/').get(userTablets.logout);
 	app.route('/usertablet/count').get(userTablets.countBySchool);
 
 	//apk upload and download
-	app.route('/upload/app/:appId').post(multerMiddleware, apps.upload);
+	app.route('/upload/app/:appId').post(users.restifyApp, multerMiddleware, apps.upload);
 	app.route('/download/apks/:apkId').get(apps.downloadApk);
 	app.route('/apks/get_updates').post(apps.getUpdate);
 
@@ -64,8 +65,12 @@ module.exports = function(app) {
 		lowercase: true,
 		access: users.userAccess,
 		findOneAndUpdate: false,
+		findOneAndRemove: false,
 		protected: "password,salt",
-		private: "password,salt"
+		private: "password,salt",
+		//postProcess: users.userPostProcess,
+		postDelete: users.deleteUser,
+		fullErrors: true
 	};
 
 
@@ -77,7 +82,11 @@ module.exports = function(app) {
 		middleware: [users.restifySchool],
 		access: users.schoolAccess,
 		private: "launcherPassword",
-		findOneAndUpdate: false
+		findOneAndUpdate: false,
+		findOneAndRemove: false,
+		postDelete: schools.deleteSchool,
+		fullErrors: true
+
 	};
 
 	var roomOptions = {
@@ -86,7 +95,9 @@ module.exports = function(app) {
 		version: '',
 		lowercase: true,
 		middleware: [users.restifyRoom],
-		findOneAndUpdate: true
+		//findOneAndUpdate: false,
+		findOneAndRemove: false,
+		fullErrors: true
 	};
 	var userTabletOptions = {
 		strict: true,
@@ -94,7 +105,9 @@ module.exports = function(app) {
 		version: '',
 		lowercase: true,
 		middleware: [users.restifyUserTablet],
-		findOneAndUpdate: false
+		findOneAndUpdate: false,
+		findOneAndRemove: false,
+		fullErrors: true
 	};
 
 	var subjectOptions = {
@@ -103,7 +116,9 @@ module.exports = function(app) {
 		version: '',
 		lowercase: true,
 		middleware: [users.restifySubject],
-		findOneAndUpdate: false
+		findOneAndUpdate: false,
+		findOneAndRemove: false,
+		fullErrors: true
 	};
 
 	var tabletOptions = {
@@ -112,7 +127,9 @@ module.exports = function(app) {
 		version: '',
 		lowercase: true,
 		middleware: [users.restifyTablet],
-		findOneAndUpdate: false
+		findOneAndUpdate: false,
+		findOneAndRemove: false,
+		fullErrors: true
 	};
 
 	var appOptions = {
@@ -120,8 +137,11 @@ module.exports = function(app) {
 		prefix: '',
 		version: '',
 		lowercase: true,
-		middleware: [users.restifyApp]
-		//findOneAndUpdate: false
+		middleware: [users.restifyApp],
+		findOneAndUpdate: false,
+		findOneAndRemove: false,
+		postDelete: apps.deleteApp,
+		fullErrors: true
 	};
 
 	var UserModel = mongoose.model('User');

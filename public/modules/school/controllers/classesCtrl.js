@@ -20,11 +20,13 @@ angular.module('schoolManage')
                 columnDefs: [
                     {field: '_id', visible: false},
                     {field: 'name', displayName: '班级名'},
-                    {field: 'code', displayName: '班级编号'},
+                    {field: 'code', displayName: '班级编号', cellTemplate: '<div ng-show="row.entity.code">{{row.entity.code}}</div><div ng-hide="row.entity.code"><span class="label label-default">暂无</span></div>'},
+                    {field:'students.length', displayName: '学生数'},
+                    {field: 'teachers.length', displayName: '老师数'},
                     {field: '', displayName: '编辑', cellTemplate:
                     '<div class="ngCellText" ng-class="col.colIndex()" ng-show="showedit">' +
-                    '<a class="glyphicon glyphicon-edit text-success" ng-click="showEditRoomDialog($event, row)"></a> &nbsp;&nbsp;' +
-                    '<a class="glyphicon glyphicon-remove text-success" ng-click="deleteRoom($event, row)"></a></div>'}
+                    '<a class="fui-new text-success" ng-click="showEditRoomDialog($event, row)"></a> &nbsp;&nbsp;' +
+                    '<a class="fui-cross text-danger" ng-click="deleteRoom($event, row)"></a></div>'}
 
                     //{field: 'school.name', displayName: '管理老师'},
                     //{field: 'grade', displayName: '年级', width: 50}
@@ -44,13 +46,13 @@ angular.module('schoolManage')
                     $scope.temp.createRoomTip = 'formatWrong';
                     return;
                 }
-                var rooms = $scope.rooms;
-                for (var roomIndex = 0; roomIndex < rooms.length; roomIndex++) {
-                    if (rooms[roomIndex].name == $scope.newRoomName.trim()) {
-                        $scope.temp.createRoomTip = 'alreadyHave';
-                        return;
-                    }
-                }
+                //var rooms = $scope.rooms;
+                //for (var roomIndex = 0; roomIndex < rooms.length; roomIndex++) {
+                //    if (rooms[roomIndex].name == $scope.newRoomName.trim()) {
+                //        $scope.temp.createRoomTip = 'alreadyHave';
+                //        return;
+                //    }
+                //}
                 var info = {};
                 info.name = $scope.newRoomName.trim();
                 info.school = me.school;
@@ -63,7 +65,8 @@ angular.module('schoolManage')
                     })
                     .error(function(err){
                         console.log(err);
-                        swal({title: "创建失败", text: "请重试", type: "error", timer: 2000 });
+                        var message = err.errors.name.message || "创建失败，请重试";
+                        swal({title: "创建失败", text: message, type: "error", timer: 2000 });
                     });
             };
 
@@ -105,23 +108,23 @@ angular.module('schoolManage')
                 info.name = $scope.room.newName;
                 info.code = $scope.room.newCode;
 
-                var rooms = $scope.rooms;
-                for (var roomIndex = 0; roomIndex < rooms.length; roomIndex++) {
-                    if(roomIndex !== rooms.indexOf(row.entity)) {
-                        if (rooms[roomIndex].name == $scope.room.newName.trim()) {
-                            $scope.room.nameError = true;
-                            return;
-                        }
-                        if($scope.room.newCode) {
-                            if (rooms[roomIndex].code == $scope.room.newCode.trim()) {
-                                $scope.room.codeError = true;
-                                return;
-                            }
-                        }
-                    }
-                }
+                //var rooms = $scope.rooms;
+                //for (var roomIndex = 0; roomIndex < rooms.length; roomIndex++) {
+                //    if(roomIndex !== rooms.indexOf(row.entity)) {
+                //        if (rooms[roomIndex].name === $scope.room.newName.trim()) {
+                //            $scope.room.nameError = true;
+                //            return;
+                //        }
+                //        if($scope.room.newCode) {
+                //            if (rooms[roomIndex].code === $scope.room.newCode.trim()) {
+                //                $scope.room.codeError = true;
+                //                return;
+                //            }
+                //        }
+                //    }
+                //}
 
-                RoomDataProvider.editRoom(info)
+                RoomDataProvider.editRoomNameAndCode(info)
                     .success(function(editedRoom) {
                         $scope.row.entity.name = editedRoom.name;
                         $scope.row.entity.code = editedRoom.code;
@@ -133,7 +136,7 @@ angular.module('schoolManage')
                     .error(function(err) {
                         console.error(err);
                         $scope.error = true;
-                        swal({title: "修改失败", text: "请重试", type: "error", timer: 2000 });
+                        swal({title: "修改失败", text: "请重试~~~~~", type: "error", timer: 2000 });
                     })
             };
 

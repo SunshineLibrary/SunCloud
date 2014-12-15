@@ -105,7 +105,7 @@ angular.module('schools')
             var teachersPromise = defered.promise;
             $http({
                 method: "GET",
-                url: "/tablets"
+                url: "/tablets?populate=school"
             }).success(function (tablets) {
                 defered.resolve(tablets);
                 if (callBack) {
@@ -170,6 +170,25 @@ angular.module('schools')
         };
 
 
+        var getAllApps = function (callBack) {
+            var defered = $q.defer();
+            var appsPromise = defered.promise;
+            $http({
+                method: "GET",
+                url: "/apps?populate=school,owner"
+            }).success(function (apps) {
+                defered.resolve(apps);
+                if(callBack){
+                    callBack(apps);
+                }
+            }).error(function (err) {
+                defered.reject(err);
+                console.log(err);
+            });
+            return appsPromise;
+        };
+
+
 
 
         return {
@@ -182,8 +201,7 @@ angular.module('schools')
             getAllTablets: getAllTablets,
             getAllTabletsCount: getAllTabletsCount,
             getAllRooms: getAllRooms,
-            getAllRoomsCount: getAllRoomsCount
-
-
+            getAllRoomsCount: getAllRoomsCount,
+            getAllApps: getAllApps
         };
     }]);

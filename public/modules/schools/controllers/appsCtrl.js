@@ -3,6 +3,7 @@ angular.module('schools')
     ['apps', 'AppDataProvider', '$scope', 'AuthService', '$location',
         function (apps, AppDataProvider, $scope, AuthService, $location) {
             $scope.apps = apps;
+            $scope.appsDisplay = apps;
             $scope.temp = {};
             var me = AuthService.me;
             $scope.seletedApp = [];
@@ -38,7 +39,7 @@ angular.module('schools')
 
             $scope.gridOptions =
             {
-                data: 'apps',
+                data: 'appsDisplay',
                 multiSelect: false,
                 filterOptions: $scope.filterOptions,
                 rowTemplate: '<div  ng-mouseover="$parent.showedit=true" ng-mouseleave="$parent.showedit=false" ng-style="{\'cursor\': row.cursor, \'z-index\': col.zIndex() }" ' +
@@ -50,9 +51,11 @@ angular.module('schools')
                     {field: 'package', displayName: '应用的包名', cellTemplate:'<div class="ngCellText" ng-class="col.colIndex()" ng-show="row.entity.package">' +
                     '{{row.getProperty(col.field)}}</div>' +
                     '<div ng-hide="row.entity.package"><span class="label label-default">暂无</span></div>'},
+                    {field: 'school.name', displayName: '所属学校', cellTemplate: '<div ng-show="row.entity.school">{{row.entity.school.name}}</div><div ng-hide="row.entity.school">Root</div>'},
+                    {field:'create_by', displayName: '创建者', cellTemplate: '<div ng-show="row.entity.create_by === \'admin\'">学校管理员</div><div ng-show="row.entity.create_by === \'teacher\'">{{row.entity.owner.name}}</div><div ng-show="row.entity.create_by === \'root\'">Root</div>'},
                     {field: '', displayName: '操作',cellTemplate:
                     '<div class="ngCellText" ng-class="col.colIndex()" ng-show="showedit">' +
-                    '<a class="glyphicon glyphicon-remove text-success" role="button" ng-click="deleteApp($event, row)"></a></div>'}
+                    '<a class="fui-cross text-danger" role="button" ng-click="deleteApp($event, row)"></a></div>'}
                 ],
                 selectedItems: $scope.seletedApp
             };
@@ -84,5 +87,20 @@ angular.module('schools')
 
                         })
                     });
-            }
+            };
+
+            $scope.allApps = function() {
+                $scope.appsDisplay = $scope.apps;
+            };
+            $scope.onlyRoot = function() {
+                $scope.appsDisplay = _.filter($scope.apps, function(app) {
+                    return app.create_by === 'root';
+                })
+            };
+            // Focus state for append/prepend inputs
+            $('.input-group').on('focus', '.form-control', function () {
+                $(this).closest('.input-group, .form-group').addClass('focus');
+            }).on('blur', '.form-control', function () {
+                $(this).closest('.input-group, .form-group').removeClass('focus');
+            });
         }]);

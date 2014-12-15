@@ -1,7 +1,7 @@
 angular.module('schools')
     .controller('classesRootController',
-    ['rooms', 'RoomDataProvider', '$scope',
-        function (rooms, TeacherDataProvider, $scope) {
+    ['rooms', 'RoomDataProvider', '$scope', '$location',
+        function (rooms, TeacherDataProvider, $scope, $location) {
             $scope.rooms = rooms;
 
 
@@ -21,13 +21,8 @@ angular.module('schools')
             };
 
 
-
-            $scope.onDblClickRow = function (rowItem) {
-                var thisUser = rowItem.entity;
-                window.location = '#/student/' + thisUser._id;
+            $scope.selectClass = function () {
+                $location.path('/rooms/' + $scope.gridOptions.selectedItems[0]._id);
             };
-
-
-
 
         }]);

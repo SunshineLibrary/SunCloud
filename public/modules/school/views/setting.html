@@ -1,28 +1,69 @@
 <section>
-    <header class="setting-header"><h2>设置</h2></header>
+    <header class="sun-header"><h4>设置</h4></header>
     <hr/>
     <h3>应用程序</h3>
-    <checkbox median class="btn-default" style="margin-top:0px" ng-model="addApp"></checkbox> &nbsp;&nbsp;&nbsp;所有老师都能新建应用程序
+    <!--<checkbox median class="btn-default" style="margin-top:0px" ng-model="addApp"></checkbox> &nbsp;&nbsp;&nbsp;所有老师都能新建应用程序  或者-->
+    老师能否创建新的应用程序?  <button id="sun-1" style="width:80px;margin-left:10px" class="btn btn-primary btn-wide" ng-click="toSet()">设置</button>
+    <!--<br/>-->
+    <!--<br/>-->
+    <!--<checkbox median class="btn-default" style="margin-top:0px" ng-model="pushApp"></checkbox> &nbsp;&nbsp;&nbsp;所有老师都能推送应用程序-->
     <br/>
-    <br/>
-    <checkbox median class="btn-default" style="margin-top:0px" ng-model="pushApp"></checkbox> &nbsp;&nbsp;&nbsp;所有老师都能推送应用程序
-    <br/>
-    <br/>
-    <div style="margin-left: 200px">
-        <button class="btn btn-primary">保存</button>
-        <button class="btn btn-inverse">取消</button>
-    </div>
+    <!--<br/>-->
+    <!--<div style="margin-left: 200px">-->
+        <!--<button class="btn btn-primary">保存</button>-->
+        <!--<button class="btn btn-inverse">取消</button>-->
+    <!--</div>-->
 
     <hr/>
     <h3>返回原生桌面密码</h3>
     密码: {{school.launcherPassword}} &nbsp;&nbsp;&nbsp;
          <span ng-hide="isResettingPassword">
-            <a href="" role="button" ng-click="enableEditor()" class="btn btn-info">重设密码</a>
+            <a href="" role="button" ng-click="enableEditor()" class="btn btn-primary btn-wide" style="width:80px;margin-left:75px">重设密码</a>
         </span>
         <form ng-show="isResettingPassword" class="form-inline" name="resetForm">
             <input type="text" class="form-control" style="color: black; font-size: large" ng-model="newPassword" placeholder="请输入新密码"/>
-            <a role="button" ng-click="save()" class="btn btn-primary btn-info glyphicon glyphicon-ok" ng-disabled="resetForm.$invalid" >保存</a>
-            <a role="button" ng-click="disableEditor()" class="btn btn-primary btn-warning glyphicon glyphicon-remove" >取消</a>
+            <a role="button" ng-click="save()" class="btn btn-success glyphicon glyphicon-ok" ng-disabled="resetForm.$invalid" >保存</a>
+            <a role="button" ng-click="disableEditor()" class="btn btn-default glyphicon glyphicon-remove" >取消</a>
         </form>
     <hr/>
 </section>
+
+
+
+<div class="modal fade" id="whoCanCreateAppDialog" tabindex="-1" role="dialog" aria-labelledby="addTeachersModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="addTeachersModalLabel">老师创建应用程序权限设置</h4>
+            </div>
+            <div class="modal-body">
+                <p>请选择老师， 被选择的老师将拥有创建应用程序的权限 <br/>(拥有超级管理员权限的老师不在此列表中)</p>
+                <table class="sun-table">
+                    <tr>
+                        <th width="25%">
+                            <a role="button"  class="btn btn-success" style="width:70px" ng-click="checkAll()"><span ng-show="checkall">全&nbsp;&nbsp;&nbsp;选</span><span ng-hide="checkall">全不选</span></a>
+                        </th>
+                        <th>老师姓名</th>
+                        <th>老师用户名</th>
+                    </tr>
+                    <tr ng-repeat="teacher in teachers">
+                        <td>
+                            <checkbox median class="btn btn-primary" style="margin-top:7px;margin-left:15px" ng-model="selected[$index]"></checkbox> &nbsp;&nbsp;&nbsp;&nbsp;
+                        </td>
+                        <td>{{teacher.name}}</td>
+                        <td>{{teacher.username}}</td>
+                    </tr>
+                </table>
+
+            </div>
+            <div class="modal-footer">
+                <div class="pull-right">
+                    <button class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button class="btn btn-primary" ng-click="createAppAccess()">确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

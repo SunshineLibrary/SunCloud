@@ -54,6 +54,7 @@ angular.module('resources')
                 return userPromise;
             };
 
+
             var login = function (password, callBack) {
                 $http({
                     method: 'POST',
@@ -82,6 +83,8 @@ angular.module('resources')
                 }
                 return results;
             };
+
+
 
             var generateStudentInstance = function(ids, names) {
                 var results = [];

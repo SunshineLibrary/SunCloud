@@ -30,8 +30,8 @@ angular.module('schools')
                     {field: 'phone', displayName: '电话'},
                     {field: '', displayName: '编辑', cellTemplate:
                     '<div class="ngCellText" ng-class="col.colIndex()" ng-show="showedit">' +
-                    '<a class="glyphicon glyphicon-edit text-success" ng-click="showEditTeacherDialog($event, row)"></a> &nbsp;&nbsp;' +
-                    '<a class="glyphicon glyphicon-remove text-success" ng-click="deleteTeacher($event,row)"></a></div>'}
+                    '<a class="fui-new text-success" ng-click="showEditTeacherDialog($event, row)"></a> &nbsp;&nbsp;' +
+                    '<a class="fui-cross text-danger" ng-click="deleteTeacher($event,row)"></a></div>'}
 
                     //{field: 'grade', displayName: '年级', width: 50}
                     //{field: 'loginDateLocal', displayName: '上次登录时间', width: 170}
@@ -46,7 +46,7 @@ angular.module('schools')
                 info.school = $scope.newTeacher.school._id;
                 info.phone = $scope.newTeacher.phone;
                 info.email = $scope.newTeacher.email;
-                info.roles = ['teacher'];
+                info.roles = $scope.newTeacher.isAdmin ? ['admin','teacher'] : ['teacher'];
                 info.password = 'xiaoshu';
                 TeacherDataProvider.createTeacher(info)
                     .success(function(teacher){
@@ -137,6 +137,30 @@ angular.module('schools')
             };
 
 
+            // Focus state for append/prepend inputs
+            $('.input-group').on('focus', '.form-control', function () {
+                $(this).closest('.input-group, .form-group').addClass('focus');
+            }).on('blur', '.form-control', function () {
+                $(this).closest('.input-group, .form-group').removeClass('focus');
+            });
+            $('[data-toggle="checkbox"]').radiocheck();
+            // Table: Toggle all checkboxes
+            $('.table .toggle-all :checkbox').on('click', function () {
+                var $this = $(this);
+                var ch = $this.prop('checked');
+                $this.closest('.table').find('tbody :checkbox').radiocheck(!ch ? 'uncheck' : 'check');
+            });
+
+            // Table: Add class row selected
+            $('.table tbody :checkbox').on('change.radiocheck', function () {
+                var $this = $(this);
+                var check = $this.prop('checked');
+                var checkboxes = $this.closest('.table').find('tbody :checkbox');
+                var checkAll = checkboxes.length === checkboxes.filter(':checked').length;
+
+                $this.closest('tr')[check ? 'addClass' : 'removeClass']('selected-row');
+                $this.closest('.table').find('.toggle-all :checkbox').radiocheck(checkAll ? 'check' : 'uncheck');
+            });
 
 
 

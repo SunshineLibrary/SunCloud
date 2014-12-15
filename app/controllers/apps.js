@@ -7,6 +7,7 @@ var mongoose = require('mongoose'),
     errorHandler = require('./errors'),
     App = mongoose.model('App'),
     _ = require('underscore'),
+    async = require('async'),
     path = require('path');
 var Record = mongoose.model('UserTablet');
 var Room = mongoose.model('Room');
@@ -185,4 +186,30 @@ exports.downloadApk = function(req, res) {
     //    }
     //});
 
+};
+
+exports.deleteApp = function(res, result, done) {
+    var theApp = result[0];
+    Room.find({apps: theApp}, function(err, rooms) {
+        if(err) {
+            done(err);
+        }
+        if(rooms.length) {
+            async.each(rooms, function(room, callback) {
+                room.apps = _.reject(room.apps, function(app) {
+                    return app.toString() === theApp._id.toString();
+                });
+                room.save(function(err) {
+                    if(err) {
+                        callback(err);
+                    }
+                })
+            }, function(err) {
+                if(err) {
+                    done(err);
+                }
+            })
+        }
+    });
+    done();
 };

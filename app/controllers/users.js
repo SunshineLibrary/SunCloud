@@ -13,6 +13,8 @@ module.exports = _.extend(
 	require('./users/authorization.js'),
 	require('./users/password.js'),
 	require('./users/profile.js'),
-	require('./users/create.js')
+	require('./users/create.js'),
+	require('./users/users.js')
+
 
 );

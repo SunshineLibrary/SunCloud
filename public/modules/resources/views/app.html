@@ -1,41 +1,77 @@
-<div>
-    <div class="well well-sm" style="margin-top:20px">
-        <span ng-hide="editorEnabled">
-            <span class="h3">{{app.name}}</span>
-            <a href="" ng-click="enableEditor()" class="glyphicon glyphicon-edit"></a>
-        </span>
 
+<div>
+    <div class="page-header" style="margin-top:20px">
+        <span ng-hide="editorEnabled">
+            <span class="h3">{{app.name}}</span>&nbsp;
+            <a href="" ng-click="enableEditor()" class="glyphicon glyphicon-edit" ng-show="isRootOrAdminOrSelf"></a>
+        </span>
         <span ng-show="editorEnabled" class="form-inline">
             <input type="text" style="color: black; font-size: large" class="form-control" ng-model="editablename"/>
             <a role="button" ng-click="save()" class="btn btn-primary btn-info glyphicon glyphicon-ok" >保存</a>
-            <a role="button" ng-click="disableEditor()" class="btn btn-primary btn-warning glyphicon glyphicon-remove" >取消</a>
+            <a role="button" ng-click="disableEditor()" class="btn btn-default glyphicon glyphicon-remove" >取消</a>
         </span>
 
+        &nbsp;
+        <span><a href=""><i class="fa fa-anchor"></i></a></span>
+        &nbsp;
+        <span><a href=""><i class="fa fa-share-alt"></i></a></span>
         <span ng-hide="editor2Enabled">
-            <span class="h3">{{item.name}}</span>
-            <a href="" ng-click="editor2Enabled=!editor2Enabled" class="glyphicon glyphicon-edit"></a>
+            <span class="label label-primary" ng-click="enableEditor2()">需要手动推送给班级</span>
         </span>
-
         <span ng-show="editor2Enabled">
-            <select  class="form-control" style="width:auto" ng-model="item" ng-options="item.name for item in pushOptions">
+            <select class="form-control select select-inverse select-block mbl" id="pushAppSelect" ng-model="default_installed">
+                    <option value="false">需要手动推送给班级</option>
+                    <option value="true">默认分配给所有班级</option>
             </select>
         </span>
+
+
+
+        <!--<span class="bootstrap-switch-square">-->
+            <!--<input type="checkbox" style="width:600px" checked data-toggle="switch" data-on-text="手动推送" data-off-text="否"  name="pushAppSwitch" id="pushAppSwitch" />-->
+        <!--</span>-->
+        <span class="bootstrap-switch-square" ng-show="isSelf">
+            <input type="checkbox" data-size="xx-large" checked data-toggle="switch" data-on-text="共享" data-off-text="不共享" data-handle-width="200px" data-label-width="200px" name="shareSwitch" id="shareSwitch" />
+        </span>
+        <!-- Square switch -->
+
+        <!--<div class="bootstrap-switch-square">-->
+            <!--<input type="checkbox" checked data-toggle="switch" id="custom-switch-03" data-on-text="<span class='fui-check'></span>" data-off-text="<span class='fui-cross'></span>" />-->
+        <!--</div>-->
+
+        <!--<span ng-hide="editor2Enabled">-->
+            <!--<span class="h3">{{item.name}}</span>-->
+            <!--<a href="" ng-click="editor2Enabled=!editor2Enabled" class="glyphicon glyphicon-edit"></a>-->
+        <!--</span>-->
+
+        <!--<span ng-show="editor2Enabled">-->
+            <!--<select  class="form-control" style="width:auto" ng-model="item" ng-options="item.name for item in pushOptions">-->
+            <!--</select>-->
+        <!--</span>-->
         <span class="pull-right">
-            <a role="button" class="btn btn-primary btn-warning" href="#uploadApkDialog" data-toggle="modal"><i class="glyphicon glyphicon-cloud-upload"></i> 上传安装包</a>
-            <a role="button" class="btn btn-primary btn-warning" href="" ng-click="toAssignApp()"><i class="glyphicon glyphicon-gift"></i> 分配给班级</a>
-            <a role="button" ng-click="back()" class="btn btn-primary btn-info"> <i class=" glyphicon glyphicon-chevron-left"></i>返回</a>
+            <a ng-show="isRootOrAdminOrSelf" role="button" class="btn btn-primary" href="#uploadApkDialog" data-toggle="modal"><i class="glyphicon glyphicon-cloud-upload"></i> 上传安装包</a>
+            <a role="button" class="btn btn-primary" href="" ng-click="toAssignApp()"><i class="glyphicon glyphicon-gift"></i> 分配给班级</a>
+            <a role="button" ng-click="back()" class="btn btn-inverse"> <i class=" glyphicon glyphicon-chevron-left"></i>返回</a>
         </span>
 
-        <h5>内部包名: <span ng-show="app.package" class="inline">{{app.package}}</span><span ng-hide="app.package"><span class="label label-default inline">暂无</span></span></h5>
-        <h5>分配班级:
+        <!--<div>是否共享：<i class="fa fa-share-alt"></i>-->
+            <!--<div class="bootstrap-switch-square">-->
+                <!--<input type="checkbox" data-toggle="switch" id="custom-switch-04" />-->
+            <!--</div>-->
+            <!--<span class="bootstrap-switch-square">-->
+            <!--<input type="checkbox" checked data-toggle="switch" id="custom-switch-03" data-on-text="<span class='fui-check'></span>" data-off-text="<span class='fui-cross'></span>" />-->
+            <!--</span>-->
+        <!--</div>-->
+        <!--<div>是否共享:</div>-->
+        <div>内部包名: <span ng-show="app.package" class="inline">{{app.package}}</span><span ng-hide="app.package"><span class="label label-default inline">暂无</span></span></div>
+        <div>分配班级:
              <span ng-repeat="room in myRoomsAssigned" class="row-fluid" ng-show="myRoomsAssigned.length">
-            <a class="label label-success label-lg inline" href="">{{room.name}}</a>
-                 <!--<script>document.write("<a href='/#/rooms/'" +">"+"{{room.name}}"+"</a>")</script>-->
+            <a class="label label-success label-lg inline" ng-href="/#/rooms/{{room._id}}">{{room.name}}</a>
             </span>
             <span  ng-hide="myRoomsAssigned.length">
                 <span class="label label-default">暂无</span>
             </span>
-        </h5>
+        </div>
     </div>
 
     <div ng-show="app.apks.length">
@@ -47,8 +83,6 @@
         <h3>您还没有上传任何安装包</h3>
         <a role="button" class="btn btn-primary btn-success" href="#uploadApkDialog" data-toggle="modal"><span class="glyphicon glyphicon-cloud-upload"></span> 上传安装包</a>
     </div>
-
-
 </div>
 
 <!--------------------------------Modal--------------------->
@@ -69,8 +103,8 @@
                 <!--selected：{{selectedRooms2}}-->
                 <!--<!--<button class="btn btn-success pull-right" ng-click="assignToRooms()"> 分配</button>-->
                 <div style="margin-left:180px">
-                    <button class="btn btn-warning" ng-click="checkAll()">全选</button>
-                    <button class="btn btn-inverse" ng-click="uncheckAll()">全不选</button>
+                    <button class="btn btn-primary" ng-click="checkAll()">全选</button>
+                    <button class="btn btn-default" ng-click="uncheckAll()">全不选</button>
                 </div>
 
                 <ul class="assign-class-list-long-{{myRooms.length > 5}}">
@@ -78,17 +112,12 @@
                         <checkbox median class="btn-primary" style="margin-top:7px" ng-model="selected[$index]"></checkbox> &nbsp;&nbsp;&nbsp;&nbsp;{{room.name}}
                     </li>
                 </ul>
-                <!--<div ng-repeat="room in myRooms">-->
-                    <!--&lt;!&ndash;<br>&ndash;&gt;-->
-                    <!--&lt;!&ndash;<input type="checkbox" ng-model="selectedRooms[$index]"> {{room.name}}         {{selectedRooms[$index]}}&ndash;&gt;-->
-                    <!--<checkbox large class="btn-primary" style="margin-top:7px" ng-model="selectedRooms[$index]"></checkbox> &nbsp;&nbsp;&nbsp;&nbsp;{{room.name}}-->
-                <!--</div>-->
 
             </div>
 
             <div class="modal-footer">
                 <div class="pull-right">
-                    <button class="btn btn-inverse  " data-dismiss="modal">取消</button>&nbsp;&nbsp;
+                    <button class="btn btn-default  " data-dismiss="modal">取消</button>&nbsp;&nbsp;
                     <button class="btn btn-success " ng-click="assignToRooms()"> 分配</button>
                 </div>
 
@@ -164,7 +193,7 @@
                     </div>
                     </div>
                     <div class="form-group pull-right">
-                        <button type="button" class="btn btn-warning btn-s" data-dismiss="modal">
+                        <button type="button" class="btn btn-default btn-s" data-dismiss="modal">
                             <span class="glyphicon glyphicon-remove-circle"></span> 关闭
                         </button>
                         <button type="button" class="btn btn-success btn-s" ng-click="uploader.queue[0].upload()" ng-disabled="!uploader.getNotUploadedItems().length">

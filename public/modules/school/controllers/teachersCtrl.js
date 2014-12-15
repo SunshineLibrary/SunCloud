@@ -25,13 +25,13 @@ angular.module('schoolManage')
                     {field: '_id', visible: false},
                     {field: 'name', displayName: '姓名'},
                     {field: 'username', displayName: '用户名'},
-                    {field: 'roles', displayName: '是否为超级管理员', cellTemplate: '<div>{{row.entity[col.field].indexOf(\'admin\') > -1 | isAdminFilter}}</div>'},
+                    {field: 'roles', displayName: '超级管理员', cellTemplate: '<div>{{row.entity[col.field].indexOf(\'admin\') > -1 | isAdminFilter}}</div>'},
                     {field: 'email', displayName: '邮箱'},
                     {field: 'phone', displayName: '电话'},
                     {field: '', displayName: '编辑', cellTemplate:
                     '<div class="ngCellText" ng-class="col.colIndex()" ng-show="showedit">' +
-                    '<a class="glyphicon glyphicon-edit text-success" ng-click="showEditTeacherDialog($event, row)"></a> &nbsp;&nbsp;' +
-                    '<a class="glyphicon glyphicon-remove text-success" ng-click="deleteTeacher($event, row)"></a></div>'}
+                    '<a class="fui-new text-success" ng-click="showEditTeacherDialog($event, row)"></a> &nbsp;&nbsp;' +
+                    '<a class="fui-cross text-danger" ng-click="deleteTeacher($event, row)"></a></div>'}
 
                     //{field: 'grade', displayName: '年级', width: 50}
                     //{field: 'loginDateLocal', displayName: '上次登录时间', width: 170}

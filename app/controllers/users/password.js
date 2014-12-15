@@ -184,6 +184,40 @@ exports.reset = function(req, res, next) {
 	});
 };
 
+
+/**
+ * Reset Password for teacher
+ */
+
+exports.resetPassword = function(req, res) {
+	var teacherId = req.body.teacherId;
+	if(req.user) {
+			User.findById(teacherId, function(err, user) {
+				if(!err && user) {
+					user.password = "xiaoshu";
+					user.resetPassword = false;
+					user.save(function(err) {
+						if (err) {
+							return res.status(400).send({
+								message: errorHandler.getErrorMessage(err)
+							});
+						} else {
+							res.status(200).send({message: '密码修改成功'});
+						}
+					});
+
+				}else {
+					res.status(400).send({
+						message: '未找到该用户'
+					});
+				}
+			})
+	}else {
+		res.status(400).send({
+			message: '请先登录'
+		});
+	}
+};
 /**
  * Change Password
  */
@@ -198,6 +232,7 @@ exports.changePassword = function(req, res) {
 					if (user.authenticate(passwordDetails.currentPassword)) {
 						if (passwordDetails.newPassword === passwordDetails.verifyPassword) {
 							user.password = passwordDetails.newPassword;
+							user.resetPassword = true;
 
 							user.save(function(err) {
 								if (err) {

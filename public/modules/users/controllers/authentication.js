@@ -35,5 +35,25 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$http
 				$scope.error = response.message;
 			});
 		};
+
+		$('[data-toggle="tooltip"]').tooltip();
+		$('[data-toggle="popover"]').popover();
+
+		// Add style class name to a tooltips
+		$('.tooltip').addClass(function () {
+			if ($(this).prev().attr('data-tooltip-style')) {
+				return 'tooltip-' + $(this).prev().attr('data-tooltip-style');
+			}
+		});
+
+		// Focus state for append/prepend inputs
+		$('.input-group').on('focus', '.form-control', function () {
+			$(this).closest('.input-group, .form-group').addClass('focus');
+		}).on('blur', '.form-control', function () {
+			$(this).closest('.input-group, .form-group').removeClass('focus');
+		});
+
+
+
 	}
 ]);

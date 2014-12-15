@@ -2,9 +2,11 @@
 
 
 // Setting up route
-angular.module('schoolManage').config(['$stateProvider',
-    function($stateProvider) {
+angular.module('schoolManage').config(['$stateProvider', '$urlRouterProvider',
+    function($stateProvider, $urlRouterProvider) {
         var __templates = '/modules/school/views/';
+        $urlRouterProvider.when("/school", "/school/info");
+
 
         $stateProvider.
             state('schoolNav', {
@@ -13,7 +15,7 @@ angular.module('schoolManage').config(['$stateProvider',
                 templateUrl:  __templates + 'schoolNav.html'
             }).
             state('schoolInfo',{
-               //url: '/',
+                url: '/info',
                 parent: 'schoolNav',
                 controller: 'schoolController',
                 templateUrl: __templates + 'school.html',

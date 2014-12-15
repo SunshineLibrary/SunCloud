@@ -37,8 +37,12 @@ exports.getRoomById = function (req, res, next, roomId) {
 };
 
 exports.createRoom = function (req, res) {
+
+
     Room.createRoom(req.body, function (err, room) {
-        if (err) return res.json(500, err);
+        if (err) {
+            console.error(err);
+            return res.json(500, err);}
         return res.json(room);
     });
 };

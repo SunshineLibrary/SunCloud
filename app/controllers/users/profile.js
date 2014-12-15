@@ -42,7 +42,7 @@ exports.update = function(req, res) {
 		});
 	} else {
 		res.status(400).send({
-			message: 'User is not signed in'
+			message: '请先登录'
 		});
 	}
 };

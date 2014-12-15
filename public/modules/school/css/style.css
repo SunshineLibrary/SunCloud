@@ -42,12 +42,32 @@ li .active {
 
 table.school-overview, th.school-overview, td.school-overview  {
     align-content: center;
-    border: 1px solid black;
     border-collapse: collapse;
+    /*border-radius: 6px;*/
 }
+/*tr:nth-child(even) {*/
+    /*background-color:#48cfad ;*/
+/*}*/
+/*tr:nth-child(odd) {*/
+    /*background-color:#F5FFFA ;*/
+/*}*/
+
+
 
 td.school-overview {
     padding: 12px;
     text-align: center;
+}
 
+table.school-overview {
+    border-collapse: collapse;
+    border-radius: 30px;
+    overflow: hidden;
+    border-style: hidden; /* hide standard table (collapsed) border */
+    box-shadow: 0 0 0 1px #666;
+    background: #e3f9fd;
+}
+
+.sun-table {
+    width: 70%;
 }

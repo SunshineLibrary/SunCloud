@@ -1,12 +1,15 @@
 'use strict';
 
-angular.module('schools').config(['$stateProvider',
-    function($stateProvider) {
+angular.module('schools').config(['$stateProvider', '$urlRouterProvider',
+    function($stateProvider, $urlRouterProvider) {
         var __templates = '/modules/schools/views/';
 
+        $urlRouterProvider.when("/schools", "/schoollist");
         $stateProvider.
             state('schoolsNav', {
                 url: '/schools',
+                //abstract: true,
+                //redirectTo: 'schoolsNav.studentsAll',
                 controller: 'schoolsNavController',
                 templateUrl:  __templates + 'schoolsNav.html'
             }).
@@ -82,9 +85,9 @@ angular.module('schools').config(['$stateProvider',
                 controller: 'appsRootController',
                 templateUrl: __templates + 'apps.html',
                 resolve: {
-                    apps: ['AppDataProvider',
-                        function(AppDataProvider) {
-                            return AppDataProvider.getAllApps();
+                    apps: ['RootDataProvider',
+                        function(RootDataProvider) {
+                            return RootDataProvider.getAllApps();
                         }
                     ]
                 }

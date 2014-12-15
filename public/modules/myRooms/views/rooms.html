@@ -15,12 +15,12 @@
                     <!---->
                 <!--</div>-->
                 <div ng-if="!rooms || rooms.length === 0">
-                    <h5  style="color:green">您还没有任何班级,您可以：</h5>
+                    <h5  style="color:black" align="center">您还没有任何班级 您可以</h5>
                 </div>
 
-                <a class="btn btn-primary btn-warning center-block" role="button" href="#claimRoomDialog" data-toggle="modal"><span class="glyphicon glyphicon-shopping-cart"></span> 认领班级</a>
+                <a class="btn btn-primary  center-block" role="button" href="#claimRoomDialog" data-toggle="modal"><span class="glyphicon glyphicon-shopping-cart"></span> 认领班级</a>
                 <br>
-                <a class="btn btn-primary btn-warning center-block" role="button" href="#createRoomDialog" data-toggle="modal"><span class="glyphicon glyphicon-plus"></span> 创建小组</a>
+                <a class="btn btn-primary  center-block" role="button" href="#createRoomDialog" data-toggle="modal"><span class="glyphicon glyphicon-plus"></span> 创建小组</a>
 
             </div>
         </div>
@@ -47,7 +47,7 @@
                     <form name="newRoomForm"  class="form-group input-group input-group-lg">
                         <input class="form-control" placeholder="请输入小组名称" ng-model="newRoomName" required>
                         <div class="input-group-btn">
-                            <button type="button" class="btn  btn-success"
+                            <button type="button" class="btn btn-success"
                                     ng-click="createTeachingRoom()" ng-disabled="newRoomForm.$invalid">创建 </button>
                         </div>
                     </form>
@@ -68,15 +68,23 @@
                 <h4 class="modal-title">认领班级</h4>
             </div>
             <div class="modal-body">
-                <form role="form">
-                    <div class="input-group input-group-lg">
-                        <select class="form-control" id="selectRoom" data-ng-options="room.name for room in roomList" data-ng-model="selectedRoom"></select>
-                        <div class="input-group-btn">
-                            <button type="button" class="btn  btn-success"
-                                    ng-click="claimRoom()">认领</button>
-                        </div>
-                    </div>
+                <form name="newRoomForm"  class="form-group inline input-group input-group-lg">
+                    <select class="form-control select-primary" id="selectRoom" data-ng-options="room.name for room in roomList" data-ng-model="selectedRoom"></select>
+
+                    <br/>
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-success" ng-click="claimRoom()"><span style="color:green">认领</span></button>
+                    </span>
                 </form>
+                <!--<form role="form">-->
+                    <!--<div class="input-group input-group-lg">-->
+                        <!--<div class="input-group-btn">-->
+                            <!--<button type="button" class="btn btn-success" ng-click="claimRoom()">认领</button>-->
+                        <!--</div>-->
+                    <!--</div>-->
+
+
+                <!--</form>-->
 
             </div>
             <!--<div class="modal-footer">-->

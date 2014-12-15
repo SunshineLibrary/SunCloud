@@ -1,13 +1,14 @@
 angular.module('schoolManage')
     .factory('TabletDataProvider', ['$http', '$q', function ($http, $q) {
-        var getXiaoshuBySchool = function (schoolId, callBack) {
+        var getXiaoshuLogCountBySchool = function (schoolId, callBack) {
             $http({
                 method: "GET",
                 url: "/usertablet/count?schoolId=" + schoolId
             }).success(function (counts) {
-                callBack(counts);
+                callBack(null, counts.count);
             }).error(function (err) {
                 console.error(err);
+                callback(err);
             });
         };
 
@@ -24,6 +25,24 @@ angular.module('schoolManage')
                 }
             }).error(function (err) {
                 console.error(err);
+            });
+            return tabletsBySchoolPromise;
+        };
+
+        var getTabletCountBySchool = function(schoolId, callBack) {
+            var defered = $q.defer();
+            var tabletsBySchoolPromise = defered.promise;
+            $http({
+                method: "GET",
+                url: "/tablets/count?school=" + schoolId
+            }).success(function(tablets) {
+                defered.resolve(tablets);
+                if(callBack) {
+                    callBack(null, tablets.count);
+                }
+            }).error(function (err) {
+                console.error(err);
+                callBack(err);
             });
             return tabletsBySchoolPromise;
         };
@@ -47,7 +66,7 @@ angular.module('schoolManage')
         var getTabletUser = function(tabletId) {
             return $http({
                 method: "GET",
-                url: "/usertablets?tabletId="+tabletId+"&logout_at&populate=userId&select=userId.name,userId.username"
+                url: "/usertablets?tabletId="+tabletId+"&logout_at&populate=userId"
             })
         };
 
@@ -59,8 +78,9 @@ angular.module('schoolManage')
         };
 
         return {
-            getXiaoshuBySchool: getXiaoshuBySchool,
+            getXiaoshuLogCountBySchool: getXiaoshuLogCountBySchool,
             getTabletsBySchool: getTabletsBySchool,
+            getTabletCountBySchool: getTabletCountBySchool,
             getTablet: getTablet,
             getTabletUser: getTabletUser,
             logout: logout

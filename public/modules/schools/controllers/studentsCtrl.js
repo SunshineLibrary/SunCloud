@@ -30,8 +30,8 @@ angular.module('schools')
                     {field: 'school.name', displayName: '学校'},
                     {field: '', displayName: '编辑', cellTemplate:
                     '<div class="ngCellText" ng-class="col.colIndex()" ng-show="showedit">' +
-                    '<a class="glyphicon glyphicon-edit text-success" ng-click="showEditStudentDialog($event, row)"></a> &nbsp;&nbsp;' +
-                    '<a class="glyphicon glyphicon-remove text-success" ng-click="deleteStudent($event,row)"></a></div>'}
+                    '<a class="fui-new text-success" ng-click="showEditStudentDialog($event, row)"></a> &nbsp;&nbsp;' +
+                    '<a class="fui-cross text-danger" ng-click="deleteStudent($event,row)"></a></div>'}
                 ],
                 filterOptions: $scope.filterOptions,
                 selectedItems: $scope.selectedStudent
@@ -117,6 +117,20 @@ angular.module('schools')
                 console.log($scope.gridOptions.selectedItems);
                 $location.path('/students/' + $scope.gridOptions.selectedItems[0]._id);
             };
+
+            // Custom Selects
+            if ($('[data-toggle="select"]').length) {
+                $('[data-toggle="select"]').select2();
+            }
+
+            // Focus state for append/prepend inputs
+            $('.input-group').on('focus', '.form-control', function () {
+                $(this).closest('.input-group, .form-group').addClass('focus');
+            }).on('blur', '.form-control', function () {
+                $(this).closest('.input-group, .form-group').removeClass('focus');
+            });
+
+
 
         }
     ]);

@@ -57,6 +57,7 @@ angular.module('schoolManage')
             })
         };
 
+
         return {
             createSchool: createSchool,
             getSchool: getSchool,

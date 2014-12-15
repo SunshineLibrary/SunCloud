@@ -1,9 +1,10 @@
 'use strict';
 
 // Setting up route
-angular.module('manage').config(['$stateProvider',
-    function($stateProvider) {
+angular.module('manage').config(['$stateProvider', '$urlRouterProvider',
+    function($stateProvider, $urlRouterProvider) {
         var __templates = '/modules/manage/views/';
+        $urlRouterProvider.when("/manage", "/manage/mydevice");
 
         $stateProvider.
             state('deviceManage', {

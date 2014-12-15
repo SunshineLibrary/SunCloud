@@ -15,28 +15,28 @@
 }
 
 
-.navbar-default {
-    background-image: none;
-    background-color: #439400;
-    border-color: #67e300;
-}
+/*.navbar-default {*/
+    /*background-image: none;*/
+    /*background-color: #439400;*/
+    /*border-color: #67e300;*/
+/*}*/
 
-.navbar-default .navbar-brand {
-    color: #ecf0f1;
-}
-.navbar-default .navbar-brand:hover, .navbar-default .navbar-brand:focus {
-    color: #ecdbff;
-}
-.navbar-default .navbar-text {
-    color: #ecf0f1;
-}
-.navbar-default .navbar-nav > li > a {
-    color: #ecf0f1;
-}
+/*.navbar-default .navbar-brand {*/
+    /*color: #ecf0f1;*/
+/*}*/
+/*.navbar-default .navbar-brand:hover, .navbar-default .navbar-brand:focus {*/
+    /*color: #ecdbff;*/
+/*}*/
+/*.navbar-default .navbar-text {*/
+    /*color: #ecf0f1;*/
+/*}*/
+/*.navbar-default .navbar-nav > li > a {*/
+    /*color: #ecf0f1;*/
+/*}*/
 
-.navbar-default .navbar-nav > li > a > .active {
-    background-color: #ff0000;
-}
+/*.navbar-default .navbar-nav > li > a > .active {*/
+    /*background-color: #ff0000;*/
+/*}*/
 /*.navbar-default .navbar-nav > li > a:hover, .navbar-default .navbar-nav > li > a:focus {*/
     /*color: #ecdbff;*/
 /*}*/

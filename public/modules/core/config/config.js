@@ -1,6 +1,6 @@
 'use strict';
 
-var HTTPInterceptor = function($q) {
+var HTTPInterceptor = function($q, $location) {
     return {
         request: function(request) {
             return request;
@@ -13,7 +13,7 @@ var HTTPInterceptor = function($q) {
         },
         responseError: function(response) {
             if(response.status === 401){
-                $location.path('/signin');
+                $location.path('/#/signin');
             }
             console.log(response.status);
             return $q.reject(response);

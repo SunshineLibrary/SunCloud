@@ -2,7 +2,7 @@
     <h4 class="tableTitle pull-left">所有学校 &nbsp;&nbsp;</h4>
 
     <div class=" pull-right" style="margin-top:10px">
-        <a role="button" class="btn btn-primary btn-warning" href="#createSchoolDialog" data-toggle="modal"><i class="glyphicon glyphicon-plus"></i>新建学校</a>
+        <a role="button" class="btn btn-primary" href="#createSchoolDialog" data-toggle="modal"><i class="fui-plus"></i>新建学校</a>
     </div>
 
     <div class="inner-addon left-addon pull-left" style="margin-top:10px">
@@ -13,7 +13,6 @@
 
     <br>
     <br>
-
     <div class="table">
         <div class="gridStyle" ng-grid="gridOptions" ng-click="selectSchool()"></div>
     </div>
@@ -31,18 +30,12 @@
             </div>
             <div class="modal-body">
                 <form class="form-group" name="schoolForm"  novalidate="">
-                    <input type="text" name="name" class="form-control" placeholder="*学校名称" ng-model="newSchool.name" required>
-                    <!--<p ng-show="schoolForm.name.$invalid && !userForm.name.$pristine" class="help-block">必须填写学校名称</p>-->
-                    <br>
-                    <input type="text" name="admin" class="form-control" placeholder="*学校管理员用户名" ng-model="newSchool.admin" required>
-                    <br>
-                    <input type="text" name="code" class="form-control" placeholder="*学校代号" ng-model="newSchool.code" required>
-                    <br>
-                    <input type="text" name="address" class="form-control" placeholder="学校所在地" ng-model="newSchool.address">
-                    <br>
-                    <input type="text" name="serverUrl" class="form-control" placeholder="学校服务器域名 (选填)" ng-model="newSchool.serverUrl">
-                    <br>
-                    <input type="text" name="serverIP" class="form-control" placeholder="学校服务器IP (选填)" ng-model="newSchool.serverIP" ng-pattern='/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/'>
+                    <input type="text"  name="name" class="form-control" placeholder="*学校名称" ng-model="newSchool.name" required>
+                    <input type="text" style="margin-top:10px" name="admin" class="form-control" placeholder="*学校管理员用户名" ng-model="newSchool.admin" required>
+                    <input type="text" style="margin-top:10px" name="code" class="form-control" placeholder="*学校代号" ng-model="newSchool.code" required>
+                    <input type="text" style="margin-top:10px" name="address" class="form-control" placeholder="学校所在地" ng-model="newSchool.address">
+                    <input type="text" style="margin-top:10px" name="serverUrl" class="form-control" placeholder="学校服务器域名 (选填)" ng-model="newSchool.serverUrl">
+                    <input type="text" style="margin-top:10px" name="serverIP" class="form-control" placeholder="学校服务器IP (选填)" ng-model="newSchool.serverIP" ng-pattern='/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/'>
                     <p ng-show="schoolForm.serverIP.$invalid && !schoolForm.serverIP.$pristine" class="help-block">IP格式不正确</p>
                 </form>
             </div>
@@ -63,30 +56,30 @@
                 <h4 class="modal-title">编辑学校</h4>
             </div>
             <div class="modal-body">
-                <form name="editForm" class="form-group">
-                    <div class="form-inline">
-                        <label for="newName">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;学校名称</label>
-                        <input type="text" id="newName" class="form-control" style="width:400px" placeholder="" ng-model="temp.newName" required>
+                <form name="editForm" class="form-group" >
+                    <div class="input-group">
+                        <span class="input-group-btn"><button class="btn" type="button"><span class="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;学校名</span></button></span>
+                        <input type="text" id="newName" class="form-control" placeholder="" ng-model="temp.newName" required>
                     </div>
                     <br>
-                    <div class="form-inline">
-                        <label for="newCode">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;学校代号</label>
-                        <input type="text" id="newCode" class="form-control" style="width:400px" placeholder="" ng-model="temp.newCode" required>
+                    <div class="input-group input-group-lg">
+                        <span class="input-group-btn"><button class="btn" type="button"><span class="">&nbsp;&nbsp;学校编号</span></button></span>
+                        <input type="text" id="newCode" class="form-control"  placeholder="" ng-model="temp.newCode" required>
                     </div>
                     <br>
-                    <div class="form-inline">
-                        <label for="newAddress">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;学校所在地</label>
-                        <input type="text" id="newAddress" class="form-control" style="width:400px" placeholder="" ng-model="temp.newAddress">
+                    <div class="input-group">
+                        <span class="input-group-btn"><button class="btn" type="button"><span class="">学校所在地</span></button></span>
+                        <input type="text" id="newAddress" class="form-control"  placeholder="" ng-model="temp.newAddress">
                     </div>
                     <br>
-                    <div class="form-inline">
-                        <label for="newServerUrl">学校服务器域名</label>
-                        <input type="text" id="newServerUrl" class="form-control" style="width:400px" placeholder="" ng-model="temp.newServerUrl">
+                    <div class="input-group">
+                        <span class="input-group-btn"><button class="btn" type="button"><span class="">服务器域名</span></button></span>
+                        <input type="text" id="newServerUrl" class="form-control" placeholder="" ng-model="temp.newServerUrl">
                     </div>
                     <br>
-                    <div class="form-inline">
-                        <label for="newServerIP">&nbsp;&nbsp;&nbsp;&nbsp;学校服务器IP</label>
-                        <input type="text" id="newServerIP" class="form-control" style="width:400px" placeholder="" ng-model="temp.newServerIP">
+                    <div class="input-group">
+                        <span class="input-group-btn"><button class="btn" type="button"><span class="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;服务器IP</span></button></span>
+                        <input type="text" id="newServerIP" class="form-control" placeholder="" ng-model="temp.newServerIP">
                     </div>
                 </form>
                 <span style="color: red" ng-show="error">修改失败，可能由于学校代号或名称已存在。请修改后重试。</span>
@@ -98,5 +91,4 @@
         </div>
     </div>
 </div>
-
 

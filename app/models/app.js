@@ -59,7 +59,7 @@ var AppSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'School'
     },
-    teacher: {
+    owner: {
         type: Schema.Types.ObjectId,
         ref: 'User'
     },

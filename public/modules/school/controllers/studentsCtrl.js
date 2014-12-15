@@ -35,13 +35,14 @@ angular.module('schoolManage')
                     {field: '_id', visible: false},
                     {field: 'name', displayName: '姓名'},
                     {field: 'username', displayName: '用户名'},
+                    {field: 'birthday', displayName: '生日'},
                     {field: 'gender', displayName: '性别', width: 60},
                     {field: 'grade', displayName: '年级', width: 50},
-                    {field: 'tablet', displayName: '正在使用的晓书',cellTemplate:'<div class="ngCellText" ng-class="col.colIndex()"><a href="/#/tablets/{{row.entity.tablet}}">{{row.getProperty(col.field)}}</a></div>'},
+                    //{field: 'tablet', displayName: '正在使用的晓书',cellTemplate:'<div class="ngCellText" ng-class="col.colIndex()"><a href="/#/tablets/{{row.entity.tablet}}">{{row.getProperty(col.field)}}</a></div>'},
                     {field: '', displayName: '编辑', cellTemplate:
                         '<div class="ngCellText" ng-class="col.colIndex()" ng-show="showedit">' +
-                        '<a class="glyphicon glyphicon-edit text-success" ng-click="showEditStudentDialog($event, row)"></a> &nbsp;&nbsp;' +
-                        '<a class="glyphicon glyphicon-remove text-success" ng-click="removeStudent($event, row)"></a></div>'}
+                        '<a class="fui-new text-success" ng-click="showEditStudentDialog($event, row)"></a> &nbsp;&nbsp;' +
+                        '<a class="fui-cross text-danger" ng-click="removeStudent($event, row)"></a></div>'}
 
                     //{field: 'loginDateLocal', displayName: '上次登录时间', width: 170}
                 ],
@@ -55,18 +56,22 @@ angular.module('schoolManage')
                 $scope.row = row;
                 $scope.temp.newName = row.entity.name;
                 $scope.temp.newUsername = row.entity.username;
+                $scope.temp.newBirthday = row.entity.birthday;
             };
             $scope.editStudent = function(row) {
                 var info = {};
                 info._id = row.entity._id;
                 info.name = $scope.temp.newName;
                 info.username = $scope.temp.newUsername;
-                StudentDataProvider.editStudent(info)
+                info.birthday = $scope.temp.newBirthday;
+                StudentDataProvider.editStudentNameBirthday(info)
                     .success(function(editedStudent) {
                         $scope.row.entity.name = editedStudent.name;
                         $scope.row.entity.username = editedStudent.username;
+                        $scope.row.entity.birthday = editedStudent.birthday;
                         $('#editStudentDialog').modal('hide');
                         swal({title: "修改成功", type: "success", timer: 1000 });
+                        $scope.error = false;
                     })
                     .error(function(err) {
                         console.error(err);
@@ -111,12 +116,15 @@ angular.module('schoolManage')
                 var info = {};
                 info.name = $scope.newStudent.name;
                 info.username = $scope.newStudent.username;
+                info.birthday = $scope.newStudent.birthday;
                 info.school = me.school;
                 info.roles = ['student'];
+                console.log(info.birthday);
                 StudentDataProvider.createStudent(info)
                     .success(function(newStudent) {
                         students.push(newStudent);
                         $('#createStudentDialog').modal('hide');
+                        $scope.newStudent = {};
                         swal({title: "创建成功", type: 'success', timer: 1000});
 
                     })
@@ -134,7 +142,6 @@ angular.module('schoolManage')
 
                 var newStudents = [];
                 var failList = [];
-                //Format input string and get new students list.
                 $scope.newStudentsList = $scope.newStudentsList.trim();
                 var lines = $scope.newStudentsList.split(/\n/);
                 for (var i = 0; i < lines.length; i++) {
@@ -189,5 +196,19 @@ angular.module('schoolManage')
             $scope.selectStudent = function () {
                 $location.path('/students/' + $scope.gridOptions.selectedItems[0]._id);
             };
+
+            var datepickerSelector = $('#datepicker-01');
+            datepickerSelector.datepicker({
+                showOtherMonths: true,
+                selectOtherMonths: true,
+                dateFormat: 'yy-mm-dd'
+                //yearRange: '-1:+1'
+            }).prev('.input-group-btn').on('click', function (e) {
+                e && e.preventDefault();
+                datepickerSelector.focus();
+            });
+            $.extend($.datepicker, { _checkOffset: function (inst,offset,isFixed) { return offset; } });
+            // Now let's align datepicker with the prepend button
+            datepickerSelector.datepicker('widget').css({ 'margin-left': -datepickerSelector.prev('.input-group-btn').find('.btn').outerWidth() + 3 });
         }
     ]);

@@ -12,6 +12,7 @@ angular.module('myRooms')
             var me = AuthService.me;
             $scope.temp = {};
 
+
             $scope.$watch('rooms', function(newRooms) {
                 RoomDataProvider.getAdminRoomsBySchool(me.school).then(function(rooms){
                     $scope.roomList = _.filter(rooms, function(room) {
@@ -31,6 +32,8 @@ angular.module('myRooms')
                     }
                 }
             }, true);
+            //$location.path('/myrooms/' + $scope.rooms[0]._id);
+
 
             $scope.$on('roomNameChange', function(event, data) {
                 console.log(data);

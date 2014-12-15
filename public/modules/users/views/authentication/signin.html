@@ -1,28 +1,36 @@
 <section class="row" data-ng-controller="AuthenticationController">
 
-	<h1 class="col-md-12 text-center" style="text-align:center">教师平台登录</h1>
+	<h1 class="col-md-10 col-md-offset-1" style="text-align:center">教师平台登录</h1>
     <div>
 
         <span>
         </span>
     </div>
 
-	<div class="col-xs-offset-2 col-xs-8 col-md-offset-5 col-md-3">
+	<div class="col-xs-offset-2 col-xs-8 col-md-offset-4 col-md-4">
+
 		<form data-ng-submit="signin()" class="signin form-horizontal" autocomplete="off">
 			<fieldset>
-				<div class="form-group">
-					<label for="username" style="float:left">用户名</label>
+				<div class="input-group">
+					<span class="input-group-btn"><button class="btn" type="button"><span class="fui-user">用户名</span></button></span>
                     <input type="text" style="float:left" id="username" name="username" class="form-control" data-ng-model="credentials.username">
 				</div>
-				<div class="form-group">
-					<label for="password" style="float:left">登录密码</label>
+				<br/>
+				<div class="input-group">
+					<span class="input-group-btn"><button class="btn" type="button"><span class="fui-lock"> 密码</span></button></span>
 					<input type="password" id="password" name="password" class="form-control" data-ng-model="credentials.password">
 				</div>
+				<br/>
 				<div class="text-center form-group">
-					<button type="submit" class="btn btn-primary">登录</button>
+					<button type="submit" class="btn btn-primary btn-block">登录</button>
 				</div>
 				<div class="forgot-password" align = 'center'>
-					<a href="/#/password/forgot">忘记密码？</a>
+					<!--<a href="/#/password/forgot">忘记密码？</a>-->
+					<!--<button title="请联系学校管理员，在老师页面重置密码" data-placement="bottom" data-toggle="tooltip" class="btn btn-default mrs" type="button">忘记密码？</button>-->
+					<a data-content="请联系学校管理员，让其在老师页面重置密码" width="auto" data-placement="right" data-toggle="popover" data-container="body" data-original-title="" title="">
+					 忘记密码？
+					</a>
+
 				</div>
 				<div data-ng-show="error" class="text-center text-danger">
 					<strong data-ng-bind="error"></strong>

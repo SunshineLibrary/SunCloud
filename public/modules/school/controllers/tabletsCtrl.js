@@ -25,16 +25,15 @@ angular.module('schoolManage')
                 multiSelect: false,
                 columnDefs: [
                     {field: '_id', visible: false},
-                    {field: 'machine_id', displayName: '晓书编号'},
+                    {field: 'machine_id', displayName: '晓书编号', width: '25%'},
                     {field: 'OS_type', displayName: '操作系统'},
-                    {field: 'OS_version', displayName: '操作系统版本'},
-                    {field: 'lastUpdate', displayName: '上次更新'},
-                    //{field: 'school.name', displayName: '所属学校'},
+                    {field: 'OS_version', displayName: '版本', width: '10%'},
+                    {field: 'lastUpdate', displayName: '上次更新', width: '20%'},
                     {field: 'userName', displayName: '正在使用',
                         cellTemplate:'<div class="ngCellText" ng-class="col.colIndex()" ng-show="row.entity.userName">' +
                         '<a href="/#/students/{{row.entity.userId}}">{{row.getProperty(col.field)}}</a></div>' +
-                        '<div ng-hide="row.entity.userName"><span class="badge">暂无</span></div>'},
-                    {field: 'user', displayName: '', cellTemplate:'<button type="button" align="center" class="btn btn-default btn-sm" ng-click="logout($event, row)" ng-show="row.entity.userName"><span class="glyphicon glyphicon-log-out"></span> 登出</button>'}
+                        '<div ng-hide="row.entity.userName"><span class="label label-default">暂无</span></div>'},
+                    {field: 'userId', displayName: '', cellTemplate:'<button type="button" align="center" class="btn btn-inverse btn-sm" ng-click="logout($event, row)" ng-show="row.entity.userName"><span class="glyphicon glyphicon-log-out"></span> 登出</button>'}
 
                 ],
                 selectedItems: $scope.selectedTablet,
@@ -44,8 +43,8 @@ angular.module('schoolManage')
             $scope.logout = function (event, row) {
                 event.stopPropagation();
                 swal({
-                        title: "您确定要将学生"+row.entity.userName+"登出晓书吗?",
-                        type: "warning",
+                        title: "登出晓书",
+                        text: "您确定要将"+row.entity.userName+"登出晓书吗?",                        type: "warning",
                         showCancelButton: true,
                         cancelButtonText: "取消",
                         confirmButtonColor: "#DD6B55",

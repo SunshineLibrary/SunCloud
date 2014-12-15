@@ -80,9 +80,10 @@ exports.tabletLogin = function(req, res) {
     var errorCode = 401;
     async.waterfall([
        function(callback) {
+           console.log(username);
            User.findOne({username: username}).populate('school').exec(function(err, user) {
                if(err) {
-                   error = '数据库错误,请重试.';
+                   error = '数据库错误,未能查找到该用户名,请重试.';
                    errorCode = 500;
                }
                callback(error, user);
@@ -102,7 +103,7 @@ exports.tabletLogin = function(req, res) {
                 user.save(function(err){
                     if(err) {
                         console.error(err);
-                        error = '数据库错误,请重试.';
+                        error = '数据库错误, 未能保存该用户信息, 请重试.';
                         errorCode = 500;
                     }
                 })
@@ -110,10 +111,10 @@ exports.tabletLogin = function(req, res) {
             callback(error, user);
         },
         function(user, callback) {
-            Tablet.update({machine_id: machine_id},{machine_id: machine_id,OS_type: os_type, OS_version: os_version, school: user.school, lastUpdate: Date.now()},
+            Tablet.update({machine_id: machine_id},{OS_type: os_type, OS_version: os_version, school: user.school._id, lastUpdate: Date.now()},
                 {upsert: true},function(err){
                     if(err) {
-                        error = '数据库错误，请重试.';
+                        error = '数据库错误，未能更新设备信息, 请重试.';
                         errorCode = 500;
                     }
                     callback(error, user);
@@ -122,7 +123,7 @@ exports.tabletLogin = function(req, res) {
         function(user, callback) {
             Tablet.findOne({machine_id: machine_id}, function(err, tablet) {
                 if(err) {
-                    error = '数据库错误，请重试.';
+                    error = '数据库错误，未能找到该设备,请重试.';
                     errorCode = 500;
                 }
                 callback(error, user, tablet);
@@ -131,7 +132,7 @@ exports.tabletLogin = function(req, res) {
         function(user, tablet, callback) {
             UserTablet.findOne({userId: user._id, tabletId: tablet._id, logout_at: {$exists: false}}, function(err, record){
                 if(err){
-                    error = '数据库错误，请重试.';
+                    error = '数据库错误，未能找到晓书登录记录, 请重试.';
                     errorCode = 500;
                 }
                 if(record) {
@@ -145,7 +146,7 @@ exports.tabletLogin = function(req, res) {
         function(user, tablet, callback) {
             UserTablet.findOne({userId: user._id, logout_at: {$exists: false}},function(err, anotherTablet){
                 if(err) {
-                    error = '数据库错误，请重试.';
+                    error = '数据库错误，未能找到登录记录, 请重试.';
                     errorCode = 500;
                 }
                 if(anotherTablet) {
@@ -158,7 +159,7 @@ exports.tabletLogin = function(req, res) {
         function(user, tablet, callback) {
             UserTablet.findOne({tabletId: tablet._id, logout_at: {$exists: false}}).populate('userId').exec(function(err, anotherUser){
                 if(err) {
-                    error = '数据库错误，请重试.';
+                    error = '数据库错误，未能找到登录记录，请重试.';
                     errorCode = 500;
                 }
                 if(anotherUser) {
@@ -170,7 +171,7 @@ exports.tabletLogin = function(req, res) {
         function(user, tablet, callback) {
             findRoom(user._id, user_type, function(err, room) {
                 if(err) {
-                    error = '数据库错误，请重试.';
+                    error = '数据库错误，未能找到该用户所在班级请重试.';
                     errorCode = 500;
                 }
                 callback(error, user, tablet, room);
@@ -200,7 +201,7 @@ exports.tabletLogin = function(req, res) {
             console.log(userInfo);
             UserTablet.addRecord(user._id, tablet._id,function(err, newRecord) {
                 if(err) {
-                    error = '数据库错误，请重试.';
+                    error = '数据库错误，未能添加登录记录, 请重试.';
                     errorCode = 500;
                 }
                 console.log(newRecord);
@@ -248,7 +249,7 @@ exports.checkToken = function(req, res){
                 UserTablet.findOne({access_token: req.query.access_token}, function(err, record){
                     if(err) {
                         console.error(err);
-                        error = '数据库错误，请重试.';
+                        error = '数据库错误，未能找到登录记录， 请重试.';
                         errorCode = 500;
                     }
                     if(!record) {
@@ -262,7 +263,7 @@ exports.checkToken = function(req, res){
                 User.findOne({_id: record.userId }).populate('school').exec(function(err, user) {
                     if(err) {
                         console.error(err);
-                        error = '数据库错误，请重试.';
+                        error = '数据库错误，未能找到该用户信息， 请重试.';
                         errorCode = 500;
                     }
                     callback(error, user);
@@ -273,7 +274,7 @@ exports.checkToken = function(req, res){
                 findRoom(user._id, user_type, function(err, room) {
                     if(err) {
                         console.error(err);
-                        error = '数据库错误，请重试.';
+                        error = '数据库错误，未能找到该新湖所在班级，请重试.';
                         errorCode = 500;
                     }
                     callback(error, user, user_type, room);
