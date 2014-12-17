@@ -136,3 +136,73 @@ exports.assignApp = function(req, res) {
         res.status(500).send({message: ""})
     })
 };
+
+
+
+var assignFolderToRoom = function(folderId, roomId) {
+    var deferred = Q.defer();
+    Room.findById(roomId, function(err, room) {
+        if(err) {
+            deferred.reject(err);
+        }else {
+            if(room.sunpack.indexOf(folderId) === -1) {
+                room.sunpack.push(folderId);
+                room.save(function(err) {
+                    if(err) {
+                        deferred.reject(err);
+                    }else {
+                        deferred.resolve(room);
+                    }
+                })
+            }
+            deferred.resolve(room);
+        }
+    });
+    return deferred.promise;
+};
+
+var removeFolderFromRoom = function(folderId, roomId) {
+    var deferred = Q.defer();
+    Room.findById(roomId, function(err, room) {
+        if(err) {
+            deferred.reject(err);
+        }else {
+            var index = room.sunpack.indexOf(folderId);
+            if(index > -1) {
+                room.sunpack.splice(index, 1);
+                room.save(function(err) {
+                    if(err) {
+                        deferred.reject(err);
+                    }else {
+                        deferred.resolve(room);
+                    }
+                })
+            }
+            deferred.resolve(room);
+        }
+    });
+    return deferred.promise;
+};
+
+
+exports.assignSunpack = function(req, res) {
+    var assignments = req.body.assignments;
+    var folderId = req.body.folderId;
+    var promises = [];
+    _.each(assignments, function(assignment) {
+        if(assignment.assigned) {
+            promises.push(assignFolderToRoom(folderId, assignment.roomId));
+        }else {
+            promises.push(removeFolderFromRoom(folderId, assignment.roomId));
+        }
+    });
+    console.log(promises);
+    Q.all(promises).then(function(data) {
+        console.log(data);
+        res.status(200).send(data);
+    }, function(err) {
+        console.error(err);
+        res.status(500).send({message: ""})
+    })
+
+};

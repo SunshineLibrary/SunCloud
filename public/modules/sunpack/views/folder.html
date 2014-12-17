@@ -1,0 +1,228 @@
+<div ui-view>
+    <div class="">
+        <div class="pull-right">
+            <a ng-click="toAssignFolder()" data-toggle="modal" role="button" class="btn btn-primary"><i class="glyphicon glyphicon-gift"></i> 分配给班级</a>
+            <a ng-click="showEditFolderDialog()" role="button" class="btn btn-primary"><i class="glyphicon glyphicon-edit"></i> 编辑</a>
+        </div>
+
+        <div><strong>适用年级</strong>: &nbsp;  <span ng-show="folder.semester" class="inline">{{folder.semester.name}}</span><span ng-hide="folder.semester"><span class="label label-default inline">暂无</span></span></div>
+        <div><strong>分配班级</strong>: &nbsp;
+             <span ng-repeat="room in myRoomsAssigned" class="row-fluid" ng-show="myRoomsAssigned.length">
+            <a class="label label-success label-lg inline" ng-href="/#/myrooms/{{room._id}}">{{room.name}}</a>
+            </span>
+            <span  ng-hide="myRoomsAssigned.length">
+                <span class="label label-default">暂无</span>
+            </span>
+        </div>
+        <hr/>
+    </div>
+
+    <div class="container">
+        <div class="col-md-8 col-lg-8">
+
+            <div ng-show="folder.files.length">
+                <!--<a  role="button" class="btn btn-primary pull-right" data-toggle="modal" href="#uploadFileDialog"><span class="glyphicon glyphicon-file"></span> 创建书包文件夹</a>-->
+                <!--<br/>-->
+                <div class="table">
+                    <div class="gridStyle" ng-grid="gridOptions" ng-click="selectFile()"></div>
+                </div>
+            </div>
+
+            <div ng-hide="folder.files.length" align="center">
+                <h4>还没有任何文件</h4>
+                <a role="button" class="btn btn-success" data-toggle="modal" href="#createFilerDialog"><span class="fa fa-university"></span> 查看教学资源库</a>
+                或者
+                <a role="button" class="btn btn-success" data-toggle="modal" href="#uploadFileDialog"><span class="fa fa-cloud-upload"></span> 上传教学资源</a>
+
+            </div>
+
+        </div>
+        <div class="col-md-4 col-lg-4">
+            <div class="jumbotron" align="center">
+                看看资源库里有什么？
+                <!--<i class="glyphicon glyphicon-info-sign"></i>-->
+                <a title="Tooltip on top" data-placement="top" data-toggle="tooltip" type="button"><i class="glyphicon glyphicon-info-sign"></i></a>
+                <br/>
+                <a role="button" align="center" class="btn btn-info" data-toggle="modal" href="#createFilerDialog"><span class="fa fa-university"></span> 查看教学资源库</a>
+
+            </div>
+
+            <div class="jumbotron" align="center">
+                资源库里没有想要的？
+                <!--<i class="glyphicon glyphicon-info-sign"></i>-->
+                <a title="Tooltip on top" data-placement="top" data-toggle="tooltip" type="button"><i class="glyphicon glyphicon-info-sign"></i></a>
+                <br/>
+                <a role="button" align="center" class="btn btn-info" data-toggle="modal" href="#uploadFileDialog"><span class="glyphicon glyphicon-cloud-upload"></span> 上传教学资源</a>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<!--------------------------------Modal--------------------->
+<div class="modal fade" id="assignFolderDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true" style="overflow-y:scroll">
+    <div class='modal-dialog' style="left: auto">
+        <div class='modal-content'>
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span></button>
+                <h4 class="modal-title">分配给班级</h4>
+            </div>
+            <div class='modal-body'>
+                <div class="pull-right">
+                    <button class="btn btn-primary" ng-click="checkAll()">全选</button>
+                    <button class="btn btn-default" ng-click="uncheckAll()">全不选</button>
+                </div>
+                <br/>
+              <div width="100%">
+                  <ul class="assign-class-list-long-{{myRooms.length > 5}}">
+                      <li  ng-repeat="room in myRooms">
+                          <checkbox median class="btn-primary" style="margin-top:7px" ng-model="room.assigned"></checkbox> &nbsp;&nbsp;&nbsp;&nbsp;{{room.name}}
+                      </li>
+                  </ul>
+              </div>
+
+
+            </div>
+
+            <div class="modal-footer">
+                <div class="pull-right">
+                    <button class="btn btn-default  " data-dismiss="modal">取消</button>&nbsp;&nbsp;
+                    <button class="btn btn-success " ng-click="assignToRooms()"> 分配</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!--------------------------------Modal--------------------->
+<div class="modal fade" id="uploadFileDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true" style="overflow-y:scroll">
+    <div class='modal-dialog modal-lg' style="left: auto">
+        <div class='modal-content'>
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span></button>
+                <h4 class="modal-title">上传教学资源</h4>
+            </div>
+            <div class='modal-body'>
+                <p class="pull-left text-info" ng-show="uploader.queue.length === 0">请选择文件，可以上传多个文件：</p>
+                <p class="pull-left text-info" ng-hide="uploader.queue.length === 0" ><strong>继续选择：</strong></p>
+
+                <input type="file" nv-file-select uploader="uploader" multiple/>
+                <br/>
+                <div align="center">
+                    <span style="color: red" ng-show="error.extension">只能上传后缀名为apk的文件</span>
+                    <span style="color: red" ng-show="error.limit">一次只能上传一个文件，请删除其他文件</span>
+                </div>
+                <div ng-show="uploader.queue.length">
+                    文件个数： {{uploader.queue.length}}
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th width="30%">文件名</th>
+                            <th ng-show="uploader.isHTML5">大小</th>
+                            <th ng-show="uploader.isHTML5">进度</th>
+                            <th>状态</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="item in uploader.queue">
+                            <td><strong>{{ item.file.name }}</strong></td>
+                            <td ng-show="uploader.isHTML5" nowrap>{{ item.file.size/1024/1024|number:2 }} MB</td>
+                            <td ng-show="uploader.isHTML5">
+                            <div class="progress" style="margin-bottom: 0;">
+                            <div class="progress-bar" role="progressbar" ng-style="{ 'width': item.progress + '%' }"></div>
+                            </div>
+                            </td>
+                            <td class="text-center">
+                                <span ng-show="item.isSuccess"><i class="glyphicon glyphicon-ok text-success"></i></span>
+                                <span ng-show="item.isCancel"><i class="glyphicon glyphicon-ban-circle text-warning"></i></span>
+                                <span ng-show="item.isError"><i class="glyphicon glyphicon-remove text-danger"></i></span>
+                            </td>
+                            <td nowrap>
+                                <button type="button" class="btn btn-success btn-xs" ng-click="item.upload()" ng-disabled="item.isReady || item.isUploading || item.isSuccess">
+                                <span class="glyphicon glyphicon-upload"></span>上传
+                                </button>
+                                <!--<button type="button" class="btn btn-warning btn-xs" ng-click="item.cancel()" ng-disabled="!item.isUploading">-->
+                                <!--<span class="glyphicon glyphicon-ban-circle"></span>取消-->
+                                <!--</button>-->
+                                <button type="button" class="btn btn-danger btn-xs" ng-click="item.remove()">
+                                    <span class="glyphicon glyphicon-trash"></span> 删除
+                                </button>
+                            </td>
+                        </tbody>
+                    </table>
+
+
+                    <div>
+                        上传进度:
+                        <div class="progress" style="">
+                            <div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" ng-style="{ 'width': uploader.queue[0].progress + '%' }"></div>
+                        </div>
+                    </div>
+                </div>
+
+        </div>
+
+            <div class="modal-footer">
+                <div class="pull-right form-group">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                    <span class="glyphicon glyphicon-remove"></span> 关闭
+                    </button>
+                    <button type="button" class="btn btn-danger btn-s" ng-click="uploader.clearQueue()" ng-disabled="!uploader.queue.length">
+                        <span class="glyphicon glyphicon-trash"></span> 删除所有
+                    </button>
+                    <!--<button type="button" class="btn btn-warning btn-s" ng-click="uploader.cancelAll()" ng-disabled="!uploader.isUploading">-->
+                        <!--<span class="glyphicon glyphicon-ban-circle"></span> 取消所有-->
+                    <!--</button>-->
+                    <button type="button" class="btn btn-success btn-s" ng-click="uploader.uploadAll()" ng-disabled="!uploader.getNotUploadedItems().length">
+                        <span class="glyphicon glyphicon-upload"></span> 上传所有
+                    </button>
+                </div>
+
+            </div>
+    </div>
+</div>
+
+</div>
+
+
+
+<div class="modal fade" id="editFolderDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class='modal-dialog'>
+        <div class='modal-content'>
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span></button>
+                <h4 class="modal-title">编辑文件夹</h4>
+            </div>
+            <div class="modal-body">
+                <form name="editForm" class="form-group">
+                    <div class="input-group">
+                        <span class="input-group-btn"><button class="btn" type="button"><span class="fa fa-folder-open-o">文件夹名</span></button></span>
+                        <input type="text" id="newName" class="form-control"  placeholder="文件夹名" ng-model="temp.newName" required>
+                    </div>
+                    <br>
+                    <div class="input-group">
+                        <span class="input-group-btn"><button class="btn" type="button"><span class="fa fa-graduation-cap">适用年级</span></button></span>
+                        <select class="form-control select-primary" id="selectSemester" data-ng-options="semester.name for semester in semesters" data-ng-model="temp.newSemester" required>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-defautl" data-dismiss="modal">取消</button>
+                <button class="btn btn-success btn-lg" ng-click="editFolder()" ng-disabled="editForm.$invalid">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+

@@ -142,7 +142,7 @@ angular.module('resources')
 
         var addAppToRooms = function(appId, assignment) {
             return $http({
-                method: "PUT",
+                method: "POST",
                 url: "/assign/apps",
                 data: {
                     assignments: assignment,

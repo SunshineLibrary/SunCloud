@@ -14,11 +14,20 @@ var FileSchema = new Schema({
         type: String,
         required: true
     },
+    originalname: {
+        type: String
+    },
+    description: String,
     path: String,
     size: Number,
     type: {
         type: String
     },
+    extension: String,
+    encoding: String,
+    mimetype: String,
+    truncated: Boolean,
+    buffer: String,
     owner: {
         type: Schema.Types.ObjectId,
         ref: 'User'
@@ -31,7 +40,10 @@ var FileSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'Semester'
     },
-    shared: Boolean,
+    shared: {
+        type: Boolean,
+        default: true
+    },
     users: [{
         type: Schema.Types.ObjectId,
         ref: 'User'

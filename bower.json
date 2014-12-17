@@ -1,6 +1,7 @@
 {
   "name": "meanjs",
   "version": "0.3.2",
+  "directory" : "public/lib",
   "description": "Fullstack JavaScript with MongoDB, Express, AngularJS, and Node.js.",
   "dependencies": {
     "bootstrap": "~3",
@@ -23,7 +24,8 @@
     "angular-bootstrap-checkbox": "~0.3.1",
     "ng-grid": "~2.0.13",
     "font-awesome": "~4.2.0",
-    "angular-bootstrap-switch": "~0.3.0"
+    "angular-bootstrap-switch": "~0.3.0",
+    "material-design-icons": ""
 
 
   },

@@ -1,0 +1,65 @@
+<div class="">
+    <div class="pull-right">
+        <a href="#editFileDialog" role="button" class="btn btn-primary"><i class="glyphicon glyphicon-edit"></i> 编辑</a>
+        <a href="" role="button" class="btn btn-primary"><i class="fa fa-cloud-download"></i> 下载</a>
+
+    </div>
+
+    <!--<div><strong>创建人:</strong>&nbsp; <span>{{file.owner.name}}</span></div>-->
+    <!--<div><strong>年级:</strong> &nbsp;  <span ng-show="file.semester" class="inline">{{file.semester.name}}</span><span ng-hide="folder.semester"><span class="label label-default inline">暂无</span></span></div>-->
+    <!--<div><strong>科目:</strong> &nbsp; {{file.subject.name}}</div>-->
+    <table class="" width="10%">
+        <tr>
+            <td><strong>描述:</strong></td>
+            <td>{{file.description}}</td>
+        </tr>
+        <tr>
+            <td><strong>创建人:</strong></td>
+            <td>{{file.owner.name}}</td>
+        </tr>
+        <tr>
+            <td><strong>年级:</strong></td>
+            <td> <span ng-show="file.semester" class="inline">{{file.semester.name}}</span><span ng-hide="folder.semester"><span class="label label-default inline">暂无</span></span></td>
+        </tr>
+        <tr>
+            <td><strong>科目:</strong> </td>
+            <td>{{file.subject.name}}</td>
+        </tr>
+    </table>
+    <hr/>
+</div>
+
+
+
+
+<div class="modal fade" id="editFileDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class='modal-dialog'>
+        <div class='modal-content'>
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span></button>
+                <h4 class="modal-title">编辑文件信息</h4>
+            </div>
+            <div class="modal-body">
+                <form name="editForm" class="form-group">
+                    <div class="input-group">
+                        <span class="input-group-btn"><button class="btn" type="button"><span class="">&nbsp;&nbsp;&nbsp;&nbsp;文件名</span></button></span>
+                        <input type="text" id="newName" class="form-control"  placeholder="文件名" ng-model="temp.newName" required>
+                    </div>
+                    <br>
+                    <div class="input-group">
+                        <span class="input-group-btn"><button class="btn" type="button"><span class="">&nbsp;&nbsp;&nbsp;&nbsp;描述</span></button></span>
+                        <input type="text" id="newDescription" class="form-control"  placeholder="文件描述" ng-model="temp.newDescription">
+                    </div>
+                    <br>
+                </form>
+                <span style="color: red" ng-show="error">修改失败，可能由于用户名已存在。请修改用户名后重试。</span>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-defautl" data-dismiss="modal">取消</button>
+                <button class="btn btn-success btn-lg" ng-click="editFile()" ng-disabled="editForm.$invalid">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+

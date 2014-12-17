@@ -374,9 +374,51 @@ exports.restifyRoom = function(req, res, next) {
 
 			});
 		}
-		else if(req.route.path === '/assign/apps' && req.method === 'PUT') {
+		else if(req.route.path === '/assign/apps' && req.method === 'POST') {
 			/**
 			 * admin can only assign apps to rooms of the same school.
+			 * teacher can only assign apps to rooms he/she is in.
+			 */
+			var roomIds = _.map(req.body.assignments, function(assignment) {
+				return assignment.roomId;
+			});
+			async.map(roomIds, function(id, callback) {
+				Room.findById(id, function(err, room) {
+					if(err) {
+						callback(err)
+					}else {
+						callback(null, room);
+					}
+				})
+			}, function(err, rooms) {
+				console.log(rooms);
+				var errList ;
+				if(is('admin')) {
+					errList = _.filter(rooms, function(room){
+						return room.school.toString() !== req.user.school.toString();
+					});
+					if(errList.length) {
+						return res.status(403).send('Forbidden');
+					}else {
+						return next();
+					}
+				}else if(is('teacher')) {
+					errList = _.filter(rooms, function(room) {
+						return room.teachers.indexOf(req.user._id) === -1;
+					});
+					if(errList.length) {
+						return res.status(403).send('Forbidden');
+					}else {
+						return next();
+					}
+				}else {
+					return res.status(406).send('Role Not Acceptable');
+				}
+			})
+		}
+		else if(req.route.path === '/assign/sunpack' && req.method === 'POST') {
+			/**
+			 * admin can only assign folders to rooms of the same school.
 			 * teacher can only assign apps to rooms he/she is in.
 			 */
 			var roomIds = _.map(req.body.assignments, function(assignment) {
@@ -610,4 +652,9 @@ exports.restifyTablet = function(req, res, next) {
 	}else {
 		return res.status(401).send("Unauthorized");
 	}
+};
+
+
+exports.restifyFolder = function(req,res, next) {
+	next();
 };

@@ -1,0 +1,56 @@
+<div ui-view>
+
+    <div ng-show="folders.length">
+        <a  role="button" class="btn btn-primary pull-right" data-toggle="modal" href="#createFolderDialog"><span class="fui-folder"></span> 创建书包文件夹</a>
+        <br/>
+        <div class="table">
+            <div class="gridStyle" ng-grid="gridOptions" ng-click="selectFolder()"></div>
+        </div>
+    </div>
+
+    <div ng-hide="folders.length" align="center">
+        <h4>还没有任何文件夹</h4>
+        <a role="button" class="btn btn-success" data-toggle="modal" href="#createFolderDialog"><span class="fui-folder"></span> 创建书包文件夹</a>
+
+    </div>
+
+
+    <!--<a ui-sref="sunpack.subject.folder">大家</a>-->
+
+</div>
+
+
+
+<div class="modal fade" id="createFolderDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" ng-click="close('Cancel')" data-dismiss="modal" aria-hidden="true">&times</button>
+                <h4 class="modal-title">创建书包文件夹</h4>
+            </div>
+            <div class="modal-body">
+                <form name="createFolderForm">
+                    <div class="input-group">
+                        <span class="input-group-addon">名称</span>
+                        <input type="text" class="form-control" placeholder="*请输入文件夹名称" data-ng-model="newFolder.name" required/>
+                    </div>
+                    <br/>
+                    <div class="input-group">
+                        <span class="input-group-addon">年级</span>
+                        <select class="form-control select-primary" id="selectSemester" data-ng-options="semester.name for semester in semesters" data-ng-model="newFolder.semester" required>
+                            <option style="display:none" value="">请选择年级</option>
+                        </select>
+                    </div>
+                </form>
+
+
+            </div>
+            <div class="modal-footer">
+            <button type="button" ng-click="close('No')" class="btn btn-default" data-dismiss="modal">取消</button>
+            <button type="button" ng-click="createFolder()" ng-disabled="createFolderForm.$invalid" class="btn btn-success" data-dismiss="modal">确定</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+

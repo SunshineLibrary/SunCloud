@@ -15,9 +15,12 @@ module.exports = function(app) {
 	var schools = require('../../app/controllers/schools');
 	var userTablets = require('../../app/controllers/userTablets');
 	var apps = require('../../app/controllers/apps');
+	var folders = require('../../app/controllers/folders');
 	var tabletLog = require('../../app/controllers/tabletLog');
 
 	var multerMiddleware = multer({dest: __dirname+ '/../../upload/tmp'});
+	var sunpackMiddleware = multer({dest: __dirname+ '/../../upload/tmp'});
+
 
 	// Setting up the users profile api
 	app.route('/me').get(users.me);
@@ -39,16 +42,27 @@ module.exports = function(app) {
 
 	app.route('/rooms').post(users.restifyRoom, rooms.createRoom);
 	app.route('/rooms/:roomId').delete(users.restifyRoom, rooms.removeRoom);
-	app.route('/assign/apps').put(users.restifyRoom, rooms.assignApp);
+	app.route('/assign/apps').post(users.restifyRoom, rooms.assignApp);
+	app.route('/assign/sunpack').post(users.restifyRoom, rooms.assignSunpack);
+
 
 
 	app.route('/usertablet/').get(userTablets.logout);
 	app.route('/usertablet/count').get(userTablets.countBySchool);
 
-	//apk upload and download
+	/**
+	 * 	apk upload and download
+	 */
 	app.route('/upload/app/:appId').post(users.restifyApp, multerMiddleware, apps.upload);
 	app.route('/download/apks/:apkId').get(apps.downloadApk);
 	app.route('/apks/get_updates').post(apps.getUpdate);
+
+	/**
+	 * Sunpack
+	 */
+	app.route('/upload/files/:folderId').post(users.restifyFolder,sunpackMiddleware, folders.uploadFile);
+
+
 
 	// xiaoshu login
 	app.route('/schools/get_all.json').get(tabletLog.getSchool);
@@ -144,6 +158,38 @@ module.exports = function(app) {
 		fullErrors: true
 	};
 
+	var folderOptions = {
+		strict: true,
+		prefix: '',
+		version: '',
+		lowercase: true,
+		findOneAndUpdate: false,
+		findOneAndRemove: false,
+		fullErrors: true
+	};
+
+	var fileOptions = {
+		strict: true,
+		prefix: '',
+		version: '',
+		lowercase: true,
+		//middleware: [users.restifySubject],
+		findOneAndUpdate: false,
+		findOneAndRemove: false,
+		fullErrors: true
+	};
+
+	var semesterOptions = {
+		strict: true,
+		prefix: '',
+		version: '',
+		lowercase: true,
+		//middleware: [users.restifySubject],
+		findOneAndUpdate: false,
+		findOneAndRemove: false,
+		fullErrors: true
+	};
+
 	var UserModel = mongoose.model('User');
 	var SchoolModel = mongoose.model('School');
 	var RoomModel = mongoose.model('Room');
@@ -151,6 +197,9 @@ module.exports = function(app) {
 	var SubjectModel = mongoose.model('Subject');
 	var TabletModel = mongoose.model('Tablet');
 	var AppModel = mongoose.model('App');
+	var FolderModel = mongoose.model('Folder');
+	var FileModel = mongoose.model('File');
+	var SemesterModel = mongoose.model('Semester');
 
 
 	restify.serve(app, UserModel, userOptions);
@@ -160,6 +209,10 @@ module.exports = function(app) {
 	restify.serve(app, SubjectModel, subjectOptions);
 	restify.serve(app, TabletModel, tabletOptions);
 	restify.serve(app, AppModel, appOptions);
+	restify.serve(app, FolderModel, folderOptions);
+	restify.serve(app, FileModel, fileOptions);
+	restify.serve(app, SemesterModel, semesterOptions);
+
 
 
 	// Finish by binding the user middleware

@@ -32,7 +32,7 @@ angular.module('resources')
 
 
         return {
-            getSubejct: getSubject,
+            getSubject: getSubject,
             getAllSubjects: getAllSubjects
 
         };

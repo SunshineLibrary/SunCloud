@@ -175,7 +175,6 @@ angular.module('resources')
                 swal({title: " 上传失败", text: response.message,type: 'error'});
                 if (status == 406) {
                     $scope.uploader.clearQueue();
-
                 }
             };
 
@@ -198,7 +197,7 @@ angular.module('resources')
                 fn: function () {
                     $scope.error.limit = false;
                     $scope.error.limit = (this.queue.length > 1);
-                    return this.queue.length < 10;
+                    return this.queue.length < 2;
                 }
             });
 

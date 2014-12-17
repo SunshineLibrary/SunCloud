@@ -12,7 +12,8 @@ angular.module('schoolManage')
                     "type": 'admin',
                     "students": [],
                     "teachers": [],
-                    "apps": []
+                    "apps": [],
+                    "sunpack": []
                 }
             })
         };
@@ -27,7 +28,8 @@ angular.module('schoolManage')
                     "type": 'teaching',
                     "students": [],
                     "teachers": [info.me],
-                    "apps": []
+                    "apps": [],
+                    "sunpack": []
                 }
             })
         };

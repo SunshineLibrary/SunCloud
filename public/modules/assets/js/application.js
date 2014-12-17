@@ -54,7 +54,7 @@ String.prototype.repeat = function (num) {
     $('[data-toggle="popover"]').popover();
 
     // jQuery UI Sliders
-    var $slider = $('#slider');
+    var $slider = $('#slider');check
     if ($slider.length > 0) {
       $slider.slider({
         max: 15,
