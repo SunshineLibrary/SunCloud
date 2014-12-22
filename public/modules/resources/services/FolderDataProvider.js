@@ -35,7 +35,7 @@ angular.module('resources')
             var thePromise = defered.promise;
             $http({
                 method: "GET",
-                url: "/folders?owner=" + teacherId + "&subject=" + subjectId
+                url: "/folders?owner=" + teacherId + "&subject=" + subjectId + "&populate=semester"
             }).success(function (folders) {
                 defered.resolve(folders);
             }).error(function (err) {
@@ -76,8 +76,16 @@ angular.module('resources')
                 url: "/folders/" + info._id,
                 data: {
                     name: info.name,
-                    semester: info.semester
+                    semester: info.semester,
+                    updated_at: Date.now()
                 }
+            })
+        };
+
+        var deleteFolder = function(folderId) {
+            return $http({
+                method: "DELETE",
+                url: "folders/" + folderId
             })
         };
 
@@ -88,6 +96,7 @@ angular.module('resources')
             getFoldersByTeacherAndSubject: getFoldersByTeacherAndSubject,
             createFolder: createFolder,
             addFolderToRooms: addFolderToRooms,
-            editFolderNameAndSemester: editFolderNameAndSemester
+            editFolderNameAndSemester: editFolderNameAndSemester,
+            deleteFolder: deleteFolder
         };
     }]);

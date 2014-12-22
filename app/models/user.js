@@ -66,6 +66,10 @@ var UserSchema = new Schema({
 		}],
 		default:[]
 	},
+	subjects: [{
+		type: Schema.Types.ObjectId,
+		ref: 'Subject'
+	}],
 	updated: {
 		type: Date
 	},
@@ -127,7 +131,8 @@ UserSchema.virtual('profile').get(function () {
 		'school': this.school,
 		'gender': this.gender,
 		'grade': this.grade,
-		'roles': this.roles
+		'roles': this.roles,
+		'subjects': this.subjects
 	};
 });
 

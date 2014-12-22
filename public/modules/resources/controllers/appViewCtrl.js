@@ -17,7 +17,7 @@ angular.module('resources')
             $scope.pushOptions = [{value: false, name: '需要手动分配给班级'},{value: true, name: '默认分配给所有班级'}];
             console.log('share',$scope.app.shared);
             $scope.isSelf = theApp.owner !== null && theApp.owner !== undefined && (theApp.owner.toString() === me._id.toString());
-            $scope.isRootOrAdminOrSelf = me.roles.indexOf('root') > -1 || (me.roles.indexOf('admin') > -1 && me.school.toString() === theApp.school.toString()) || $scope.isSelf;
+            $scope.isRootOrAdminOrSelf = me.roles.indexOf('root') > -1 || (me.roles.indexOf('admin') > -1 && theApp.school && me.school.toString() === theApp.school.toString()) || $scope.isSelf;
 
             $('input[name="pushAppSwitch"]').on('switchChange.bootstrapSwitch', function(event, state) {
                 console.log(this); // DOM element
@@ -66,7 +66,7 @@ angular.module('resources')
             var hasTheApp = function(roomId) {
                 var deferred = $q.defer();
                 RoomDataProvider.getRoom(roomId).then(function(room) {
-                     deferred.resolve(room.apps.indexOf(theApp._id) > -1);
+                     deferred.resolve(room.apps && room.apps.indexOf(theApp._id) > -1);
                 }, function(err) {
                     deferred.reject(err);
                 });

@@ -112,6 +112,26 @@ angular.module('schoolManage')
             })
         };
 
+        var addSubject = function(teacherId, subjectId) {
+            return $http({
+                method: "PUT",
+                url: "/users/" + teacherId,
+                data: {
+                    $push: {subjects: subjectId}
+                }
+            })
+        };
+
+        var removeSubject = function(teacherId, subjectId) {
+            return $http({
+                method: "PUT",
+                url: "/users/" + teacherId,
+                data: {
+                    $pull: {subjects: subjectId}
+                }
+            })
+        };
+
         var deleteTeacher = function (teacherId) {
             return $http({
                 method: "DELETE",
@@ -151,6 +171,8 @@ angular.module('schoolManage')
             editTeacherRole: editTeacherRole,
             deleteTeacher: deleteTeacher,
             getRoomsOfTeacher: getRoomsOfTeacher,
-            resetPassword: resetPassword
+            resetPassword: resetPassword,
+            addSubject: addSubject,
+            removeSubject: removeSubject
         };
     }]);

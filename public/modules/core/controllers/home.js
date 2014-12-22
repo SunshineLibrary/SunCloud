@@ -6,7 +6,8 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
 		// This provides Authentication context.
 		$scope.authentication = Authentication;
 		$scope.user = Authentication.user;
-		console.log($scope.user);
+		//console.log($scope.user);
+		//console.log($scope.user);
 		if($scope.user) {
 			$scope.isRoot = $scope.user.roles.indexOf('root') > -1;
 			// Change user password

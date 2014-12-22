@@ -12,8 +12,15 @@
     <br>
     <br>
 
-    <div class="table">
+    <div class="table" ng-show="apps.length">
         <div class="gridStyle" ng-grid="gridOptions" ng-click="selectApp()"></div>
+    </div>
+
+
+    <div ng-hide="apps.length"  align="center">
+        <h6>还没有任何应用程序</h6>
+        <a role="button" class="btn btn-success" href="#createAppDialog" data-toggle="modal"><i class="glyphicon glyphicon-plus"></i>添加应用程序</a>
+
     </div>
 </div>
 

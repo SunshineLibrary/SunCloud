@@ -45,7 +45,7 @@ module.exports = {
 				'public/lib/flat-ui-pro/dist/css/flat-ui-pro.css',
                 'public/lib/angular-ui-grid/ui-grid.min.css',
 				'public/lib/ng-grid/ng-grid.css',
-				'public/lib/sweetalert/sweet-alert.css',
+				'public/lib/sweetalert/lib/sweet-alert.css',
 				'public/lib/font-awesome/css/font-awesome.css',
 				//'public/lib/bootstrap-switch/dist/css/bootstrap3/bootstrap-switch.css'
 			],
@@ -67,7 +67,7 @@ module.exports = {
 				'public/lib/ng-grid/ng-grid-2.0.13.min.js',
 				'public/lib/moment/moment.js',
 				//'public/lib/bootstrap/dist/js/bootstrap.min.js',
-				'public/lib/sweetalert/sweet-alert.min.js',
+				'public/lib/sweetalert/lib/sweet-alert.min.js',
 				'public/lib/angular-file-upload/angular-file-upload.js',
 				'public/lib/checklist-model/checklist-model.js',
 				'public/lib/angular-bootstrap-checkbox/angular-bootstrap-checkbox.js',

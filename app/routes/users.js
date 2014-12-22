@@ -16,6 +16,7 @@ module.exports = function(app) {
 	var userTablets = require('../../app/controllers/userTablets');
 	var apps = require('../../app/controllers/apps');
 	var folders = require('../../app/controllers/folders');
+	var files = require('../../app/controllers/files');
 	var tabletLog = require('../../app/controllers/tabletLog');
 
 	var multerMiddleware = multer({dest: __dirname+ '/../../upload/tmp'});
@@ -60,7 +61,8 @@ module.exports = function(app) {
 	/**
 	 * Sunpack
 	 */
-	app.route('/upload/files/:folderId').post(users.restifyFolder,sunpackMiddleware, folders.uploadFile);
+	app.route('/upload/files/:folderId').post(users.restifyFolder,sunpackMiddleware, folders.uploadFiles);
+	app.route('/upload/file/:fileId').post(sunpackMiddleware, files.uploadFile);
 
 
 
@@ -78,7 +80,7 @@ module.exports = function(app) {
 		middleware: [users.restifyUser],
 		lowercase: true,
 		access: users.userAccess,
-		findOneAndUpdate: false,
+		//findOneAndUpdate: false,
 		findOneAndRemove: false,
 		protected: "password,salt",
 		private: "password,salt",
@@ -163,8 +165,10 @@ module.exports = function(app) {
 		prefix: '',
 		version: '',
 		lowercase: true,
+		//middleware: [users.restifySubject],
 		findOneAndUpdate: false,
 		findOneAndRemove: false,
+		postDelete: folders.deleteFolder,
 		fullErrors: true
 	};
 

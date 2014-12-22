@@ -1,4 +1,7 @@
 <div ui-view>
+    <div class="" style="margin-top:10px">
+        <div ncy-breadcrumb class="breadcrumb-text ptl"></div>
+    </div>
     <div class="">
         <div class="pull-right">
             <a ng-click="toAssignFolder()" data-toggle="modal" role="button" class="btn btn-primary"><i class="glyphicon glyphicon-gift"></i> 分配给班级</a>
@@ -167,9 +170,7 @@
                         </div>
                     </div>
                 </div>
-
-        </div>
-
+            </div>
             <div class="modal-footer">
                 <div class="pull-right form-group">
                     <button type="button" class="btn btn-default" data-dismiss="modal">
@@ -222,6 +223,60 @@
         </div>
     </div>
 </div>
+
+
+
+
+<div class="modal fade" id="editFileDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class='modal-dialog'>
+        <div class='modal-content'>
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span></button>
+                <h4 class="modal-title">编辑文件</h4>
+            </div>
+            <div class="modal-body">
+                <form name="editFileForm" class="form-group">
+                    <div class="input-group">
+                        <span class="input-group-btn"><button class="btn" type="button"><span class="fa fa-file-o"> 文件名</span></button></span>
+                        <input type="text" id="newFileName" class="form-control"  placeholder="文件名" ng-model="temp.newFileName" required>
+                    </div>
+                    <br/>
+                    <div class="input-group">
+                        <span class="input-group-btn"><button class="btn" type="button"><span class="fa fa-comment"> 文件描述</span></button></span>
+                        <input type="text" id="newFileDescription" class="form-control"  placeholder="文件描述" ng-model="temp.newFileDescription" required>
+                    </div>
+                    <!--<div class="input-group">-->
+                    <br/>
+
+                    <!--<span class="input-group">-->
+                            <!--&nbsp;-->
+                        <!--</span>-->
+                    <span class="input-group-btn pull-left"><button class="btn" type="button"><span class="fa fa-file"> 文件内容</span></button></span>
+
+   <!--<span class="fileinput fileinput-new"  data-provides="fileinput" style="float: none;margin-left:110px">-->
+                                <!--<span class="btn btn-primary btn-embossed btn-file">-->
+                                <!--<span class="fileinput-new"><span class="fui-gear"></span>&nbsp;&nbsp;修改</span>-->
+                                <!--<span class="fileinput-exists"><span class="fui-gear"></span>&nbsp;&nbsp;修改</span>-->
+                    <input type="file" nv-file-select="" uploader="uploader" />
+                              <!--</span>-->
+                                <!--<span class="fileinput-filename"><a href="">{{row.entity.originalname}}</a></span>-->
+                                <!--<a href="#" class="close fileinput-exists" data-dismiss="fileinput" ng-click="uploader.clearQueue()" style="float: none">&times;</a>-->
+                            </span>
+                    <!--</div>-->
+                    <br>
+                </form>
+                <button type="button" class="btn btn-success btn-s" ng-click="uploader.uploadAll()" ng-disabled="!uploader.getNotUploadedItems().length">
+                    <span class="glyphicon glyphicon-upload"></span> Upload all
+                </button>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-defautl" data-dismiss="modal">取消</button>
+                <button class="btn btn-success btn-lg" ng-click="editFile(row)" ng-disabled="editFileForm.$invalid">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 
 

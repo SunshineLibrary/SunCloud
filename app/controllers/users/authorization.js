@@ -222,7 +222,8 @@ exports.restifyUser = function(req, res, next) {
 				return next();
 			}else {
 				var id = req.params.id;
-				if(isSelf) {
+				if(id.toString() === req.user._id.toString()) {
+					console.log('isself');
 					return next();
 				} else {
 					if(is('admin')) {

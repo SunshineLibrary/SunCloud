@@ -30,10 +30,30 @@ angular.module('resources')
             return thePromise;
         };
 
+        var deleteFile = function(fileId) {
+            return $http({
+                method: "DELETE",
+                url: "/files/" + fileId
+            })
+        };
+
+
+        var editFileNameAndDescription = function(info) {
+            return $http({
+                method: "PUT",
+                url: "/files/" + info._id,
+                data: {
+                    originalname: info.name,
+                    description: info.description
+                }
+            })
+        };
 
         return {
             getFile: getFile,
-            getAllFiles: getAllFiles
+            getAllFiles: getAllFiles,
+            deleteFile: deleteFile,
+            editFileNameAndDescription: editFileNameAndDescription
 
         };
     }]);

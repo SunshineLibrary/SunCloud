@@ -11,12 +11,21 @@
     </div>
     <br>
     <br/>
-    <p  class="pull-right" >显示 <a href="" ng-click="allApps()">【全部】</a> <a href=""ng-click="onlyRoot()">【Root创建的】</a>应用程序
-    </p>
-    <br/>
-    <div class="table">
-        <div class="gridStyle" ng-grid="gridOptions" ng-click="selectApp()"></div>
+    <div ng-show="apps.length">
+        <p  class="pull-right" >显示 <a href="" ng-click="allApps()">【全部】</a> <a href=""ng-click="onlyRoot()">【Root创建的】</a>应用程序
+        </p>
+        <br/>
+        <div class="table">
+            <div class="gridStyle" ng-grid="gridOptions" ng-click="selectApp()"></div>
+        </div>
     </div>
+
+    <div ng-hide="apps.length"  align="center">
+        <h6>还没有任何应用程序</h6>
+        <a role="button" class="btn btn-success" href="#createAppDialog" data-toggle="modal"><i class="glyphicon glyphicon-plus"></i>添加应用程序</a>
+
+    </div>
+
 </div>
 
 

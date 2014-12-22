@@ -27,10 +27,20 @@ angular.module('sunpack')
                         function(SubjectDataProvider) {
                             return SubjectDataProvider.getAllSubjects();
                         }
+                    ],
+                    semesters: ['SemesterDataProvider',
+                    function(SemesterDataProvider) {
+                            return SemesterDataProvider.getAllSemesters();
+                            }
+                ],
+                    myRooms: ['RoomDataProvider', 'AuthService',
+                        function(RoomDataProvider, AuthService) {
+                            return RoomDataProvider.getRoomsByTeacher(AuthService.me._id)
+                        }
                     ]
                 },
                 ncyBreadcrumb: {
-                    label: '所有科目'
+                    label: '{{label}}'
                 }
             })
             .state('sunpack.subject', {
@@ -47,6 +57,28 @@ angular.module('sunpack')
                 ncyBreadcrumb: {
                     label: "{{subject.name}}"
                     //label: "语文"
+                }
+            })
+            .state('sunpack.myroom', {
+                url: '/myrooms/:roomId',
+                controller: 'myRoomPackController',
+                templateUrl: __templates + 'myroom.html',
+                resolve: {
+                  myRoom: ['RoomDataProvider', '$stateParams',
+                  function(RoomDataProvider, $stateParams) {
+                      return RoomDataProvider.getRoom($stateParams.roomId);
+                  }]
+                },
+                ncyBreadcrumb: {
+                    label: "{{myRoom.name}}"
+                }
+            })
+            .state('sunpack.repo', {
+                url: '/repo/:subjectId',
+                controller: 'repoController',
+                templateUrl: __templates + 'repo.html',
+                ncyBreadcrumb: {
+                    label: "资源库"
                 }
             })
             .state('sunpack.subject.folder', {
@@ -84,8 +116,3 @@ angular.module('sunpack')
         ;
     }
 ]);
-
-/**
- * http://localhost:3000/#/sunpack/subjects/545ae60f502ea6150c8ac8bd
- * http://localhost:3000/#/sunpack/subejects/545ae60f502ea6150c8ac8bd/folder
- */

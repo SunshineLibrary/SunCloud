@@ -80,8 +80,8 @@
         </div>
     </div>
     <div ng-hide="app.apks.length" align="center">
-        <h3>您还没有上传任何安装包</h3>
-        <a role="button" class="btn btn-primary btn-success" href="#uploadApkDialog" data-toggle="modal"><span class="glyphicon glyphicon-cloud-upload"></span> 上传安装包</a>
+        <h3>还没有任何安装包</h3>
+        <a role="button" class="btn btn-primary btn-success" href="#uploadApkDialog" data-toggle="modal" ng-show="isRootOrAdminOrSelf"><span class="glyphicon glyphicon-cloud-upload"></span> 上传安装包</a>
     </div>
 </div>
 
