@@ -111,11 +111,12 @@ angular.module('schools')
                                     confirmButtonText: "确定",
                                     closeOnConfirm: false })
                             }).error(function(err){
+                                console.log(err);
                                 swal({
                                     title: "创建学校成功",
-                                    text: "创建学校管理员账号失败，请重试",
+                                    text: "创建学校管理员账号失败，可能请重试",
                                     type: "warning",
-                                    confirmButtonColor: "#2E8B57",
+                                    confirmButtonColor: "#DD6B55",
                                     confirmButtonText: "确定",
                                     closeOnConfirm: false })
                             });

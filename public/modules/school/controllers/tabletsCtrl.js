@@ -33,7 +33,7 @@ angular.module('schoolManage')
                         cellTemplate:'<div class="ngCellText" ng-class="col.colIndex()" ng-show="row.entity.userName">' +
                         '<a href="/#/students/{{row.entity.userId}}">{{row.getProperty(col.field)}}</a></div>' +
                         '<div ng-hide="row.entity.userName"><span class="label label-default">暂无</span></div>'},
-                    {field: 'userId', displayName: '', cellTemplate:'<button type="button" align="center" class="btn btn-inverse btn-sm" ng-click="logout($event, row)" ng-show="row.entity.userName"><span class="glyphicon glyphicon-log-out"></span> 登出</button>'}
+                    {field: 'userId', displayName: '', cellTemplate:'<button type="button" class="btn btn-inverse btn-xs" ng-click="logout($event, row)" ng-show="row.entity.userName"><span class="glyphicon glyphicon-log-out"></span> 登出</button>'}
 
                 ],
                 selectedItems: $scope.selectedTablet,

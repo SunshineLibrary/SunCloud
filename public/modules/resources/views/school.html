@@ -16,27 +16,27 @@
         <div class="tab-pane active" id="roomList">
             <div ng-show="rooms.length">
                 <div class="pull-right">
-                    <a class="btn btn-primary" data-toggle="modal" href="#createRoomDialog" ng-show="isRootOrAdmin"><span class="">创建班级</span></a>
+                    <a class="btn btn-primary" data-toggle="modal" href="#createRoomDialog" ng-show="isRootOrAdmin"><i class="fa fa-cubes"></i> 创建班级</a>
                 </div>
                 <br>
                 <div class="table">
-                    <div class="gridStyle style1"  ng-grid="gridOptions1" ng-click="selectRoom()"></div>
+                    <div class="gridStyle style3"  ng-grid="gridOptions1" ng-click="selectRoom()"></div>
                 </div>
             </div>
             <div ng-hide="rooms.length">
                 <h3 align="center">还没有任何班级</h3>
                 <div align="center">
-                    <a class="btn btn-success" data-toggle="modal" href="#createRoomDialog" ng-show="isRootOrAdmin">创建班级</a>
+                    <a class="btn btn-success" data-toggle="modal" href="#createRoomDialog" ng-show="isRootOrAdmin"><i class="fa fa-cubes"></i> 创建班级</a>
                 </div>
             </div>
         </div>
 
         <div class="tab-pane" id="adminList">
             <div ng-show="admins.length">
-                <a class="btn btn-primary pull-right" ng-show="isRootOrAdmin" ng-click="toAddAdmins()">添加学校管理员</a>
+                <a class="btn btn-primary pull-right" ng-show="isRootOrAdmin" ng-click="toAddAdmins()"><i class="fa fa-plus"></i> 添加学校管理员</a>
                 <br>
                 <div class="table">
-                <div class="gridStyle style1"  ng-grid="gridOptions2" ng-click="selectAdmin()"></div>
+                <div class="gridStyle style3"  ng-grid="gridOptions2" ng-click="selectAdmin()"></div>
                 </div>
             </div>
             <div ng-hide="admins.length">
@@ -51,7 +51,7 @@
 </div>
 
 <!--**************************Modal***************************-->
-<div class="modal fade" id="addAdminsDailog" tabindex="-1" role="dialog" aria-labelledby="addStudentsModalLabel"
+<div class="modal fade" id="addAdminsDialog" tabindex="-1" role="dialog" aria-labelledby="addStudentsModalLabel"
      aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -60,7 +60,31 @@
                 <h4 class="modal-title" id="addStudentsModalLabel">添加学校管理员</h4>
             </div>
             <div class="modal-body">
-
+                <div class="inner-addon left-addon" style="margin-top:10px">
+                    <i class="glyphicon glyphicon-search"></i>
+                    <input type="search" class="form-control"  placeholder="搜索" ng-model="filterOptions3.filterText"/>
+                </div>
+                <p style="color: #2980b9">已选：{{selectedTeachers.length}}人</p>
+                <div ng-show="notAdmins.length">
+                    <div class="gridStyle style2" ng-grid="gridOptions3"></div>
+                </div>
+                <div ng-hide="notAdmins.length" align="center">
+                    <h4>                    没有可添加的老师
+                    </h4>
+                </div>
+                <div ng-hide="isCreatingAdmin" class="pull-right">
+                    <button class="btn btn-success pull-right" ng-click="toCreateAdmin()">创建管理员</button>
+                </div>
+                <div ng-show="isCreatingAdmin">
+                    <form class="form-group form-inline pull-right" name="newAdminForm">
+                        <input type="text" class="form-control" placeholder="*新管理员姓名"  ng-model="newAdmin.name" required>
+                        <input type="text" class="form-control" placeholder="*新管理员用户名"  ng-model="newAdmin.username" required>
+                        <button class="btn btn-success" ng-click="createAdmin()" ng-disabled="newAdminForm.$invalid">创建</button>
+                        <button class="btn btn-inverse" ng-click="cancelCreateAdmin()">取消</button>
+                    </form>
+                </div>
+                <br/>
+                <br/>
                 <button class="btn btn-primary  btn-block" ng-click="addAdmins()">添加</button>
             </div>
             <div class="modal-footer">

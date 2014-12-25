@@ -4,6 +4,8 @@ angular.module('resources')
         function (theTablet,TabletDataProvider, $scope, AuthService, RoomDataProvider, $location, $stateParams) {
             $scope.tablet = theTablet;
             console.log(theTablet);
+            var me = AuthService.me;
+            $scope.isInSameSchool = $scope.tablet.school._id.toString() === me.school.toString();
 
             TabletDataProvider.getTabletUser($scope.tablet._id).success(function(record){
                 if(record.length){
@@ -11,15 +13,13 @@ angular.module('resources')
                     $scope.role = $scope.user.roles.indexOf('teacher') > -1 ? 'teachers' : 'students';
                 }else{
                     $scope.user = null;
-                    console.log($scope.user);
-
                 }
             });
 
             $scope.logout = function () {
                 swal({
                         title: "登出晓书",
-                        text: "您确定要将"+user.name+"登出晓书吗?",
+                        text: "您确定要将"+$scope.user.name+"登出晓书吗?",
                         type: "warning",
                         showCancelButton: true,
                         cancelButtonText: "取消",

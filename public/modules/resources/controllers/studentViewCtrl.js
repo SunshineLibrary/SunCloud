@@ -4,6 +4,9 @@ angular.module('resources')
         function (student,StudentDataProvider, $scope, AuthService, UserDataProvider, RoomDataProvider,$location, $stateParams) {
             $scope.student = student;
             $scope.temp = {};
+            var me = AuthService.me;
+            $scope.isInSameSchool = $scope.student.school._id.toString() === me.school.toString();
+
 
 
             RoomDataProvider.getRoomsByStudent($stateParams.studentId).then(function(rooms) {
@@ -52,6 +55,12 @@ angular.module('resources')
                     })
             };
 
+            // Focus state for append/prepend inputs
+            $('.input-group').on('focus', '.form-control', function () {
+                $(this).closest('.input-group, .form-group').addClass('focus');
+            }).on('blur', '.form-control', function () {
+                $(this).closest('.input-group, .form-group').removeClass('focus');
+            });
 
 
 

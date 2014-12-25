@@ -34,8 +34,12 @@
                     <br>
                     <!--<label for="teacherUsername">用户名</label>-->
                     <input type="text" id="teacherUsername" class="form-control" placeholder="*新老师用户名" ng-model="newTeacher.username" required>
-                    <br>
-                    <input type="checkbox" ng-model="newTeacher.isAdmin"/> 是否具有超级管理员权限
+                    <!--<br>-->
+                    <!--<input type="checkbox" ng-model="newTeacher.isAdmin"/> 是否具有超级管理员权限-->
+                    <!--<label for="adminCheckbox"><input type="checkbox" id="adminCheckbox" ng-model="teacher.isAdmin"/></label>&nbsp;&nbsp;&nbsp;是否具有超级管理员权限-->
+                    <label class="checkbox" for="checkbox1">
+                        <input type="checkbox" data-toggle="checkbox" ng-model="newTeacher.isAdmin" id="checkbox1">   是否具有超级管理员权限
+                    </label>
                 </form>
                 <span style="color: red" ng-show="errorMessage">{{errorMessage}}</span>
 
@@ -59,12 +63,12 @@
             <div class="modal-body">
                 <form name="editForm" class="form-group">
                     <div class="input-group">
-                        <span class="input-group-btn"><button class="btn" type="button"><span class="fui-user">姓名</span></button></span>
+                        <span class="input-group-btn"><button class="btn" type="button"><span class="fui-user"> 姓名</span></button></span>
                         <input type="text" id="newName" class="form-control" placeholder="新姓名" ng-model="temp.newName" required>
                     </div>
                     <br>
                     <div class="input-group">
-                        <span class="input-group-btn"><button class="btn" type="button"><span>用户名</span></button></span>
+                        <span class="input-group-btn"><button class="btn" type="button"><span>  用户名</span></button></span>
                         <input type="text" id="newUsername" class="form-control" placeholder="新用户名" ng-model="temp.newUsername" required>
                     </div>
                     <br>
@@ -77,8 +81,12 @@
                         <span class="input-group-btn"><button class="btn" type="button"><span class="glyphicon glyphicon-envelope">邮箱</span></button></span>
                         <input type="text" id="newEmail" class="form-control"  placeholder="邮箱" ng-model="temp.newEmail">
                     </div>
-                    <br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" ng-model="temp.isAdmin"/> &nbsp;&nbsp;&nbsp;是否具有超级管理员权限
+                    <!--<br>-->
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <label class="checkbox" for="checkbox2">
+                        <input type="checkbox" data-toggle="checkbox" ng-model="temp.isAdmin" id="checkbox2">   是否具有超级管理员权限
+                    </label>
+                    <!--<input type="checkbox" ng-model="temp.isAdmin"/> &nbsp;&nbsp;&nbsp;是否具有超级管理员权限-->
 
                 </form>
                 <span style="color: red" ng-show="error">修改失败，可能由于用户名已存在。请修改用户名后重试。</span>

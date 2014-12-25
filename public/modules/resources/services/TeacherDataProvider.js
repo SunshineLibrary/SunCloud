@@ -67,6 +67,20 @@ angular.module('schoolManage')
                 data: info
             })
         };
+
+        var createAdmin = function(info) {
+            return $http({
+                method: "POST",
+                url: "/users",
+                data: {
+                    name: info.name,
+                    username: info.username,
+                    school: info.school,
+                    roles: info.roles,
+                    created_at: Date.now()
+                }
+            })
+        };
         var getTeacher = function (teacherId, callBack) {
             var defered = $q.defer();
             var teacherPromise = defered.promise;
@@ -165,6 +179,7 @@ angular.module('schoolManage')
             getAdminsBySchool: getAdminsBySchool,
             getCountsOfTeachersBySchool: getCountsOfTeachersBySchool,
             createTeacher: createTeacher,
+            createAdmin: createAdmin,
             getTeacher: getTeacher,
             editTeacher: editTeacher,
             editTeacherPermission: editTeacherPermission,

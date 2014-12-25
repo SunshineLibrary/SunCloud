@@ -7,7 +7,7 @@
         <!--</div>-->
     <!--</div>-->
     <div class="page-header">
-        <h4>{{student.name}}
+        <h4>{{student.name || student.username}}
             <small> &nbsp;
                 <span class="label label-success">学生</span>
             </small>
@@ -21,7 +21,7 @@
 
     <div>
         <h4>个人信息
-            <div class="pull-right">
+            <div class="pull-right" ng-show="isInSameSchool">
                 <button role="button" class="btn btn-primary" ng-click="showEditStudentDialog()"><span class="glyphicon glyphicon-edit"></span> 编辑</button>
                 &nbsp;&nbsp;
             </div>
@@ -29,7 +29,7 @@
         <table width="500px">
             <tr>
                 <td><strong>姓名</strong></td>
-                <td>{{student.name}}</td>
+                <td>{{student.name}} </td>
             </tr>
             <tr>
                 <td><strong>用户名</strong></td>

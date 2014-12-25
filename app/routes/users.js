@@ -41,6 +41,17 @@ module.exports = function(app) {
 	app.route('/auth/signout').get(users.signout);
 
 
+	/**
+	 * create students
+	 */
+	app.route('/students/batch').post(users.createStudentBatch);
+	app.route('/students/auto').post(users.autoCreateAddStudents);
+	app.route('/students/manual').post(users.manualCreateAddStudents);
+
+
+	/**
+	 *
+	 */
 	app.route('/rooms').post(users.restifyRoom, rooms.createRoom);
 	app.route('/rooms/:roomId').delete(users.restifyRoom, rooms.removeRoom);
 	app.route('/assign/apps').post(users.restifyRoom, rooms.assignApp);

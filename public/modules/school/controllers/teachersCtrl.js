@@ -25,7 +25,7 @@ angular.module('schoolManage')
                     {field: '_id', visible: false},
                     {field: 'name', displayName: '姓名'},
                     {field: 'username', displayName: '用户名'},
-                    {field: 'roles', displayName: '超级管理员', cellTemplate: '<div>{{row.entity[col.field].indexOf(\'admin\') > -1 | isAdminFilter}}</div>'},
+                    {field: 'roles', displayName: '超级管理员', cellTemplate: '<div>{{row.entity.roles | isAdminFilter}}</div>'},
                     {field: 'email', displayName: '邮箱'},
                     {field: 'phone', displayName: '电话'},
                     {field: '', displayName: '编辑', cellTemplate:
@@ -146,11 +146,17 @@ angular.module('schoolManage')
                 //$state.transitionTo(roomView(roomId: $scope.gridOptions.selectedItems[0]._id))
                 $location.path('/teachers/' + $scope.gridOptions.selectedItems[0]._id);
             };
+            // Focus state for append/prepend inputs
+            $('.input-group').on('focus', '.form-control', function () {
+                $(this).closest('.input-group, .form-group').addClass('focus');
+            }).on('blur', '.form-control', function () {
+                $(this).closest('.input-group, .form-group').removeClass('focus');
+            });
+            // Checkboxes and Radiobuttons
+
+            $('[data-toggle="checkbox"]').radiocheck();
+            $('[data-toggle="radio"]').radiocheck();
+
 
         }
-    ])
-    .filter('isAdminFilter', function() {
-    return function(input) {
-        return input ? '是' : '否';
-    };
-});
+    ]);

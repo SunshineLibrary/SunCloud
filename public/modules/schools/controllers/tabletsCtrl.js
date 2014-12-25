@@ -11,8 +11,9 @@ angular.module('schools')
             _.each($scope.tablets, function(tabletItem) {
                 TabletDataProvider.getTabletUser(tabletItem._id).success(function (records) {
                     if(records.length) {
-                        tabletItem.userId = records[0].userId._id;
-                        tabletItem.userName = records[0].userId.name;
+                        tabletItem.user = records[0].userId;
+                        //tabletItem.userId = records[0].userId._id;
+                        //tabletItem.userName = records[0].userId.name;
                     }
                 }).error(function(err) {
                     console.error(err);
@@ -23,7 +24,7 @@ angular.module('schools')
                 event.stopPropagation();
                 swal({
                         title: "登出晓书",
-                        text: "您确定要将"+row.entity.userName+"登出晓书吗?",
+                        text: "您确定要将"+row.entity.user.name+"登出晓书吗?",
                         type: "warning",
                         showCancelButton: true,
                         cancelButtonText: "取消",
@@ -31,10 +32,10 @@ angular.module('schools')
                         confirmButtonText: "确定",
                         closeOnConfirm: false },
                     function(){
-                        TabletDataProvider.logout(row.entity.userId, row.entity._id)
+                        TabletDataProvider.logout(row.entity.user._id, row.entity._id)
                             .success(function(record){
-                                row.entity.userId = null;
-                                row.entity.userName = null;
+                                row.entity.user = null;
+                                //row.entity.userName = null;
                                 //row.entity.loginTime = null;
                                 swal({title: "登出成功", type: "success", timer: 1500 });
                             })
@@ -60,11 +61,11 @@ angular.module('schools')
                     {field: 'OS_version', displayName: '版本', width: '10%'},
                     {field: 'lastUpdate', displayName: '上次更新', width: '20%'},
                     {field: 'school.name', displayName: '所属学校'},
-                    {field: 'userName', displayName: '正在使用',
-                        cellTemplate:'<div class="ngCellText" ng-class="col.colIndex()" ng-show="row.entity.userName">' +
-                        '<a href="/#/students/{{row.entity.userId}}">{{row.getProperty(col.field)}}</a></div>' +
-                        '<div ng-hide="row.entity.userName"><span class="label label-default">暂无</span></div>'},
-                    {field: 'userId', displayName: '', cellTemplate:'<button type="button" align="center" class="btn btn-inverse btn-sm" ng-click="logout($event, row)" ng-show="row.entity.userName"><span class="glyphicon glyphicon-log-out"></span> 登出</button>'}
+                    {field: 'user', displayName: '正在使用',
+                        cellTemplate:'<div class="ngCellText" ng-class="col.colIndex()" ng-show="row.entity.user">' +
+                        '<a href="/#/students/{{row.entity.user._id}}">{{row.entity.user.name || row.entity.user.username}}</a></div>' +
+                        '<div ng-hide="row.entity.user"><span class="label label-default">暂无</span></div>'},
+                    {field: 'user', displayName: '', cellTemplate:'<button type="button" align="center" class="btn btn-inverse btn-xs" ng-click="logout($event, row)" ng-show="row.entity.user.name"><span class="glyphicon glyphicon-log-out"></span> 登出</button>'}
 
                 ],
                 filterOptions: $scope.filterOptions,

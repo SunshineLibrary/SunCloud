@@ -20,9 +20,10 @@
                    <span class="glyphicon glyphicon-plus"></span> 添加学生 <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu dropdown-menu-inverse" role="menu">
-                    <li><a href="" ng-click="toAddStudents()">从学生列表添加</a></li>
-                    <li><a href="#addStudentsBatchDialog2" data-toggle="modal">批量创建并添加</a></li>
-                    <li><a href="" ng-click="toAddStudentsFromOtherRoom()">从其他班级添加</a></li>
+                    <li><a href="" ng-click="toAddStudents()"><i class="fa fa-list"></i>&nbsp;  从学生列表添加</a></li>
+                    <li><a href="#createStudentDialog" data-toggle="modal"><i class="fa fa-user"></i>&nbsp;  单个创建并添加</a></li>
+                    <li><a href="#addStudentsBatchDialog" data-toggle="modal"><i class="fa fa-users"></i>&nbsp; 批量创建并添加</a></li>
+                    <li><a href="" ng-click="toAddStudentsFromOtherRoom()"><i class="fa fa-paw"></i>&nbsp; 从其他班级添加</a></li>
                 </ul>
             </div>
             <!--<a class="btn btn-warning btn-sm pull-right"  ng-click="toAddStudents()">从学生列表中添加</a>-->
@@ -66,6 +67,7 @@
                     <i class="glyphicon glyphicon-search"></i>
                     <input type="search" class="form-control"  placeholder="搜索" ng-model="filterOptions2.filterText"/>
                 </div>
+                <p>已选学生： {{selectedStudents.length}}人</p>
                 <div class="table">
                     <div class="gridStyle style2"  ng-grid="gridOptions2"></div>
                 </div>
@@ -112,6 +114,14 @@
                         <span class="input-group-btn"><button class="btn" type="button"><span class="">用户名</span></button></span>
                         <input type="text" id="newUsername" class="form-control" placeholder="新用户名" ng-model="temp.newUsername" required>
                     </div>
+                    <br/>
+                    <div class="input-group">
+                        <span class="input-group-btn">
+                            <button class="btn" type="button"><span class="fui-calendar">生日</span></button></span>
+                        <input type="text" class="form-control" name="birthday" placeholder="yyyy-mm-dd  (如 2000-01-01)" ng-model="temp.newBirthday" ng-pattern="/^(\d{4})\-(\d{2})\-(\d{2})$/"/>
+                    </div>
+                    <span class="sun-error" ng-show="editForm.birthday.$error.pattern">生日格式应为 yyyy-mm-dd，如 2000-01-01.<br/>如果只知道月份不知道是哪天，请统一使用1号</span>
+
                 </form>
                 <span style="color: red" ng-show="error">修改失败，可能由于用户名已存在。请修改用户名后重试。</span>
             </div>
@@ -134,23 +144,24 @@
             </div>
             <div class="modal-body">
                 <ul class="nav nav-pills nav-justified">
-                    <li class="active" ><a href="#manualState" data-toggle="tab" >手动创建</a></li>
-                    <li ><a href="#autoState" data-toggle="tab">自动创建</a></li>
+                    <li ng-class="{'active': manualState}" ><a href="" ng-click="toAddManual()" data-toggle="tab" >手动创建</a></li>
+                    <li ng-class="{'active': autoState}"><a href="" ng-click="toAddAuto()" data-toggle="tab">自动创建</a></li>
                 </ul>
                 <div id="subtab-container">
-                    <div id="subtab-tab-content" class="tab-content">
-                        <div class="tab-pane fade in active col-md-12" id="manualState">
+                    <div id="subtab-tab-content" class="">
+                        <div class="col-md-12" id="manualState" ng-show="manualState">
                             <br>
                             <form name="manualForm">
                                 <li>请把学生姓名，用户名逐行输入到文本框中（也可以直接从电子文档中复制粘贴）</li>
                                 <!--<br>-->
-                                <li>如果学生不存在，创建并加入班级; 如果学生已存在，则自动加入该班级</li>
+                                <li>我们会创建该学生账号并添加到该班级</li>
+                                <li>如果您想添加已存在的学生，请去所有学生列表添加</li>
                                 <!--<br>-->
                                 <li>每行一个学生，请按照如下格式输入：</li>
                                 <!--<br>-->
                                 <p style="color: green; font-weight: bold;">&nbsp;&nbsp;姓名1，用户名1 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 或 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 姓名1 &nbsp;  用户名1 </p>
                                 <p style="color: green; font-weight: bold;">&nbsp;&nbsp;姓名2，用户名2  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   姓名2 &nbsp; 用户名2 </p>
-                                <span style="color: red" ng-show="errorMessage">由于以下学生姓名-用户名与数据库中不一致，请修改后重试。</span>
+                                <span style="color: red" ng-show="temp.manualCreateError">以下学生创建失败，可能由于用户名已存在，请修改用户名后重试</span>
 
                                 <textarea ng-model="newStudentsList" style="height: 200px" placeholder="姓名1， 用户名1
 姓名2， 用户名2" class="form-control" required></textarea>
@@ -159,7 +170,7 @@
                             <button  type="submit" class="btn btn-success btn-block" ng-click="manualCreateStudents()" ng-disabled="manualForm.$invalid">添加</button>
                         </div>
 
-                        <div id="autoState" class="tab-pane fade col-md-12" >
+                        <div id="autoState" class="col-md-12" ng-show="autoState">
                             <br>
                             <li>请您把学生姓名逐行输入到下方的文本框中（也可以直接从电子文档中复制粘贴）</li>
                             <!--<br>-->
@@ -171,7 +182,7 @@
                             <!--<br>-->
                             <div ng-hide="theRoom.code">
                                 <div ng-if="!isAddingCode">
-                                    <button class="btn btn-warning pull-right" ng-click="toAddCode()">添加班级代号</button>
+                                    <button class="btn btn-success pull-right" ng-click="toAddCode()">添加班级代号</button>
                                     <p class="pull-right" style="color:orangered">您还没有添加班级代号 &nbsp;</p>
                                     <br>
                                 </div>
@@ -189,6 +200,7 @@
 学生姓名2" ng-model="newNamesList" required></textarea>
                                 <br>
                                 <span style="color: red" ng-show="temp.student_count_max">班级人数不能超过100人</span>
+                                <span style="color: red" ng-show="temp.autoCreateError">创建学生失败，请重试，或者手动创建</span>
                             </form>
                             <button class="btn  btn-success btn-block"  ng-click="autoCreateStudents()" ng-disabled="autoForm.$invalid || !theRoom.code">生成</button>
                         </div>
@@ -196,38 +208,6 @@
                 </div>
                 <button class="btn" style="background-color:white" ></button>
             </div>
-        </div>
-    </div>
-</div>
-
-<div class="modal fade" id="addStudentsBatchDialog2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class='modal-dialog modal-lg'>
-        <div class='modal-content'>
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span></button>
-                <h4 class="modal-title">批量创建添加学生</h4>
-            </div>
-            <div class="modal-body">
-                <form name="manualForm">
-                    <li>请把学生姓名，用户名逐行输入到文本框中（也可以直接从电子文档中复制粘贴）</li>
-                    <br>
-                    <li>如果学生不存在，创建并加入班级; 如果学生已存在，则自动加入该班级</li>
-                    <br>
-                    <li>每行一个学生，请按照如下格式输入：</li>
-                    <br>
-                    <p style="color: green; font-weight: bold;">&nbsp;&nbsp;姓名1，用户名1 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 或 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 姓名1 &nbsp;  用户名1 </p>
-                    <p style="color: green; font-weight: bold;">&nbsp;&nbsp;姓名2，用户名2  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   姓名2 &nbsp; 用户名2 </p>
-                    <span style="color: red" ng-show="errorMessage">由于以下学生姓名-用户名与数据库中不一致，请修改后重试。</span>
-
-                    <textarea ng-model="newStudentsList" style="height: 200px" placeholder="姓名1， 用户名1
-姓名2， 用户名2" class="form-control" required></textarea>
-
-                    <p>提示：分隔符可以使用半角逗号、全角逗号和空格。</p>
-                </form>
-            </div>
-
-            <button type="submit" class="btn btn-default btn-success btn-block" ng-click="manualCreateStudents()" ng-disabled="manualForm.$invalid">添加</button>
-            <br>
         </div>
     </div>
 </div>
@@ -284,4 +264,32 @@
 </div>
 
 
+<div class="modal fade" id="createStudentDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class='modal-dialog'>
+        <div class='modal-content'>
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span></button>
+                <h4 class="modal-title">创建学生</h4>
+            </div>
+            <div class="modal-body">
+                <form  name="studentForm" class="form-group">
+                    <input type="text" class="form-control" placeholder="*新学生姓名" ng-model="newStudent.name" required>
+                    <br>
+                    <input type="text" class="form-control" placeholder="*新学生用户名" ng-model="newStudent.username" required>
+                    <br/>
+                    <div class="input-group">
+                        <span class="input-group-btn">
+                            <button class="btn" type="button"><span class="fui-calendar">生日</span></button></span>
+                        <input type="text" class="form-control" name="birthday" placeholder="yyyy-mm-dd  (如 2000-01-01)" ng-model="newStudent.birthday" ng-pattern="/^(\d{4})\-(\d{2})\-(\d{2})$/"/>
+                    </div>
+                    <span class="sun-error" ng-show="studentForm.birthday.$error.pattern">生日格式应为 yyyy-mm-dd，如 2000-01-01.<br/>如果只知道月份不知道是哪天，请统一使用1号</span>
+                </form>
 
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-defautl" data-dismiss="modal">取消</button>
+                <button class="btn btn-success" ng-click="createAddStudent()" ng-disabled="studentForm.$invalid">确定</button>
+            </div>
+        </div>
+    </div>
+</div>

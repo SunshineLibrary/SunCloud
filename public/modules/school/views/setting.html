@@ -1,7 +1,7 @@
 <section>
-    <header class="sun-header"><h4>设置</h4></header>
-    <hr/>
-    <h3>应用程序</h3>
+    <header class="page-header"><h3>设置</h3></header>
+    <!--<hr/>-->
+    <h4>应用程序</h4>
     <!--<checkbox median class="btn-default" style="margin-top:0px" ng-model="addApp"></checkbox> &nbsp;&nbsp;&nbsp;所有老师都能新建应用程序  或者-->
     老师能否创建新的应用程序?  <button id="sun-1" style="width:80px;margin-left:10px" class="btn btn-primary btn-wide" ng-click="toSet()"><i class="glyphicon glyphicon-cog"></i> 设置</button>
     <!--<br/>-->
@@ -15,10 +15,10 @@
     <!--</div>-->
 
     <hr/>
-    <h3>返回原生桌面密码</h3>
+    <h4>返回原生桌面密码</h4>
     密码: {{school.launcherPassword}} &nbsp;&nbsp;&nbsp;
          <span ng-hide="isResettingPassword">
-            <a href="" role="button" ng-click="enableEditor()" class="btn btn-primary btn-wide" style="width:80px;margin-left:75px"><i class="fa fa-unlock-alt"></i> 重设密码</a>
+            <a href="" role="button" ng-click="enableEditor()" class="btn btn-danger btn-wide" style="width:80px;margin-left:75px"><i class="fa fa-unlock-alt"></i> 重设密码</a>
         </span>
         <form ng-show="isResettingPassword" class="form-inline" name="resetForm">
             <input type="text" class="form-control" style="color: black; font-size: large" ng-model="newPassword" placeholder="请输入新密码"/>

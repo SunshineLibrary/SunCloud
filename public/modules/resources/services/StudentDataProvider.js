@@ -37,32 +37,42 @@ angular.module('schoolManage')
             })
         };
 
-        var createStudentBatch = function (studentsList, callBack) {
-            var successList = [];
-            var failList = [];
-            _.each(studentsList, function(student) {
-                console.log(student);
-                $.ajax({
-                    url: "/users",
-                    method: "POST",
-                    async: false,
-                    data: student,
-                    success: function (newStudent) {
-                        console.log(newStudent);
-                        successList.push(newStudent)
-                    },
-                    error: function(err) {
-                        console.error(err);
-                        failList.push(student)
-                    },
-                    dataType: "json"
-                });
-            });
-            console.log('success:' + successList);
-            console.log('fail: ' + failList);
-            callBack(successList, failList);
-
+        var createStudentBatch = function(studentsList) {
+            return $http({
+                method: "POST",
+                url: "/students/batch",
+                data: {
+                    studentsList: studentsList
+                }
+            })
         };
+
+        //var createStudentBatch = function (studentsList, callBack) {
+        //    var successList = [];
+        //    var failList = [];
+        //    _.each(studentsList, function(student) {
+        //        console.log(student);
+        //        $.ajax({
+        //            url: "/users",
+        //            method: "POST",
+        //            async: false,
+        //            data: student,
+        //            success: function (newStudent) {
+        //                console.log(newStudent);
+        //                successList.push(newStudent)
+        //            },
+        //            error: function(err) {
+        //                console.error(err);
+        //                failList.push(student)
+        //            },
+        //            dataType: "json"
+        //        });
+        //    });
+        //    console.log('success:' + successList);
+        //    console.log('fail: ' + failList);
+        //    callBack(successList, failList);
+        //
+        //};
 
         var getStudent = function (studentId, callBack) {
             var defered = $q.defer();
@@ -116,25 +126,28 @@ angular.module('schoolManage')
 
         };
 
-        var autoCreateAddStudents = function(room, names, schoolCode, roomCode, callBack) {
-            var student = {};
-            var studentNo = '';
-            var createdStudents = [];
-            var failedStudents = [];
-            _.each(names, function(name, index) {
-                student.name = name;
-                studentNo = (index > 10) ? ''+index : '0' + index;
-                student.username = schoolCode + roomCode + index;
-                student.roles = ['student'];
-                createStudent(student).success(function(newStudent) {
-                        createdStudents.push(newStudent);
-                    }
-                ).error(function(error) {
-                        failedStudents.push(student);
-                    })
+        var autoCreateAddStudents = function(schoolId, roomId, names) {
+            return $http({
+                method: "POST",
+                url: "/students/auto",
+                data: {
+                    schoolId: schoolId,
+                    roomId: roomId,
+                    names: names
+                }
+            });
+        };
 
+        var manualCreateAddStudents = function(schoolId, roomId, students) {
+            return $http({
+                method: "POST",
+                url: "/students/manual",
+                data: {
+                    schoolId: schoolId,
+                    roomId: roomId,
+                    students: students
+                }
             })
-
         };
 
         return {
@@ -143,6 +156,7 @@ angular.module('schoolManage')
             createStudent: createStudent,
             createStudentBatch: createStudentBatch,
             autoCreateAddStudents: autoCreateAddStudents,
+            manualCreateAddStudents: manualCreateAddStudents,
             getStudent: getStudent,
             editStudentNameBirthday: editStudentNameBirthday,
             editStudent: editStudent,

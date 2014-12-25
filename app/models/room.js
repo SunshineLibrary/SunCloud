@@ -63,6 +63,10 @@ var RoomSchema = new Schema({
             type: String
             //validate: [validateRoomCode, '已经存在此班级编号， 请修改班级名后重试']
         },
+        studentIndex: {
+            type: Number,
+            default: 0
+        },
         school: {
             type: Schema.Types.ObjectId,
             ref: 'School',

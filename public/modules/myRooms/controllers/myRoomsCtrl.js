@@ -7,10 +7,15 @@ angular.module('myRooms')
         'UserDataProvider',
         '$location',
         'AuthService',
-        function(myRooms, $scope, RoomDataProvider, DataAgent, UserDataProvider, $location, AuthService) {
+        '$state',
+        '$stateParams',
+        function(myRooms, $scope, RoomDataProvider, DataAgent, UserDataProvider, $location, AuthService, $state, $stateParams) {
             $scope.rooms = myRooms;
             var me = AuthService.me;
             $scope.temp = {};
+            console.log($state.current);
+            console.log($state.params.roomId);
+            console.log($stateParams.roomId);
 
 
             $scope.$watch('rooms', function(newRooms) {
@@ -32,8 +37,6 @@ angular.module('myRooms')
                     }
                 }
             }, true);
-            //$location.path('/myrooms/' + $scope.rooms[0]._id);
-
 
             $scope.$on('roomNameChange', function(event, data) {
                 console.log(data);
@@ -56,9 +59,9 @@ angular.module('myRooms')
             });
 
             $scope.selectOneRoom = function(selectedRoom) {
-                _.each($scope.rooms, function(item) {
-                    item.isActive = selectedRoom._id === item._id ;
-                });
+                //_.each($scope.rooms, function(item) {
+                //    item.isActive = selectedRoom._id === item._id ;
+                //});
               $location.path('/myrooms/' + selectedRoom._id);
             };
 
@@ -108,5 +111,13 @@ angular.module('myRooms')
                         swal({title: "认领失败", text: "请重试", type: "error", timer: 1500});
                     })
             };
+
+            // Focus state for append/prepend inputs
+            $('.input-group').on('focus', '.form-control', function () {
+                $(this).closest('.input-group, .form-group').addClass('focus');
+            }).on('blur', '.form-control', function () {
+                $(this).closest('.input-group, .form-group').removeClass('focus');
+            });
+
         }
     ]);

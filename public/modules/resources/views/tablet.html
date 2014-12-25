@@ -13,7 +13,7 @@
 
     <div>
         <h4>晓书信息
-            <div class="pull-right" ng-show="user">
+            <div class="pull-right" ng-show="user && isInSameSchool">
                 <button role="button" class="btn btn-danger" ng-click="logout()"><span class="glyphicon glyphicon-log-out"></span> 登出</button>
                 &nbsp;&nbsp;
             </div>
@@ -43,7 +43,7 @@
                 <td><strong>正在使用</strong></td>
                 <td>
                     <div ng-show="user">
-                        <a ng-href="#/{{role}}/{{user._id}}">{{user.name}}</a>
+                        <a ng-href="#/{{role}}/{{user._id}}">{{user.name || user.username}}</a>
                     </div>
                     <div ng-hide="user">
                         <span class="label label-default">暂无</span>

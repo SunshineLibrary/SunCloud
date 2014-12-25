@@ -71,7 +71,7 @@ angular.module('schools')
             var teachersPromise = defered.promise;
             $http({
                 method: "GET",
-                url: "/users?populate=school&roles=teacher"
+                url: "/users?populate=school&roles=[teacher,admin]"
             }).success(function (teachers) {
                 defered.resolve(teachers);
                 if (callBack) {

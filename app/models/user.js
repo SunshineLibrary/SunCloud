@@ -70,6 +70,10 @@ var UserSchema = new Schema({
 		type: Schema.Types.ObjectId,
 		ref: 'Subject'
 	}],
+	apps: [{
+		type: Schema.Types.ObjectId,
+		ref: 'App'
+	}],
 	updated: {
 		type: Date
 	},
@@ -141,7 +145,10 @@ UserSchema.virtual('profile').get(function () {
  * Hook a pre save method to hash the password
  */
 UserSchema.pre('save', function(next) {
+	console.info('pre save~~~~~');
 	if (this.password && this.password.length > 5) {
+		console.info('pre save------');
+
 		this.salt = new Buffer(crypto.randomBytes(16).toString('base64'), 'base64');
 		this.password = this.hashPassword(this.password);
 	}

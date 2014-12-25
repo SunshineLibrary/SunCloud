@@ -11,10 +11,15 @@
     </div>
     <br>
     <br>
-
-    <div class="table">
-        <div class="gridStyle" ng-grid="gridOptions" ng-click="selectTeacher()"></div>
+    <div ng-show="teachers.length">
+        <p  class="pull-right" >显示 <a href="" ng-click="allTeachers()">【全部】</a> <a href=""ng-click="onlyAdmins()">【有管理员权限的】</a>老师
+        </p>
+&nbsp;
+        <div class="table">
+            <div class="gridStyle" ng-grid="gridOptions" ng-click="selectTeacher()"></div>
+        </div>
     </div>
+
 </div>
 
 

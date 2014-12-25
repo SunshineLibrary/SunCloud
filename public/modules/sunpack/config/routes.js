@@ -40,7 +40,8 @@ angular.module('sunpack')
                     ]
                 },
                 ncyBreadcrumb: {
-                    label: '{{label}}'
+                    //label: '{{label}}'
+                    label: '阳光书包'
                 }
             })
             .state('sunpack.subject', {

@@ -54,14 +54,13 @@ angular.module('schoolManage')
                         height = 200,
                         radius = Math.min(width,height)/2;
 
-                    var color = ["#FF4C00", "#E9E7EF"];
+                    var color = [ "#E9E7EF", "#FF4C00"];
                     console.log(parseInt($scope.studentCount));
 
 
-                    var data = [{"label":"登录晓书的人数", "value": parseInt($scope.xiaoshuLogCount)},
-                        {"label":"未登录晓书的人数", "value": parseInt($scope.studentCount) - parseInt($scope.xiaoshuLogCount)}];
+                    var data = [{"label":"未登录晓书的人数", "value": parseInt($scope.studentCount) - parseInt($scope.xiaoshuLogCount)},{"label":"登录晓书的人数", "value": parseInt($scope.xiaoshuLogCount)}];
 
-                    var percent = (data[0].value * 100 /(data[0].value + data[1].value)).toFixed(0);
+                    var percent = (data[1].value * 100 /(data[1].value + data[0].value)).toFixed(0);
                     //percent = Math.round(percent * 100) / 100;
 
 

@@ -3,6 +3,7 @@ angular.module('schools')
     ['teachers', 'TeacherDataProvider', 'RootDataProvider','$scope', '$location',
         function (teachers, TeacherDataProvider, RootDataProvider, $scope, $location) {
             $scope.teachers = teachers;
+            $scope.teachersView = teachers;
             $scope.selectedTeacher = [];
             $scope.temp = {};
 
@@ -15,7 +16,7 @@ angular.module('schools')
 
             $scope.gridOptions =
             {
-                data: 'teachers',
+                data: 'teachersView',
                 multiSelect: false,
                 filterOptions: $scope.filterOptions,
                 rowTemplate: '<div  ng-mouseover="$parent.showedit=true" ng-mouseleave="$parent.showedit=false" ng-style="{\'cursor\': row.cursor, \'z-index\': col.zIndex() }" ' +
@@ -26,6 +27,7 @@ angular.module('schools')
                     {field: 'name', displayName: '姓名'},
                     {field: 'username', displayName: '用户名'},
                     {field: 'school.name', displayName: '学校'},
+                    {field: 'roles', displayName: '管理员', cellTemplate: '<div>{{row.entity.roles | isAdminFilter}}</div>'},
                     {field: 'email', displayName: '邮箱'},
                     {field: 'phone', displayName: '电话'},
                     {field: '', displayName: '编辑', cellTemplate:
@@ -39,6 +41,15 @@ angular.module('schools')
                 selectedItems: $scope.selectedTeacher
             };
 
+            $scope.allTeachers = function() {
+                $scope.teachersView = $scope.teachers;
+            };
+            $scope.onlyAdmins = function() {
+                $scope.teachersView = _.filter($scope.teachers, function(teacher) {
+                    return teacher.roles.indexOf('admin') > -1;
+                });
+                console.log($scope.teachersView);
+            };
             $scope.createTeacher = function() {
                 var info = {};
                 info.name = $scope.newTeacher.name;
@@ -164,4 +175,8 @@ angular.module('schools')
 
 
 
-        }]);
+        }]).filter('isAdminFilter', function() {
+        return function(roles) {
+            return roles.indexOf('admin') > -1 ? '是' : '否';
+        };
+    });

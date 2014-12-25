@@ -70,6 +70,18 @@ angular.module('resources')
                         swal({title: "修改失败", text: "请重试", type: "error", timer: 2000 });
                     })
             };
+            // Focus state for append/prepend inputs
+            $('.input-group').on('focus', '.form-control', function () {
+                $(this).closest('.input-group, .form-group').addClass('focus');
+            }).on('blur', '.form-control', function () {
+                $(this).closest('.input-group, .form-group').removeClass('focus');
+            });
+            // Checkboxes and Radiobuttons
+
+            $('[data-toggle="checkbox"]').radiocheck();
+            $('[data-toggle="radio"]').radiocheck();
+
+
 
         }
     ]

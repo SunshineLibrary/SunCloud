@@ -223,7 +223,6 @@ exports.restifyUser = function(req, res, next) {
 			}else {
 				var id = req.params.id;
 				if(id.toString() === req.user._id.toString()) {
-					console.log('isself');
 					return next();
 				} else {
 					if(is('admin')) {
@@ -280,9 +279,7 @@ exports.restifyRoom = function(req, res, next) {
 	if(is('root')) {
 		return next();
 	}
-	console.log('------------------------>',req.route.path);
 	if(isLoggedin) {
-		console.log('---->',req.path);
 		if(req.route.path === '/rooms') {
 			if(req.method === 'GET') {
 				return next();
@@ -325,7 +322,6 @@ exports.restifyRoom = function(req, res, next) {
 		}
 		else if(req.route.path === '/rooms/:roomId' || req.route.path === '/rooms/:id') {
 			var id = req.params.roomId || req.params.id;
-			console.log('-----',id);
 			Room.findById(id, function(err, room) {
 				if(err) {
 					return res.send(500);
@@ -340,8 +336,6 @@ exports.restifyRoom = function(req, res, next) {
 					else if(req.method === 'PUT') {
 
 						if(room.school.toString() === req.user.school.toString()) {
-							console.log('same school, next');
-							console.log(req.body);
 							return next();
 						}else {
 							return res.status(403).send("Forbidden");
@@ -392,7 +386,6 @@ exports.restifyRoom = function(req, res, next) {
 					}
 				})
 			}, function(err, rooms) {
-				console.log(rooms);
 				var errList ;
 				if(is('admin')) {
 					errList = _.filter(rooms, function(room){
@@ -422,10 +415,10 @@ exports.restifyRoom = function(req, res, next) {
 			 * admin can only assign folders to rooms of the same school.
 			 * teacher can only assign apps to rooms he/she is in.
 			 */
-			var roomIds = _.map(req.body.assignments, function(assignment) {
+			var roomIdss = _.map(req.body.assignments, function(assignment) {
 				return assignment.roomId;
 			});
-			async.map(roomIds, function(id, callback) {
+			async.map(roomIdss, function(id, callback) {
 				Room.findById(id, function(err, room) {
 					if(err) {
 						callback(err)
@@ -434,7 +427,6 @@ exports.restifyRoom = function(req, res, next) {
 					}
 				})
 			}, function(err, rooms) {
-				console.log(rooms);
 				var errList ;
 				if(is('admin')) {
 					errList = _.filter(rooms, function(room){

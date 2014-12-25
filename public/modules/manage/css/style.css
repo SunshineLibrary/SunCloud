@@ -1,5 +1,5 @@
 .manage-nav {
-    margin-top: 50px;
+    margin-top: 100px;
 }
 .offset-0 {
     padding-left: 0 !important;
@@ -14,26 +14,35 @@
 
 .myapps {
     width: 100%;
+    border:2px solid #16a085;
+    margin:0 0 10px 0;
+    border-radius: 20px;
+}
+.appsNotAssigned {
+    width: 100%;
+    border:2px solid #bdc3c7;
+    margin:0 0 10px 0;
+    border-radius: 20px;
 }
 
-.myapps th td {
+/*.myapps th td {*/
     /*background-color: green;*/
     /*color: white;*/
-    font-family: "Times New Roman", Times, serif;
-    font-size: xx-large;
-}
+    /*font-family: "Times New Roman", Times, serif;*/
+    /*font-size: xx-large;*/
+/*}*/
 
 /*.assigned-apps td {*/
     /*background-color: limegreen;*/
     /*color: white;*/
 /*}*/
 
-.myapps tr {
-    border-bottom: 1px solid black;
-    border-top: 1px solid black;
-    border-collapse: collapse;
-    line-height: 40px;
-}
+/*.myapps tr {*/
+    /*border-bottom: 1px solid black;*/
+    /*border-top: 1px solid black;*/
+    /*border-collapse: collapse;*/
+    /*line-height: 40px;*/
+/*}*/
 
 
 .not-assigned-apps {

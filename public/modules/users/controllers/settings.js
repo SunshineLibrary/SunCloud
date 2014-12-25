@@ -82,5 +82,12 @@ angular.module('users').controller('SettingsController', ['$scope', '$http', '$l
 					swal({title: "认领失败", text: "请重试", type: "error", timer: 1500});
 				})
 		};
+		// Focus state for append/prepend inputs
+		$('.input-group').on('focus', '.form-control', function () {
+			$(this).closest('.input-group, .form-group').addClass('focus');
+		}).on('blur', '.form-control', function () {
+			$(this).closest('.input-group, .form-group').removeClass('focus');
+		});
+
 	}
 ]);

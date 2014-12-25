@@ -37,6 +37,7 @@ angular.module('resources')
         $scope.teachers = $scope.room.teachers;
         $scope.students = $scope.room.students;
         $scope.isAdminOrRoot = (_.intersection(me.roles, ['admin', 'root'])).length ? true: false;
+        $scope.temp = {createError: false};
         var failList = [];
         var waitingList = [];
 
@@ -112,7 +113,7 @@ angular.module('resources')
             showSelectionCheckbox: true,
             checkboxCellTemplate: '<div class="ngSelectionCell"><input tabindex="-1" class="ngSelectionCheckbox" type="checkbox" ng-checked="row.selected" /> &nbsp;</div>',
             //checkboxCellTemplate: '<div class="ngSelectionCell"><input tabindex="-1" class="ngSelectionCheckbox" type="checkbox" ng-checked="row.selected" /></div>',
-            checkboxHeaderTemplate:'<div>&nbsp</div>',
+            //checkboxHeaderTemplate:'<div>&nbsp</div>',
             enableColumnResize : true,
             columnDefs: [
                 {field: '_id', visible: false},
@@ -163,6 +164,7 @@ angular.module('resources')
         $scope.toAddStudents = function() {
             getStudentsNotInRoom();
             $scope.gridOptions2.selectAll(false);
+            //$('#addStudentsBatchDialog').modal('hide');
             $('#addStudentsDialog').modal('show');
         };
         $scope.toAddTeachers = function() {
@@ -387,13 +389,43 @@ angular.module('resources')
                 });
         };
 
-        $scope.showEditStudentDialog = function(event, row) {
+        //$scope.showEditStudentDialog = function(event, row) {
+        //    event.stopPropagation();
+        //    $('#editStudentDialog').modal('show');
+        //    $scope.row = row;
+        //    $scope.student.newName = row.entity.name;
+        //    $scope.student.newUsername = row.entity.username;
+        //    $scope.student.newBirthday = row.entity.birthday;
+        //};
+        //$scope.editStudent = function(row) {
+        //    var info = {};
+        //    info._id = row.entity._id;
+        //    info.name = $scope.student.newName;
+        //    info.username = $scope.student.newUsername;
+        //    info.birthday = $scope.student.newBirthday;
+        //    StudentDataProvider.editStudentNameBirthday(info)
+        //        .success(function(editedStudent) {
+        //            $scope.row.entity.name = editedStudent.name;
+        //            $scope.row.entity.username = editedStudent.username;
+        //            $scope.row.entity.birthday = editedStudent.birthday;
+        //            $('#editStudentDialog').modal('hide');
+        //            swal({title: "修改成功", type: "success", timer: 1000 });
+        //        })
+        //        .error(function(err) {
+        //            console.error(err);
+        //            $scope.editStudentError = true;
+        //            swal({title: "修改失败", text: "请重试", type: "error", timer: 2000 });
+        //        })
+        //};
+
+
+        $scope.showEditStudentDialog = function(event, student) {
             event.stopPropagation();
             $('#editStudentDialog').modal('show');
-            $scope.row = row;
-            $scope.student.newName = row.entity.name;
-            $scope.student.newUsername = row.entity.username;
-            $scope.student.newBirthday = row.entity.birthday;
+            //$scope.student = student;
+            $scope.student.newName = student.name;
+            $scope.student.newUsername = student.username;
+            $scope.student.newBirthday = student.birthday;
         };
         $scope.editStudent = function(row) {
             var info = {};
@@ -403,7 +435,7 @@ angular.module('resources')
             info.birthday = $scope.student.newBirthday;
             StudentDataProvider.editStudentNameBirthday(info)
                 .success(function(editedStudent) {
-                    $scope.row.entity.name = editedStudent.name;
+                    $scope.student.name = editedStudent.name;
                     $scope.row.entity.username = editedStudent.username;
                     $scope.row.entity.birthday = editedStudent.birthday;
                     $('#editStudentDialog').modal('hide');
@@ -455,90 +487,7 @@ angular.module('resources')
                 })
         };
 
-        var addStudentsToRoom = function() {
-            console.log(waitingList);
-            console.log(failList);
-            console.log($scope.dupList);
-            if(waitingList.length) {
-                //var oriIds = _.map($scope.students, function(student) {return student._id});
-                var newIds = _.map(waitingList, function(student) {return student._id});
-                //var nowIds = _.uniq(oriIds.concat(newIds));
-                RoomDataProvider.addStudentsToRoom($scope.room._id, newIds)
-                    .success( function(room) {
-                        if(failList.length) {
-                            swal({title: "部分添加失败", text: "数据库错误，请重试", type: 'warning', timer: 2000});
-                            var tempList = "";
-                            $scope.errorMessage = true;
-                            console.log(failList);
-                            _.each(failList, function(student) {
-                                tempList = tempList.concat(student.name+","+student.username+"\n");
-                            });
-                            $scope.newStudentsList = tempList;
-                            console.log(tempList);
-                        }else {
-                            swal({title: "批量创建添加学生成功", type: 'success', timer: 2000});
-                            $('#addStudentsBatchDialog').modal('hide');
-                            $scope.newStudentsList = null;
-                            $scope.errorMessage = false;
-                            waitingList = [];
-                            failList = [];
-                            $state.transitionTo($state.current, $stateParams, {
-                                reload: true,
-                                inherit: false,
-                                notify: true
-                            });
-                        }
-                    }).error(function(err) {
-                        console.log(err);
-                        swal({title: "添加失败", text: "请重试", timer: 2000});
-                        waitingList = [];
-                        failList = [];
-                    });
-            }
-        };
-
-        var autoAddStudentsToRoom = function() {
-            console.log(waitingList);
-            console.log(failList);
-            if(waitingList.length) {
-                //var oriIds = _.map($scope.students, function(student) {return student._id});
-                var newIds = _.map(waitingList, function(student) {return student._id});
-                //var nowIds = _.uniq(oriIds.concat(newIds));
-                RoomDataProvider.addStudentsToRoom($scope.room._id, newIds)
-                    .success( function(room) {
-                        if(failList.length) {
-                            swal({title: "部分添加失败", text: "数据库错误，请重试", type: 'warning', timer: 2000});
-                            var tempList = "";
-                            $scope.errorMessage = true;
-                            console.log(failList);
-                            _.each(failList, function(student) {
-                                tempList = tempList.concat(student.name+"\n");
-                            });
-                            $scope.newNamesList = tempList;
-                            console.log(tempList);
-                        }else {
-                            swal({title: "批量创建添加学生成功", type: 'success', timer: 2000});
-                            $('#addStudentsBatchDialog').modal('hide');
-                            $scope.newStudentsList = null;
-                            $scope.errorMessage = false;
-                            waitingList = [];
-                            failList = [];
-                            $state.transitionTo($state.current, $stateParams, {
-                                reload: true,
-                                inherit: false,
-                                notify: true
-                            });
-                        }
-                    }).error(function(err) {
-                        console.log(err);
-                        swal({title: "添加失败", text: "请重试", timer: 2000});
-                        waitingList = [];
-                        failList = [];
-                    });
-            }
-        };
-
-        $scope.manualCreateStudents = function () {
+        $scope.manualCreateStudents = function() {
             var newStudents = [];
             $scope.newStudentsList = $scope.newStudentsList.trim();
             var lines = $scope.newStudentsList.split(/\n/);
@@ -546,164 +495,76 @@ angular.module('resources')
                 lines[i] = lines[i].trim().replace(/[,， \s]+/igm, ' ');
                 var name = lines[i].split(/[,， \s]/)[0];
                 var username = lines[i].split(/[,， \s]/)[1];
-                newStudents.push({"name": name, "username": username, "school": me.school, "roles": ['student']});
+                newStudents.push({name: name, username: username});
             }
-
-            function MultipleCreate(studentIndex) {
-                function switcher() {
-                    console.log(studentIndex);
-                    if (studentIndex < newStudents.length - 1) {
-                        studentIndex++;
-                        MultipleCreate(studentIndex);
-                    } else {
-                        if($scope.dupList.length) {
-                            for(var j = 0; j< $scope.dupList.length; j++) {
-                                $scope.selectednow[j] = true;
-                                $scope.selecteddb[j] = false;
-                            }
-                            $('#duplicatesDialog').modal('show');
-                        }else {
-                            console.log('no duplicates');
-                            addStudentsToRoom();
-                        }
-                    }
-                }
-
-                var newStudent = newStudents[studentIndex];
-                for (var sIndex = 0; sIndex < $scope.students.length; sIndex++) {
-                    var student = $scope.students[sIndex];
-                    if (student.username === newStudent.username) {
-                        if(student.name === newStudent.name) {
-                            console.log(student.name + ' is already in this class. ');
-                            return switcher();
-                        }else {
-                            $scope.dupList.push({db: student, now: newStudent});
-                            return switcher();
-                        }
-                    }
-                }
-
-                StudentDataProvider.createStudent(newStudent)
-                    .success(function(student) {
-                        $scope.students.push(student);
-                        waitingList.push(student._id);
-                        switcher();
-                    }).error(function(err) {
-                        var found = false;
-                        StudentDataProvider.getStudentsBySchool(me.school).then(function(allStudents) {
-                            for (var i = 0; i < allStudents.length; i++) {
-                                if (allStudents[i].username === newStudent.username) {
-                                    if(allStudents[i].name === newStudent.name) {
-                                        $scope.students.push(student);
-                                        waitingList.push(allStudents[i]._id);
-                                    }else {
-                                        $scope.dupList.push({db: allStudents[i], now: newStudent});
-                                    }
-                                    found = true;
-                                    break;
-                                }
-                            }
-                            if(!found) {
-                                failList.push(newStudent);
-                            }
-                            switcher();
+            StudentDataProvider.manualCreateAddStudents(me.school, $scope.room._id, newStudents)
+                .success(function(newStudents) {
+                    $scope.newStudentsList = null;
+                    swal({title: '批量创建并添加学生成功', type: 'success', timer: 2000});
+                    $scope.students = $scope.students.concat(newStudents);
+                    $('#addStudentsBatchDialog').modal('hide');
+                    $scope.temp.manualCreateError = false;
+                })
+                .error(function(err, status) {
+                    console.log(err);
+                    console.error(err);
+                    if(status === 406) {
+                        var errorList = '';
+                        _.each(err, function(e) {
+                            errorList = errorList.concat(e.name + ',' + e.username + '\n');
                         });
-                    });
-            }
-            MultipleCreate(0);
-        };
-
-
-        $scope.dbOrNow = function(index) {
-            $scope.selectednow[index] = $scope.selecteddb[index];
-            $scope.selecteddb[index] = ! $scope.selecteddb[index];
-        };
-        $scope.nowOrDb = function(index) {
-            $scope.selecteddb[index] = $scope.selectednow[index];
-            $scope.selectednow[index] = ! $scope.selectednow[index];
-        };
-        $scope.duplicateCreate = function() {
-            $('#duplicatesDialog').modal('hide');
-            for(var i = 0; i < $scope.dupList.length; i++) {
-                if($scope.selectednow[i]) {
-                    $scope.dupList[i].now._id =  $scope.dupList[i].db._id;
-                    StudentDataProvider.editStudent($scope.dupList[i].now)
-                        .success(function(student) {
-                            waitingList.push(student._id);
-                    }).error(function(err) {
-                            console.error(err);
-                            failList.push($scope.dupList[i].now);
-                        })
-                }else {
-                    var tempStudent = $scope.dupList[i].db;
-                    for (var sIndex = 0; sIndex < $scope.students.length; sIndex++) {
-                        var student = $scope.students[sIndex];
-                        if (student.username === tempStudent.username) {
-                            if(student.name === tempStudent.name) {
-                                console.log(student.name + ' is already in this class. ');
-                            }else {
-                                waitingList.push(tempStudent);
-                            }
-                        }
+                        $scope.newStudentsList = errorList;
+                        $scope.temp.manualCreateError = true;
+                        swal({title: '以下学生创建失败，请重试',text: errorList, type: 'error'});
+                    }else if(status === 500) {
+                        swal({title: '服务器内部错误', text: '请重试', type: 'error'});
+                        $scope.newStudentsList = null;
+                        $('#addStudentsBatchDialog').modal('hide');
                     }
-                }
-            }
-            addStudentsToRoom();
+                })
         };
 
-        $scope.autoCreateStudents = function () {
-            var newStudents = [];
+
+        $scope.autoCreateStudents = function() {
             $scope.newNamesList = $scope.newNamesList.trim();
-            var httpPromise;
             var names = $scope.newNamesList.split('\n');
             if(names.length > 100) {
                 $scope.temp.student_count_max = true;
                 return;
             }
-            if(0 < names.length && names.length <=100) {
-                httpPromise = SchoolDataProvider.getSchool(me.school);
-            }
-
-            httpPromise.then(function(school) {
-                var schoolCode = school.code;
-                for (var i = 0; i < names.length; i++) {
-                    var name = names[i];
-                    var studentNo = (i >= 10) ? '' + i : '0' + i;
-                    var username = schoolCode + room.code + studentNo;
-                    newStudents.push({"name": name, "username": username, "school": me.school, "roles": ['student']});
-                }
-
-                function MultipleCreate(studentIndex) {
-                    function switcher() {
-                        console.log(studentIndex);
-                        if (studentIndex < newStudents.length - 1) {
-                            studentIndex++;
-                            MultipleCreate(studentIndex);
-                        } else {
-                            autoAddStudentsToRoom();
-                        }
-                    }
-
-                    var newStudent = newStudents[studentIndex];
-                    console.log(newStudent);
-
-                    StudentDataProvider.createStudent(newStudent)
-                        .success(function(student) {
-                            $scope.students.push(student);
-                            waitingList.push(student._id);
-                            switcher();
-                        }).error(function(err) {
-                            console.log(err);
-                            failList.push(newStudent);
-                            switcher();
+            StudentDataProvider.autoCreateAddStudents(me.school, $scope.room._id, names)
+                .success(function(newStudents) {
+                    $scope.newNamesList = null;
+                    swal({title: '批量创建并添加学生成功', type: 'success', timer: 2000});
+                    $scope.students = $scope.students.concat(newStudents);
+                    $('#addStudentsBatchDialog').modal('hide');
+                    $scope.temp.autoCreateError = false;
+                })
+                .error(function(err, status) {
+                    console.error(err);
+                    if(status === 406) {
+                        var errorList = '';
+                        _.each(err, function(e) {
+                            errorList = errorList.concat(e + '\n');
                         });
-                }
-                MultipleCreate(0);
-            });
+                        $scope.newNamesList = errorList;
+                        $scope.temp.autoCreateError = true;
+                        swal({title: '批量创建学生失败',text: errorList, type: 'error', timer: 2000});
+                    }else if(status === 500) {
+                        swal({title: '添加学生到该班级失败', text: '请从学生列表中添加', type: 'error', timer: 1500});
+                        $scope.newNamesList = null;
+                        $('#addStudentsBatchDialog').modal('hide');
+                    }
+                })
         };
 
-        $scope.selectStudent = function () {
-            $location.path('/students/' + $scope.selectedStudent[0]._id)
+
+
+        //$scope.selectStudent = function () {
+        //    $location.path('/students/' + $scope.selectedStudent[0]._id)
+        //};
+        $scope.selectStudent = function (studentId) {
+            $location.path('/students/' + studentId)
         };
 
         $scope.selectTeacher = function () {
@@ -716,6 +577,12 @@ angular.module('resources')
             var $this = $(this);
             var ch = $this.prop('checked');
             $this.closest('.table').find('tbody :checkbox').radiocheck(!ch ? 'uncheck' : 'check');
+        });
+        // Focus state for append/prepend inputs
+        $('.input-group').on('focus', '.form-control', function () {
+            $(this).closest('.input-group, .form-group').addClass('focus');
+        }).on('blur', '.form-control', function () {
+            $(this).closest('.input-group, .form-group').removeClass('focus');
         });
 
         // Table: Add class row selected

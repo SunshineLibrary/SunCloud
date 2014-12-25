@@ -21,6 +21,10 @@ angular.module('resources')
         $scope.tempRoom = {};
         $scope.editRoom = {};
         $scope.editAdmin = {};
+        $scope.newAdmin = {};
+        $scope.selectedTeachers = [];
+        $scope.filterOptions3 = {filterText: ''};
+
         var me = AuthService.me;
         $scope.isRootOrAdmin = me.roles.indexOf('root') > -1 || (me.roles.indexOf('admin') > -1 && me.school.toString() === school._id.toString()) ;
 
@@ -204,7 +208,26 @@ angular.module('resources')
         };
 
         $scope.addAdmins = function() {
+            //$scope.selectedTeachers
+            async.each($scope.selectedTeachers, function(teacher, callback) {
+                TeacherDataProvider.editTeacherRole(teacher._id, ['teacher', 'admin'])
+                    .success(function(teacher) {
+                        callback(null);
+                        $scope.admins.push(teacher);
+                    })
+                    .error(function(err) {
+                        callback(err);
+                    })
 
+            }, function(err){
+                if(err) {
+                    swal({title: '添加管理员失败，请重试', type: 'error', timer: 1500});
+                }else {
+                    swal({title: '添加管理员成功', type: 'success', timer: 1500});
+                    $('#addAdminsDialog').modal('hide');
+                }
+
+            })
         };
 
         $scope.gridOptions1 =
@@ -248,9 +271,54 @@ angular.module('resources')
             ],
             selectedItems: []
         };
+        $scope.gridOptions3 =
+        {
+            data: 'notAdmins',
+            multiSelect: true,
+            showSelectionCheckbox: true,
+            checkboxCellTemplate: '<div class="ngSelectionCell"><input tabindex="-1" class="ngSelectionCheckbox" type="checkbox" ng-checked="row.selected" /></div>',
+            //checkboxCellTemplate: '<div class="ngSelectionCell"><input tabindex="-1" class="ngSelectionCheckbox" type="checkbox" ng-checked="row.selected" /></div>',
+            //checkboxHeaderTemplate:'<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>',
+            columnDefs: [
+                {field: '_id', visible: false},
+                {field: 'name', displayName: '姓名'},
+                {field: 'username', displayName: '用户名'}
+            ],
+            selectedItems: $scope.selectedTeachers,
+            filterOptions: $scope.filterOptions3
+        };
 
 
-
+        $scope.toCreateAdmin = function() {
+            $scope.isCreatingAdmin = true;
+        };
+        $scope.createAdmin = function() {
+            var info = {};
+            info.name = $scope.newAdmin.name;
+            info.username = $scope.newAdmin.username;
+            info.school = me.school;
+            info.roles = ['admin', 'teacher'];
+            TeacherDataProvider.createAdmin(info)
+                .success(function(newAdmin) {
+                    $scope.newAdmin = null;
+                    swal({title: "创建成功", type: 'success', timer: 1000});
+                    $('body').addClass('modal-open');
+                    $scope.notAdmins.push(newAdmin);
+                    $scope.selectedTeachers.push(newAdmin);
+                    $scope.isCreatingAdmin = false;
+                })
+                .error(function(err) {
+                    console.error(err);
+                    if(err.code === 11000) {
+                        var message = "用户名已存在，请修改后重试"
+                    }
+                    swal({title: "创建失败", text: message, type: 'error', timer: 2000});
+                }
+            );
+        };
+        $scope.cancelCreateAdmin = function() {
+            $scope.isCreatingAdmin = false;
+        };
         $scope.selectRoom = function () {
             $location.path('/rooms/' + $scope.gridOptions1.selectedItems[0]._id)
         };

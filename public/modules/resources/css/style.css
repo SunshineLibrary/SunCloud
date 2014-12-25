@@ -92,8 +92,14 @@
     background-color: white !important;
 }
 
+.style2 .ngCanvas {
+    width: 100% !important;
+}
+.style2 .ngRow {
+    width: 100% !important;
+}
 .style2 .ngRow.selected {
-    background-color: #AFDD22 !important;
+    background-color: #2ecc71 !important;
 }
 
 .style1 .ngRow.hover {
@@ -102,6 +108,14 @@
 
 .style1 {
     width: 100%;
+}
+
+.style3 .ngHeaderCell {
+    background-color: #2ecc71 !important;
+    color: white !important;
+    bottom: 0;
+    position: absolute;
+    top: 0;
 }
 
 .ngHeaderCell {

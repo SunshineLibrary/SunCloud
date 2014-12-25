@@ -2,8 +2,8 @@
     <!--<div class="jumbotron" style="margin-top:-40px">-->
         <h4 class="tableTitle pull-left">所有学生  &nbsp;&nbsp;</h4>
         <div class=" pull-right" style="margin-top:10px">
-            <a role="button" class="btn btn-primary " href="#createStudentDialog" data-toggle="modal"><i class="glyphicon glyphicon-plus"></i>创建学生</a>
-            <a role="button" class="btn btn-primary " href="#createStudentBatchDialog" data-toggle="modal"><i class="glyphicon glyphicon-asterisk"></i>批量创建</a>
+            <a role="button" class="btn btn-primary " href="#createStudentDialog" data-toggle="modal"><i class="fa fa-user"></i> 创建学生</a>
+            <a role="button" class="btn btn-primary " href="#createStudentBatchDialog" data-toggle="modal"><i class="fa fa-users"></i> 批量创建</a>
         </div>
 
         <div class="inner-addon left-addon pull-left" style="margin-top:10px">
@@ -13,7 +13,7 @@
     <!--</div>-->
     <br/><br/>
     <div class="table">
-        <div class="gridStyle" ng-grid="gridOptions" ng-click="selectStudent()"></div>
+        <div class="gridStyle style1" ng-grid="gridOptions" ng-click="selectStudent()"></div>
     </div>
 
 </div>
@@ -61,7 +61,7 @@
                     <div>
                         <p>每行一个学生，请按照如下格式输入：</p>
                         <p style="color: green; font-weight: bold;">&nbsp;&nbsp;姓名1，用户名1 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 或 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 姓名1 &nbsp;  用户名1 </p>
-                        <p style="color: green; font-weight: bold;">&nbsp;&nbsp;姓名2，用户名2  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   姓名2 &nbsp; 用户名2 </p>
+                        <p style="color: green; font-weight: bold;">&nbsp;&nbsp;姓名2，用户名2  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   姓名2 &nbsp; 用户名2 </p>
                     </div>
                     <span style="color: red" ng-show="errorMessage">由于用户名已存在，以下学生创建失败，请修改用户名后重试</span>
 

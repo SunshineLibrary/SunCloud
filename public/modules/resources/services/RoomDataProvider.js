@@ -54,7 +54,7 @@ angular.module('schoolManage')
             var thePromise = defered.promise;
             $http({
                 method: "GET",
-                url: "/rooms/" + roomId + "?populate=teachers,students"
+                url: "/rooms/" + roomId + "?populate=teachers,students,school"
             }).success(function(room){
                 defered.resolve(room);
             }).error(function(err){

@@ -24,6 +24,9 @@ angular.module('schoolManage')
                 })
             });
 
+            console.log(students);
+            console.log(students[10], students[50]);
+
             $scope.gridOptions =
             {
                 data: 'students',
@@ -138,77 +141,52 @@ angular.module('schoolManage')
                 );
             };
 
-            $scope.createStudentBatch = function () {
-
-                var newStudents = [];
-                var failList = [];
-                $scope.newStudentsList = $scope.newStudentsList.trim();
-                var lines = $scope.newStudentsList.split(/\n/);
-                for (var i = 0; i < lines.length; i++) {
-                    lines[i] = lines[i].trim().replace(/[,， \s]+/igm, ' ');
-                    var name = lines[i].split(/[,， \s]/)[0];
-                    var username = lines[i].split(/[,， \s]/)[1];
-                    if (!username.match(/^[@\.a-zA-Z0-9_-]+$/)) {
-                        alert('用户名只能包含字母、数字、“-”、“_”、“@”、“.”。\n操作已取消，请重新检查！');
-                        return;
-                    }
-                    newStudents.push({"name": name, "username": username, "school": me.school, "roles": ['student']});
-                }
-
-                function MultipleCreate(studentIndex) {
-                    function switcher() {
-                        console.log(studentIndex);
-                        if (studentIndex < newStudents.length - 1) {
-                            studentIndex++;
-                            MultipleCreate(studentIndex);
-                        } else {
-                            if(failList.length) {
-                                swal({title: "部分创建失败", text: "可能由于这些用户名已存在，请返回修改重试", type: 'warning', timer: 2000});
-                                $scope.errorMessage = true;
-                                var tempList = "";
-                                _.each(failList, function(student) {
-                                    tempList = tempList.concat(student.name+","+student.username+"\n");
-                                });
-                                $scope.newStudentsList = tempList;
-                                console.log(tempList);
-                            }else {
-                                swal({title: "批量创建学生成功", type: 'success', timer: 2000});
-                                $('#createStudentBatchDialog').modal('hide');
-                            }
+            $scope.createStudentBatch = function() {
+                    var newStudents = [];
+                    $scope.newStudentsList = $scope.newStudentsList.trim();
+                    var lines = $scope.newStudentsList.split(/\n/);
+                    for (var i = 0; i < lines.length; i++) {
+                        lines[i] = lines[i].trim().replace(/[,， \s]+/igm, ' ');
+                        var name = lines[i].split(/[,， \s]/)[0];
+                        var username = lines[i].split(/[,， \s]/)[1];
+                        if (!username.match(/^[@\.a-zA-Z0-9_-]+$/)) {
+                            alert('用户名只能包含字母、数字、“-”、“_”、“@”、“.”。\n操作已取消，请重新检查！');
+                            return;
                         }
+                        newStudents.push({name: name, username: username, school: me.school, roles: ['student']});
                     }
-
-                    var newStudent = newStudents[studentIndex];
-
-                    StudentDataProvider.createStudent(newStudent)
-                        .success(function(student) {
-                            $scope.students.push(student);
-                            switcher();
-                        }).error(function(err) {
-                            console.error(err);
-                            failList.push(newStudent);
-                            switcher();
+                StudentDataProvider.createStudentBatch(newStudents)
+                    .success(function(students){
+                        console.log(students);
+                        swal({title: '批量创建学生成功', type: 'success', timer: 1500});
+                        $scope.students = $scope.students.concat(students);
+                        $('#createStudentBatchDialog').modal('hide');
+                        $scope.newStudentsList = null;
+                        $scope.errorMessage = false;
+                    })
+                    .error(function(err) {
+                        console.log(err);
+                        var errList = '';
+                        _.each(err, function(e) {
+                            errList = errList.concat(e.name + ', ' + e.username + '\n');
                         });
-                }
-                MultipleCreate(0);
-            };
+                        swal({title: '部分学生创建失败', text: '由于用户名已存在，以下学生创建失败，\n'+'请修改用户名后重试.\n'  + errList, type: 'error'})
+                        $scope.errorMessage = true;
+                        $scope.newStudentsList = errList;
+                    })
 
+
+
+            };
             $scope.selectStudent = function () {
                 $location.path('/students/' + $scope.gridOptions.selectedItems[0]._id);
             };
 
-            var datepickerSelector = $('#datepicker-01');
-            datepickerSelector.datepicker({
-                showOtherMonths: true,
-                selectOtherMonths: true,
-                dateFormat: 'yy-mm-dd'
-                //yearRange: '-1:+1'
-            }).prev('.input-group-btn').on('click', function (e) {
-                e && e.preventDefault();
-                datepickerSelector.focus();
+            // Focus state for append/prepend inputs
+            $('.input-group').on('focus', '.form-control', function () {
+                $(this).closest('.input-group, .form-group').addClass('focus');
+            }).on('blur', '.form-control', function () {
+                $(this).closest('.input-group, .form-group').removeClass('focus');
             });
-            $.extend($.datepicker, { _checkOffset: function (inst,offset,isFixed) { return offset; } });
-            // Now let's align datepicker with the prepend button
-            datepickerSelector.datepicker('widget').css({ 'margin-left': -datepickerSelector.prev('.input-group-btn').find('.btn').outerWidth() + 3 });
         }
     ]);

@@ -143,4 +143,5 @@ angular.module('schoolManage')
             $scope.selectRoom = function () {
                 $location.path('/rooms/' + $scope.gridOptions.selectedItems[0]._id);
             };
+
         }]);

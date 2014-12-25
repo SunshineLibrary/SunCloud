@@ -5,11 +5,12 @@
 
 <div class="page-header">
     <h4>{{room.name}}
-        <div class="pull-right">
+        <small style="color: #3498db">{{room.school.name}}</small>
+        <span class="pull-right">
             <span class="sun-id">id: {{room._id}}</span>
             <button class="btn btn-inverse" onclick="window.history.back()"> <i class="glyphicon glyphicon-chevron-left"></i>返回 &nbsp;&nbsp;</button>
+        </span>
 
-        </div>
     </h4>
 </div>
 <div class="">
@@ -22,12 +23,32 @@
             <div ng-show="students.length">
                 <div class="pull-right" ng-show="isAdminOrRoot">
                     <a class="btn btn-primary "  ng-click="toAddStudents()">从学生列表中添加</a>
-                    <a class="btn btn-primary " id="room-btn-createStudents" href="#addStudentsBatchDialog2" data-toggle="modal">批量创建并添加</a>
+                    <a class="btn btn-primary " id="room-btn-createStudents" href="#addStudentsBatchDialog" data-toggle="modal">批量创建并添加</a>
                 </div>
                 <br>
-                <div class="table">
-                    <div class="gridStyle style1"  ng-grid="gridOptions1" ng-click="selectStudent()"></div>
-                </div>
+                <!--<div class="table">-->
+                    <!--<div class="gridStyle style1"  ng-grid="gridOptions1" ng-click="selectStudent()"></div>-->
+                <!--</div>-->
+                <table class="table  table-hover">
+                    <th>姓名</th>
+                    <th>用户名</th>
+                    <th>生日</th>
+                    <th>正在使用的晓书</th>
+                    <th>编辑</th>
+                    <tr ng-repeat="student in students" href="">
+                        <td><a href=""  ng-click="selectStudent(student._id)">{{student.name}}</a></td>
+                        <td>{{student.username}}</td>
+                        <td>{{student.birthday}}</td>
+                        <td>
+                          <div ng-show="student.tablet"><a href="/#/tablets/{{student.tabletId}}">{{student.tablet}}</a></div><div ng-hide="student.tablet"><span class="label label-default">暂无</span></div>
+                        </td>
+                        <td>
+                            <a class="fui-new text-success" ng-click="showEditStudentDialog($event, student)"></a> &nbsp;&nbsp;
+                            <a class="fui-cross-circle text-danger" ng-click="removeStudentFromRoom($event, student)"></a>
+                        </td>
+                    </tr>
+
+                </table>
             </div>
             <div ng-hide="students.length">
                 <h3 align="center">还没有任何学生</h3>
@@ -61,7 +82,7 @@
 <!--**************************Modal***************************-->
 <div class="modal fade" id="addStudentsDialog" tabindex="-1" role="dialog" aria-labelledby="addStudentsModalLabel"
      aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -72,6 +93,7 @@
                     <i class="glyphicon glyphicon-search"></i>
                     <input type="search" class="form-control"  placeholder="搜索" ng-model="filterOptions.filterText"/>
                 </div>
+                <p style="color: #2980b9">已选学生：{{selectedStudents.length}}人</p>
                 <div class="table">
                     <div class="gridStyle style2"  ng-grid="gridOptions2"></div>
                 </div>
@@ -114,15 +136,13 @@
                     <br>
                     <form name="manualForm">
                         <li>请把学生姓名，用户名逐行输入到文本框中（也可以直接从电子文档中复制粘贴）</li>
-                        <br>
-                        <li>如果学生不存在，创建并加入班级; 如果学生已存在，则自动加入该班级</li>
-                        <br>
+                        <li>我们会创建该学生账号并添加到该班级</li>
+                        <li>如果您想添加已存在的学生，请去所有学生列表添加</li>
                         <li>每行一个学生，请按照如下格式输入：</li>
                         <br>
                         <p style="color: green; font-weight: bold;">&nbsp;&nbsp;姓名1，用户名1 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 或 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 姓名1 &nbsp;  用户名1 </p>
                         <p style="color: green; font-weight: bold;">&nbsp;&nbsp;姓名2，用户名2  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   姓名2 &nbsp; 用户名2 </p>
-                        <span style="color: red" ng-show="errorMessage">由于以下学生姓名-用户名与数据库中不一致，请修改后重试。</span>
-
+                        <span style="color: red" ng-show="temp.manualCreateError">以下学生创建失败，可能由于用户名已存在，请修改用户名后重试</span>
                         <textarea ng-model="newStudentsList" style="height: 200px" placeholder="姓名1， 用户名1
 姓名2， 用户名2" class="form-control" required></textarea>
 
@@ -132,16 +152,16 @@
                 <div ng-show="autoState" class="col-md-12">
                     <br>
                         <li>请您把学生姓名逐行输入到下方的文本框中（也可以直接从电子文档中复制粘贴）</li>
-                        <br>
+                        <!--<br>-->
                         <li>每行请只输入一个名字</li>
-                        <br>
+                        <!--<br>-->
                         <li>我们会按照输入顺序自动生成学生用户名（推荐您按照学号顺序输入）</li>
-                        <br>
+                        <!--<br>-->
                         <li>生成的学生用户名格式为：学校代号+班级代号+数字</li>
                         <br>
                         <div ng-show="!room.code">
                             <div ng-if="!isAddingCode">
-                                <button class="btn btn-warning pull-right" ng-click="toAddCode()">添加班级代号</button>
+                                <button class="btn btn-success pull-right" style="margin-top:-5px" ng-click="toAddCode()">添加班级代号</button>
                                 <p class="pull-right" style="color:orangered">您还没有添加班级代号 &nbsp;</p>
                                 <br>
                             </div>
@@ -149,7 +169,7 @@
                                 <form class="form-group form-inline pull-right" name="addCodeForm">
                                     <input type="text" class="form-control" ng-model="newCode" placeholder="请输入班级代号" required>
                                     <button class="btn btn-success" ng-click="addCode()" ng-disabled="addCodeForm.$invalid">添加</button>
-                                    <button class="btn btn-inverse" ng-click="cancelAddCode()">取消</button>
+                                    <button class="btn btn-default" ng-click="cancelAddCode()">取消</button>
                                 </form>
                             </div>
                             <br>
@@ -159,6 +179,7 @@
 学生姓名2" ng-model="newNamesList" required></textarea>
                         <br>
                         <span style="color: red" ng-show="temp.student_count_max">班级人数不能超过100人</span>
+                        <span style="color: red" ng-show="temp.autoCreateError">批量创建学生失败，请重试，或者手动创建</span>
                     </form>
                 </div>
                 <button ng-show="manualState" type="submit" class="btn btn-success btn-block" ng-click="manualCreateStudents()" ng-disabled="manualForm.$invalid">添加</button>
@@ -167,40 +188,6 @@
         </div>
     </div>
 </div>
-
-<div class="modal fade" id="addStudentsBatchDialog2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class='modal-dialog modal-lg'>
-        <div class='modal-content'>
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span></button>
-                <h4 class="modal-title">批量创建添加学生</h4>
-            </div>
-            <div class="modal-body">
-                <form name="manualForm">
-                        <li>请把学生姓名，用户名逐行输入到文本框中（也可以直接从电子文档中复制粘贴）</li>
-                        <br>
-                        <li>如果学生不存在，创建并加入班级; 如果学生已存在，则自动加入该班级</li>
-                        <br>
-                        <li>每行一个学生，请按照如下格式输入：</li>
-                        <br>
-                        <p style="color: green; font-weight: bold;">&nbsp;&nbsp;姓名1，用户名1 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 或 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 姓名1 &nbsp;  用户名1 </p>
-                        <p style="color: green; font-weight: bold;">&nbsp;&nbsp;姓名2，用户名2  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   姓名2 &nbsp; 用户名2 </p>
-                        <span style="color: red" ng-show="errorMessage">由于以下学生姓名-用户名与数据库中不一致，请修改后重试。</span>
-
-                        <textarea ng-model="newStudentsList" style="height: 200px" placeholder="姓名1， 用户名1
-姓名2， 用户名2" class="form-control" required></textarea>
-
-                        <p>提示：分隔符可以使用半角逗号、全角逗号和空格。</p>
-                </form>
-                <button type="submit" class="btn btn-default btn-success btn-block" ng-click="manualCreateStudents()" ng-disabled="manualForm.$invalid">添加</button>
-                <br>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-
 
 
 <div class="modal fade" id="addTeachersDialog" tabindex="-1" role="dialog" aria-labelledby="addTeachersModalLabel"
@@ -363,61 +350,61 @@
 </div>
 
 
-<div class="modal fade" id="duplicatesDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class='modal-dialog'>
-        <div class='modal-content'>
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span></button>
-                <h4 class="modal-title"></h4>
-            </div>
-            <div class="modal-body">
-                <!--<div class="table" style="width:50%;float:left">-->
-                    <!--<div class="gridStyle style2"  ng-grid="gridOptions5"></div>-->
-                <!--</div>-->
-                <!--<div class="table" style="width:50%;float:left">-->
-                    <!--<div class="gridStyle style2"  ng-grid="gridOptions6"></div>-->
-                <!--</div>-->
-                <table border="1" cellpadding="0" cellspacing="0" style="width:50%;float:left">
-                    <caption>您的输入</caption>
-                    <tbody>
-                    <tr>
-                        <th>选择</th>
-                        <th>姓名</th>
-                        <th>用户名</th>
-                    </tr>
-                    <tr ng-repeat="student in dupList">
-                        <td><input type="checkbox" ng-model="selectednow[$index]" ng-click="dbOrNow($index)"/></td>
-                        <td> {{student.now.name}}</td>
-                        <td> {{student.now.username}}</td>
-                    </tr>
-                    </tbody>
-                </table>
-                <table border="1" cellpadding="0" cellspacing="0" style="width:50%;float:left">
-                    <caption>数据库</caption>
-                    <tbody>
-                    <tr>
-                        <th>选择</th>
-                        <th>姓名</th>
-                        <th>用户名</th>
-                    </tr>
-                    <tr ng-repeat="student in dupList">
-                        <td><input type="checkbox" ng-model="selecteddb[$index]" ng-click="nowOrDb($index)"/></td>
-                        <td> {{student.db.name}}</td>
-                        <td> {{student.db.username}}</td>
-                    </tr>
-                    </tbody>
-                </table>
-                <br>
-                <br>
-                <button class="btn btn-success" ng-click="duplicateCreate()">确定</button>
+<!--<div class="modal fade" id="duplicatesDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">-->
+    <!--<div class='modal-dialog'>-->
+        <!--<div class='modal-content'>-->
+            <!--<div class="modal-header">-->
+                <!--<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span></button>-->
+                <!--<h4 class="modal-title"></h4>-->
+            <!--</div>-->
+            <!--<div class="modal-body">-->
+                <!--&lt;!&ndash;<div class="table" style="width:50%;float:left">&ndash;&gt;-->
+                    <!--&lt;!&ndash;<div class="gridStyle style2"  ng-grid="gridOptions5"></div>&ndash;&gt;-->
+                <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                <!--&lt;!&ndash;<div class="table" style="width:50%;float:left">&ndash;&gt;-->
+                    <!--&lt;!&ndash;<div class="gridStyle style2"  ng-grid="gridOptions6"></div>&ndash;&gt;-->
+                <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                <!--<table border="1" cellpadding="0" cellspacing="0" style="width:50%;float:left">-->
+                    <!--<caption>您的输入</caption>-->
+                    <!--<tbody>-->
+                    <!--<tr>-->
+                        <!--<th>选择</th>-->
+                        <!--<th>姓名</th>-->
+                        <!--<th>用户名</th>-->
+                    <!--</tr>-->
+                    <!--<tr ng-repeat="student in dupList">-->
+                        <!--<td><input type="checkbox" ng-model="selectednow[$index]" ng-click="dbOrNow($index)"/></td>-->
+                        <!--<td> {{student.now.name}}</td>-->
+                        <!--<td> {{student.now.username}}</td>-->
+                    <!--</tr>-->
+                    <!--</tbody>-->
+                <!--</table>-->
+                <!--<table border="1" cellpadding="0" cellspacing="0" style="width:50%;float:left">-->
+                    <!--<caption>数据库</caption>-->
+                    <!--<tbody>-->
+                    <!--<tr>-->
+                        <!--<th>选择</th>-->
+                        <!--<th>姓名</th>-->
+                        <!--<th>用户名</th>-->
+                    <!--</tr>-->
+                    <!--<tr ng-repeat="student in dupList">-->
+                        <!--<td><input type="checkbox" ng-model="selecteddb[$index]" ng-click="nowOrDb($index)"/></td>-->
+                        <!--<td> {{student.db.name}}</td>-->
+                        <!--<td> {{student.db.username}}</td>-->
+                    <!--</tr>-->
+                    <!--</tbody>-->
+                <!--</table>-->
+                <!--<br>-->
+                <!--<br>-->
+                <!--<button class="btn btn-success" ng-click="duplicateCreate()">确定</button>-->
 
-            </div>
-            <div class="modal-footer">
-                <!--<button class="btn btn-defautl" data-dismiss="modal">取消</button>-->
-            </div>
-        </div>
-    </div>
-</div>
+            <!--</div>-->
+            <!--<div class="modal-footer">-->
+                <!--&lt;!&ndash;<button class="btn btn-defautl" data-dismiss="modal">取消</button>&ndash;&gt;-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
+<!--</div>-->
 
 
 
