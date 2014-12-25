@@ -117,13 +117,7 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
 							swal({title: "修改失败", text: "请重试", type: "error", timer: 2000 });
 						})
 				};
-
-
 			}
-
-
-
-
 		}else {
 			$location.path('/signin');
 		}
