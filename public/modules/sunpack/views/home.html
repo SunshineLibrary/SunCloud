@@ -8,27 +8,34 @@
 
             <div class="span4 col-md-4 col-lg-4" style="padding-right:20px; border-right: 1px solid #ccc; height:300px">
                 <div class="">
-                    <div class="btn-group pull-left">
-                        <button class="btn btn-success" type="button"><i class="fa fa-plus-square-o"></i>  添加科目</button>
-                        <button data-toggle="dropdown" class="btn btn-success dropdown-toggle" type="button"><span class="caret"></span></button>
-                        <ul role="menu" class="dropdown-menu dropdown-menu-inverse">
-                            <li ng-repeat="subject in subjectsNotIn">
-                                <a href="" ng-click="addSubject(subject)">{{subject.name}}</a>
-                            </li>
-                            <li ng-hide="subjectsNotIn.length">
-                                <a href="">暂无其他可添加科目</a>
-                            </li>
-                        </ul>
-                    </div><!-- /btn-group -->
-                    <br/>
-                    <br/>
+                    <h5 align="center">我的科目
+                        <div class="btn-group pull-right">
+                            <!--<button class="btn btn-success" type="button"><i class="fa fa-plus-square-o"></i>  添加科目</button>-->
+                            <!--<button data-toggle="dropdown" class="btn btn-success dropdown-toggle" type="button"><span class="caret"></span></button>-->
+                            <button class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown">
+                                <i class="fa fa-plus-square-o"></i>  添加科目 <span class="caret"></span>
+                            </button>
+                            <ul role="menu" class="dropdown-menu dropdown-menu-inverse">
+                                <li ng-repeat="subject in subjectsNotIn">
+                                    <a href="" ng-click="addSubject(subject)">{{subject.name}}</a>
+                                </li>
+                                <li ng-hide="subjectsNotIn.length">
+                                    <a href="">暂无其他可添加科目</a>
+                                </li>
+                            </ul>
+                        </div><!-- /btn-group -->
+                    </h5>
+                    <!--<hr/>-->
                     <div ng-show="mySubjects.length">
                         <table class="table" id="subject-table">
+                            <tr>
+                                <th>科目</th>
+                                <th>文件夹个数</th>
+                                <th></th>
+                            </tr>
                             <tr ng-repeat="subject in mySubjects">
-                                <!--<td>hi</td>-->
-                                <!--<td>{{subject.name}}</td>-->
-                                <!--<td><a href="">Hi</a></td>-->
                                 <td><a href="" ng-click="selectSubject(subject._id)"><strong>{{subject.name}}</strong></a></td>
+                                <td>{{subject.count || 0}}</td>
                                 <td  ng-mouseenter="hover(subject)" ng-mouseleave="hover(subject)"><a href="" ng-show="subject.showDelete" class="button" ng-click="removeSubject(subject)"><i class="fa fa-times-circle text-danger"></i></a></td>
                             </tr>
                         </table>
@@ -43,27 +50,35 @@
 
         <div class="span4  col-md-4 col-lg-4"  style="padding-right:20px; border-right: 1px solid #ccc; height:300px">
             <div class="col-md-10 col-md-offset-1" align="center">
-                <button class="btn btn-info"><i class="fa fa-sitemap"></i> 查看我的班级文件</button>
-                <br/>
-                <br/>
-                <ul class="nav nav-list nav-list-bricks">
-                    <li ng-repeat="room in myRooms" class="active">
-                        <a href="" ng-click="selectRoom(room._id)">
-                            {{room.name}}
-                            <!--<span class="fui-arrow-right pull-right"></span>-->
-                        </a>
-                    </li>
+                <!--<button class="btn btn-info"><i class="fa fa-sitemap"></i> 查看我的班级文件</button>-->
+                <h5>查看我的班级文件</h5>
+                <hr/>
+                <div ng-show="myRooms.length">
+                    <ul class="nav nav-list nav-list-bricks">
+                        <li ng-repeat="room in myRooms" class="active">
+                            <a href="" ng-click="selectRoom(room._id)">
+                                {{room.name}}
+                                <!--<span class="fui-arrow-right pull-right"></span>-->
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div ng-hide="myRooms.length">
+                    <p>您还没有任何班级</p>
+                    <a class="btn btn-primary" href="/#/profile"><i class="fa fa-share"></i> 去认领班级</a>
+                </div>
 
-                </ul>
 
             </div>
         </div>
 
         <div class="span4  col-md-4 col-lg-4">
             <div class="" align="center">
-                <button class="btn btn-primary"><i class="fa fa-university"></i> 查看资源库</button>
-                <br/>
-                <br/>
+                <!--<button class="btn btn-primary"><i class="fa fa-university"></i> 查看资源库</button>-->
+                <h5>查看资源库</h5>
+                <hr/>
+                <!--<br/>-->
+                <!--<br/>-->
                 <form action="" class="form-horizontal" role="form">
                     <div class="form-group row">
                         <div class="col-md-5">
@@ -81,6 +96,17 @@
                     </div>
 
                 </form>
+
+
+                <div class="">
+                    <div class="switch" style="display:inline">
+                        <input type="radio" class="switch-input form-control" name="view" value="week" id="week" checked>
+                        <label for="week" class="switch-label switch-label-off">Week</label>
+                        <input type="radio" class="switch-input" name="view" value="month" id="month">
+                        <label for="month" class="switch-label switch-label-on">Month</label>
+                        <span class="switch-selection"></span>
+                    </div>
+                </div>
             </div>
         </div>
 

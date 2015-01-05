@@ -25,7 +25,8 @@
     "ng-grid": "~2.0.13",
     "font-awesome": "~4.2.0",
     "angular-bootstrap-switch": "~0.3.0",
-    "material-design-icons": ""
+    "material-design-icons": "",
+    "css-toggle-switch": ""
 
 
   },

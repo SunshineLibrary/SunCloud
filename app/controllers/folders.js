@@ -17,43 +17,6 @@ var file_path = __dirname + '/../../upload/sunpack/';
 
 
 
-exports.uploadFiles = function(req, res) {
-    var folderId = req.param('folderId');
-    console.log('folderId:',folderId);
-    var file = new File(req.files.file);
-    console.log(file);
-    file.owner = req.user._id;
-    fs.renameSync(file.path, file_path + file.name);
-    Folder.findById(folderId, function(err, folder) {
-        if(err) {
-            console.error(err);
-            res.status(500).send({message: "数据库错误，未能找到文件夹"});
-        }
-        if(folder) {
-            console.log(folder);
-            file.subject = folder.subject;
-            file.semester = folder.semester;
-            file.path = file_path + file.name;
-            file.save(function(err) {
-                if(err) {
-                    res.status(500).send({message: "数据库错误，未能保存此文件"});
-                }
-                folder.files = folder.files.concat(file._id);
-                folder.save(function(err) {
-                    if(err) {
-                        res.status(500).send({message: "数据库错误，未能保存文件夹"});
-                    }else {
-                        res.status(200).send({message: "上传成功"});
-                    }
-                });
-            });
-        }else {
-            res.status(404).send({message: "此文件夹不存在" + folderId});
-        }
-
-    });
-};
-
 
 /**
  * When deleting a folder, also delete files in it.

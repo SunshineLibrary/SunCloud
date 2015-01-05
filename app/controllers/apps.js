@@ -153,6 +153,7 @@ exports.downloadApk = function(req, res) {
        } else {
            var apk = _.findWhere(app.apks, {id: apkId});
            console.log('downloading....' + app.name);
+           console.log(file_path, apk.fileName);
            res.download(file_path+apk.fileName, function(err){
                if(err) {
                    console.error(err);

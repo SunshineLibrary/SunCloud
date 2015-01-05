@@ -108,6 +108,8 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
 							$scope.schools[index].name = editedSchool.name;
 							$scope.schools[index].code = editedSchool.code;
 							$scope.schools[index].address = editedSchool.address;
+							$scope.schools[index].serverUrl = editedSchool.serverUrl;
+							$scope.schools[index].serverIP = editedSchool.serverIP;
 							$('#editSchoolDialog').modal('hide');
 							swal({title: "修改成功", type: "success", timer: 1000 });
 						})

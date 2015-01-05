@@ -1,1 +1,146 @@
-Hello world
+<div class="container-fluid">
+    <div class="col-md-12 col-sm-12 col-lg-12">
+        <div class="row page-header">
+            <!--图片 视频 音频 文档 电子书 其他-->
+            <!--<span class="col-md-5 col-lg-5">-->
+                <!--<div class="btn-group pull-left">-->
+                    <!--<button class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown">-->
+                        <!--请选择科目 <span class="caret"></span>-->
+                    <!--</button>-->
+                    <!--<ul role="menu" class="dropdown-menu dropdown-menu-inverse">-->
+                        <!--<li>-->
+                            <!--<a href="" ng-click="selectAllSubjects()">全部科目</a>-->
+                        <!--</li>-->
+                        <!--<li ng-repeat="subject in subjects">-->
+                            <!--<a href="" ng-click="selectSubject(subject._id)">{{subject.name}}</a>-->
+                        <!--</li>-->
+
+                    <!--</ul>-->
+                <!--</div>&lt;!&ndash; /btn-group &ndash;&gt;-->
+            <div class="col-md-2">
+                <select name="" id="selectSubject" class="form-control" data-ng-options="subject._id as subject.name for subject in allSubjects" data-ng-model="selectedSubject" data-ng-change="filter()" >
+                    <!--<option style="" value="all">所有科目</option>-->
+                </select>
+            </div>
+            &nbsp;
+            <div class="col-md-2">
+                <select name="" id="selectSemester" class="form-control" data-ng-options="subject._id as subject.name for subject in allSemesters" data-ng-model="selectedSemester" data-ng-change="filter()" >
+                    <!--<option style="" value="all">所有科目</option>-->
+                </select>
+            </div>
+
+            <div class="col-md-2">
+                <select name="" id="selectSchool" class="form-control" data-ng-options="subject._id as subject.name for subject in allSchools" data-ng-model="selectedSchool" data-ng-change="filter()" >
+                    <!--<option style="" value="all">所有学校</option>-->
+                </select>
+            </div>
+
+            <div class="col-md-2">
+                <select name="" id="selectTeacher" class="form-control" data-ng-options="teacher._id as teacher.name for teacher in allTeachers" data-ng-model="selectedTeacher" data-ng-change="filter()" >
+                </select>
+            </div>
+
+                <button class="btn btn-inverse btn-lg pull-right" href="#addResourceDialog" data-toggle="modal"><i class="fa fa-upload"></i> 发布教学资源</button>
+            <!--</span>-->
+        </div>
+
+        <div class="inner-addon left-addon pull-right" style="">
+            <i class="glyphicon glyphicon-search"></i>
+            <input type="search" class="form-control" style="width: 250px"  placeholder="搜索" ng-model="filterOptions.filterText"/>
+        </div>
+
+        <div class="inline">
+             <ul class="nav nav-pills nav-success pull-left">
+                 <li ng-class="{true: 'active', false: 'inactive'}[showingFolders]"><a href="" ng-click="showFolders()"><i class="fa fa-folder"></i> 显示文件夹</a></li>
+                 <li ng-class="{true: 'inactive', false: 'active'}[showingFolders]"><a href="" ng-click="showFiles()"><i class="fa fa-file"></i> 显示文件</a></li>
+             </ul>
+            &nbsp;&nbsp;
+            <span class="pull-left" ng-hide="showingFolders">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <button class="btn btn-success">全部</button>
+                <button class="btn btn-primary">文档</button>
+                <button class="btn btn-primary">电子书</button>
+                <button class="btn btn-primary">视频</button>
+                <button class="btn btn-primary">音频</button>
+                <button class="btn btn-primary">图片</button>
+                <button class="btn btn-primary">其他</button>
+            </span>
+        </div>
+
+        <div class="table" ng-show="showingFolders">
+            <div class="gridStyle style1" ng-grid="gridOptions" ng-click="selectFolder()"></div>
+        </div>
+
+        <div class="table" ng-hide="showingFolders">
+            <div class="gridStyle style1" ng-grid="gridOptions2" ng-click="selectFile()"></div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<!--------------------------------Modal--------------------->
+
+<div class="modal fade" id="addResourceDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true" style="overflow-y:scroll">
+    <div class='modal-dialog' style="left: auto">
+        <div class='modal-content'>
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span></button>
+                <h4 class="modal-title">添加教学资源</h4>
+            </div>
+            <div class="modal-body">
+                <form name="addResourceForm" novalidate>
+                    <div class="input-group">
+                        <span class="input-group-addon">科目</span>
+                        <select class="form-control select-primary" data-ng-options="subject.name for subject in subjects" data-ng-model="newResource.subject"  required>
+                            <option style="display:none" value="">请选择科目</option>
+                        </select>
+                    </div>
+                    <br/>
+                    <div class="input-group">
+                        <span class="input-group-addon">年级</span>
+                        <select class="form-control select-primary" data-ng-options="semester.name for semester in semesters" data-ng-model="newResource.semester" required>
+                            <option style="display:none" value="">请选择年级</option>
+                        </select>
+                    </div>
+                    <br/>
+                    <div class="input-group">
+                        <span class="input-group-addon">文件夹</span>
+                        &nbsp;
+                        &nbsp;
+                        <select class="form-control select-primary" style="width:auto" data-ng-options="semester.name for semester in folders" data-ng-model="newResource.folder" required>
+                            <option style="display:none" value="">请选择文件夹</option>
+                            <option value="">不放入文件夹</option>
+                        </select>
+                        &nbsp;
+                        <div class="pull-right">
+                            <div  ng-hide="isCreatingFolder">
+                                <button class="btn btn-primary" ng-click="toCreateFolder()"><i class="fa fa-folder-open"></i> 新建文件夹</button>
+                            </div>
+                            <div ng-show="isCreatingFolder">
+                                <form class="form-group form-inline" name="newFolderForm">
+                                    <input type="text" class="form-control" style="width:200px" placeholder="请输入文件夹名" ng-model="newFolderName" required/>
+                                    <button class="btn btn-default" ng-click="cancelCreate()">取消</button>
+                                    <button class="btn btn-success" ng-click="createFolder()" ng-disabled="newFolderForm.$invalid">新建</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pull-right" ng-show="error.subject" style="color:red">请选择科目</div>
+                    <div class="pull-right" ng-show="error.semester" style="color:red">请选择年级</div>
+                    <div class="pull-right" ng-show="error.folder" style="color:red">请输入文件夹名</div>
+                    <br/>
+                    <div class="input-group">
+                        <span class="input-group-addon">文件</span>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" ng-click="close('No')" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" ng-click="addResource()" ng-disabled="addResourceForm.$invalid" class="btn btn-success">确定</button>
+            </div>
+        </div>
+    </div>
+</div>

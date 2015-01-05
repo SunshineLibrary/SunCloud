@@ -5,7 +5,7 @@ angular.module('resources')
             $scope.student = student;
             $scope.temp = {};
             var me = AuthService.me;
-            $scope.isInSameSchool = $scope.student.school._id.toString() === me.school.toString();
+            $scope.isInSameSchool = me.roles.indexOf('root') > -1 || $scope.student.school._id.toString() === me.school.toString();
 
 
 

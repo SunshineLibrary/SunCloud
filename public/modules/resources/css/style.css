@@ -119,11 +119,11 @@
 }
 
 .ngHeaderCell {
-    background-color: #008B00 !important;
-    /*background-color: white;*/
-    /*color: black;*/
+    /*background-color: #008B00 !important;*/
+    /*color: #ffffff !important;*/
+    background-color: #21A675      ;
+    color: white;
     bottom: 0;
-    color: #ffffff !important;
     position: absolute;
     top: 0;
 }
@@ -155,6 +155,7 @@
 .ngViewport{
     height:auto !important;
     min-height: 200px !important;
+    overflow-x: hidden !important;
 }
 .ngCanvas, .ngViewport, .ngRow, .ngFooterPanel, .ngTopPanel   {
     width: 100% !important;

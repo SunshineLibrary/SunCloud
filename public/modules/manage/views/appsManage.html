@@ -2,8 +2,8 @@
     <div class="container-fluid">
         <div align="center">
             <ul class="nav nav-pills  " style="margin-top:50px;margin-left:250px">
-                <li ng-class="{true: 'active', false: 'inactive'}[showingAllApps]"><a href="" ng-click="showAllApps()">所有应用程序</a></li>
                 <li ng-class="{true: 'inactive', false: 'active'}[showingAllApps]"><a href="" ng-click="showMyRooms()">班级应用程序分配</a></li>
+                <li ng-class="{true: 'active', false: 'inactive'}[showingAllApps]"><a href="" ng-click="showAllApps()">所有应用程序</a></li>
             </ul>
         </div>
 
@@ -27,60 +27,63 @@
             </div>
 
             <div class="pill-pane" id="myRooms" ng-hide="showingAllApps">
-                <div class="col-lg-4 col-md-4" style="margin-top:65px">
-                    <ul id="roomsList" class="list-group">
-                        <li ng-repeat="roomItem in myRooms"  ng-class="{active: roomItem.isActive}" style="list-style-type:none" >
-                            <a ng-click="selectOneRoom(roomItem)" href="" class="list-group-item list-group-item-success" ng-class="{active: roomItem.isActive}">
-                                {{roomItem.name}}
-                            </a>
-                        </li>
-                    </ul>
+                <div ng-show="myRooms.length">
+                    <div class="col-lg-4 col-md-4" style="margin-top:65px">
+                        <ul id="roomsList" class="list-group">
+                            <li ng-repeat="roomItem in myRooms"  ng-class="{active: roomItem.isActive}" style="list-style-type:none" >
+                                <a ng-click="selectOneRoom(roomItem)" href="" class="list-group-item list-group-item-success" ng-class="{active: roomItem.isActive}">
+                                    {{roomItem.name}}
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-lg-8 col-md-8">
+                        <h3 align="center">{{selectedRoom.name}}的应用程序</h3>
+                        <div class="myapps">
+                            <table class="table" ng-show="appsOfRoom.length">
+                                <caption><h6 align="center" style="color:#27ae60">已经推送的应用程序</h6></caption>
+                                <tr ng-repeat="app in appsOfRoom">
+                                    <td><a href="" ng-click="goToApp(app._id)">{{app.name}}</a></td>
+                                    <td></td>
+                                    <td>
+                                        <div>
+                                            <i class="fa fa-tablet fa-2x"></i>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            <a href="" role="button" class="fa fa-minus-circle fa-2x  text-danger" ng-click="removeAppFromRoom(app)"></a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                            <div ng-hide="appsOfRoom.length" align="center">
+                                <br/>
+                                {{selectedRoom.name}} 还没有任何应用程序
+                                <br/>
+                                <br/>
+                            </div>
+                        </div>
+                        <div class="appsNotAssigned">
+                            <table class="table" ng-show="otherApps.length">
+                                <caption><h6 align="center">候选应用</h6></caption>
+                                <tr ng-repeat="app in otherApps">
+                                    <td><a href="" ng-click="goToApp(app._id)">{{app.name}}</a></td>
+                                    <td><div><a href="" role="button" class="fa fa-plus-circle fa-2x  text-success" ng-click="addAppToRoom(app)"></a></div></td>
+                                </tr>
+                            </table>
+                            <div ng-hide="otherApps.length">
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-lg-8 col-md-8">
-                    <h3 align="center">{{selectedRoom.name}}的应用程序</h3>
-                    <div class="myapps">
-                        <table class="table" ng-show="appsOfRoom.length">
-                            <caption><h6 align="center" style="color:#27ae60">已经推送的应用程序</h6></caption>
-                            <tr ng-repeat="app in appsOfRoom">
-                                <td><a href="" ng-click="goToApp(app._id)">{{app.name}}</a></td>
-                                <td></td>
-                                <td>
-                                    <div>
-                                        <i class="fa fa-tablet fa-2x"></i>
-                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                        <a href="" role="button" class="fa fa-minus-circle fa-2x  text-danger" ng-click="removeAppFromRoom(app)"></a>
-                                    </div>
-                                </td>
-                            </tr>
-                        </table>
-                        <div ng-hide="appsOfRoom.length" align="center">
-                            <br/>
-                            {{selectedRoom.name}} 还没有任何应用程序
-                            <br/>
-                            <br/>
-                        </div>
+                <div ng-hide="myRooms.length">
+                    hell0
+                    <br/>
+                    <br/>
+                    <div align="center">
+                        <h4>您还没有任何班级</h4>
+                        <a class="btn btn-primary" href="/#/profile"><i class="fa fa-share"></i> 去认领班级</a>
                     </div>
-
-
-                    <div class="appsNotAssigned">
-                        <table class="table" ng-show="otherApps.length">
-                            <caption><h6 align="center">候选应用</h6></caption>
-                            <tr ng-repeat="app in otherApps">
-                                <td><a href="" ng-click="goToApp(app._id)">{{app.name}}</a></td>
-                                <td><div><a href="" role="button" class="fa fa-plus-circle fa-2x  text-success" ng-click="addAppToRoom(app)"></a></div></td>
-                            </tr>
-                        </table>
-                        <div ng-hide="otherApps.length">
-
-                        </div>
-                    </div>
-
                 </div>
             </div>
-
-
-
-
         </div>
     </div>
 </div>

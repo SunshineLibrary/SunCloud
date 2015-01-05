@@ -32,6 +32,10 @@ var FileSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'User'
     },
+    school: {
+        type: Schema.Types.ObjectId,
+        ref: 'School'
+    },
     subject: {
         type: Schema.Types.ObjectId,
         ref: 'Subject'

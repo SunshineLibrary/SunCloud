@@ -1,7 +1,7 @@
 angular.module('sunpack')
     .controller('allSubjectsController',
-    ['subjects','semesters', 'myRooms', 'Authentication', '$scope', 'TeacherDataProvider', '$state',
-        function (subjects, semesters, myRooms,Authentication, $scope, TeacherDataProvider, $state) {
+    ['subjects','semesters', 'myRooms', 'Authentication', '$scope', 'TeacherDataProvider', 'FolderDataProvider', '$state',
+        function (subjects, semesters, myRooms,Authentication, $scope, TeacherDataProvider, FolderDataProvider, $state) {
             $scope.subjects = subjects;
             $scope.semesters = semesters;
             $scope.myRooms = myRooms;
@@ -12,24 +12,28 @@ angular.module('sunpack')
                 if(me.subjects.indexOf(subject._id) === -1) {
                     $scope.subjectsNotIn.push(subject);
                 }else {
-                    $scope.mySubjects.push(subject);
-
+                    FolderDataProvider.getFoldersCountByTeacherAndSubject(me._id, subject._id).then(function(count) {
+                        subject.count = count;
+                        $scope.mySubjects.push(subject);
+                    });
                 }
             });
+
+
             $scope.selectedSubject = $scope.mySubjects[0];
 
 
-                $scope.addSubject = function(subject) {
-                TeacherDataProvider.addSubject(me._id, subject._id)
-                    .success(function() {
-                        $scope.mySubjects.push(subject);
-                        $scope.subjectsNotIn.splice($scope.subjectsNotIn.indexOf(subject), 1);
-                    })
-                    .error(function(err) {
-                        console.error(err);
-                        swal({title: "添加科目失败", text: "请重试", type: "error", timer: 2000});
-                    })
-            };
+            $scope.addSubject = function(subject) {
+            TeacherDataProvider.addSubject(me._id, subject._id)
+                .success(function() {
+                    $scope.mySubjects.push(subject);
+                    $scope.subjectsNotIn.splice($scope.subjectsNotIn.indexOf(subject), 1);
+                })
+                .error(function(err) {
+                    console.error(err);
+                    swal({title: "添加科目失败", text: "请重试", type: "error", timer: 2000});
+                })
+        };
 
             $scope.hover = function(subject) {
                 // Shows/hides the delete button on hover
@@ -62,6 +66,8 @@ angular.module('sunpack')
                     });
 
             };
+
+
 
 
             $scope.selectSubject = function(subjectId) {

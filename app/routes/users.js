@@ -72,8 +72,9 @@ module.exports = function(app) {
 	/**
 	 * Sunpack
 	 */
-	app.route('/upload/files/:folderId').post(users.restifyFolder,sunpackMiddleware, folders.uploadFiles);
+	app.route('/upload/files/:folderId').post(users.restifyFolder,sunpackMiddleware, files.uploadFiles);
 	app.route('/upload/file/:fileId').post(sunpackMiddleware, files.uploadFile);
+	app.route('/download/files/:fileId').get(files.downloadFile);
 
 
 

@@ -20,7 +20,7 @@ angular.module('resources')
             var thePromise = defered.promise;
             $http({
                 method: "GET",
-                url: "/folders"
+                url: "/folders?populate=subject,semester,owner,school"
             }).success(function (folders) {
                 defered.resolve(folders);
             }).error(function (err) {
@@ -45,6 +45,21 @@ angular.module('resources')
             return thePromise;
         };
 
+        var getFoldersCountByTeacherAndSubject = function(teacherId, subjectId) {
+            var defered = $q.defer();
+            var thePromise = defered.promise;
+            $http({
+                method: "GET",
+                url: "/folders/count?owner=" + teacherId + "&subject=" + subjectId
+            }).success(function (counts) {
+                defered.resolve(counts.count);
+            }).error(function (err) {
+                defered.reject(err);
+                console.log(err);
+            });
+            return thePromise;
+        };
+
         var createFolder = function(info) {
             return $http({
                 method: "POST",
@@ -54,6 +69,7 @@ angular.module('resources')
                     subject: info.subject,
                     semester: info.semester,
                     owner: info.owner,
+                    school: info.school,
                     created_at: Date.now()
                 }
             })
@@ -88,12 +104,20 @@ angular.module('resources')
                 url: "folders/" + folderId
             })
         };
+        //
+        //var getFoldersByRoom = function(roomId) {
+        //    return $http({
+        //        method: "GET",
+        //        url: ""
+        //    })
+        //}
 
 
         return {
             getFolder: getFolder,
             getAllFolders: getAllFolders,
             getFoldersByTeacherAndSubject: getFoldersByTeacherAndSubject,
+            getFoldersCountByTeacherAndSubject: getFoldersCountByTeacherAndSubject,
             createFolder: createFolder,
             addFolderToRooms: addFolderToRooms,
             editFolderNameAndSemester: editFolderNameAndSemester,

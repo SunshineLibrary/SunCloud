@@ -292,6 +292,21 @@ angular.module('schoolManage')
             })
         };
 
+        var getFoldersByRoom = function(roomId) {
+            var defered = $q.defer();
+            var thePromise = defered.promise;
+            $http({
+                method: "GET",
+                url: "/rooms/" + roomId + "?populate=sunpack"
+            }).success(function(room) {
+                defered.resolve(room.sunpack);
+            }).error(function(err){
+                console.error(err);
+                defered.reject(err);
+            });
+            return thePromise;
+        };
+
         return {
             createAdminRoom: createAdminRoom,
             createTeachingRoom: createTeachingRoom,
@@ -314,6 +329,7 @@ angular.module('schoolManage')
             removeTeacherFromRoom: removeTeacherFromRoom,
             addStudentsToRoom: addStudentsToRoom,
             addTeachersToRoom: addTeachersToRoom,
-            getMyRooms: getMyRooms
+            getMyRooms: getMyRooms,
+            getFoldersByRoom: getFoldersByRoom
         };
     }]);

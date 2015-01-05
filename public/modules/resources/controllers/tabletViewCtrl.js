@@ -5,7 +5,7 @@ angular.module('resources')
             $scope.tablet = theTablet;
             console.log(theTablet);
             var me = AuthService.me;
-            $scope.isInSameSchool = $scope.tablet.school._id.toString() === me.school.toString();
+            $scope.isInSameSchool = me.roles.indexOf('root') > -1 || $scope.tablet.school._id.toString() === me.school.toString();
 
             TabletDataProvider.getTabletUser($scope.tablet._id).success(function(record){
                 if(record.length){

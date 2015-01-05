@@ -83,6 +83,23 @@ angular.module('schools')
             return teachersPromise;
         };
 
+        var getAllTeachersMin = function (callBack) {
+            var defered = $q.defer();
+            var teachersPromise = defered.promise;
+            $http({
+                method: "GET",
+                url: "/users?roles=[teacher,admin,root]"
+            }).success(function (teachers) {
+                defered.resolve(teachers);
+                if (callBack) {
+                    callBack(teachers);
+                }
+            }).error(function (err) {
+                console.error(err);
+            });
+            return teachersPromise;
+        };
+
         var getAllTeachersCount = function (callBack) {
             var defered = $q.defer();
             var countPromise = defered.promise;
@@ -197,6 +214,7 @@ angular.module('schools')
             getAllStudents: getAllStudents,
             getAllStudentsCount: getAllStudentsCount,
             getAllTeachers: getAllTeachers,
+            getAllTeachersMin: getAllTeachersMin,
             getAllTeachersCount: getAllTeachersCount,
             getAllTablets: getAllTablets,
             getAllTabletsCount: getAllTabletsCount,

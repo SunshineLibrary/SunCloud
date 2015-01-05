@@ -3,8 +3,8 @@
         <div ncy-breadcrumb class="breadcrumb-text ptl"></div>
     </div>
     <div class="pull-right">
-        <a href="#editFileDialog" role="button" class="btn btn-primary"><i class="glyphicon glyphicon-edit"></i> 编辑</a>
-        <a href="" role="button" class="btn btn-primary"><i class="fa fa-cloud-download"></i> 下载</a>
+        <a href="" role="button" class="btn btn-primary" ng-click="showEditFileDialog()"><i class="glyphicon glyphicon-edit"></i> 编辑</a>
+        <a ng-href="/download/files/{{file._id}}" role="button" class="btn btn-primary" ><i class="fa fa-cloud-download"></i> 下载</a>
 
     </div>
 
@@ -55,7 +55,7 @@
                     </div>
                     <br>
                 </form>
-                <span style="color: red" ng-show="error">修改失败，可能由于用户名已存在。请修改用户名后重试。</span>
+                <!--<span style="color: red" ng-show="temp.error">修改失败，可能由于用户名已存在。请修改用户名后重试。</span>-->
             </div>
             <div class="modal-footer">
                 <button class="btn btn-defautl" data-dismiss="modal">取消</button>

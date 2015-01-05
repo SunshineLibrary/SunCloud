@@ -25,6 +25,7 @@ angular.module('sunpack')
                 info.semester = $scope.newFolder.semester._id;
                 info.owner = me._id;
                 info.subject = subject._id;
+                info.school = me.school;
                 FolderDataProvider.createFolder(info)
                     .success(function(folder) {
                         console.log(folder);

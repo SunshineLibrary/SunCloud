@@ -26,6 +26,10 @@ var FolderSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'Semester'
     },
+    school: {
+        type: Schema.Types.ObjectId,
+        ref: 'School'
+    },
     files: [{
         type: Schema.Types.ObjectId,
         ref: 'File'

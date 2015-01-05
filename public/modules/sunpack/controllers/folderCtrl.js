@@ -204,7 +204,7 @@ angular.module('sunpack')
 
 
 
-
+console.log($scope.files);
 
         $scope.gridOptions =
         {
@@ -216,7 +216,7 @@ angular.module('sunpack')
             'class="ngCell {{col.cellClass}}" ng-cell></div>',
             columnDefs: [
                 {field: '_id', visible: false},
-                {field: 'mimetype', displayName: '类型', width: '15%',cellTemplate: '<div><a>{{row.entity.mimetype}}</a></div>'},
+                {field: 'type', displayName: '类型', width: '15%',cellTemplate: '<div><span ng-bind-html="row.entity.type | typeFilter"></span></div>'},
                 {field: 'originalname', displayName: '文件名称', cellTemplate: '<div><a>{{row.entity.originalname}}</a></div>'},
                 {field: 'users.length', displayName: '使用人数', width: '10%'},
                 {field: 'size', displayName: '大小',width: '10%', cellTemplate: '<div>{{row.entity[col.field]/1024/1024 | number:2}} MB</div>'},
@@ -260,4 +260,27 @@ angular.module('sunpack')
 
     }
     ]
-);
+)
+    .filter('typeFilter', function($sce) {
+        return function(type) {
+            if(type === 'image') {
+                return $sce.trustAsHtml('<span class="label label-success"><i class="fa fa-image"></i> 图片</span>');
+            }
+            if(type === 'audio') {
+                return $sce.trustAsHtml('<span class="label label-success"><i class="fa fa-music"></i> 音频</span>');
+            }
+            if(type === 'video') {
+                return $sce.trustAsHtml('<span class="label label-success"><i class="fa fa-video-camera"></i> 视频</span>');
+            }
+            if(type === 'doc') {
+                return $sce.trustAsHtml('<span class="label label-success"><i class="fa fa-file-text"></i> 文档</span>');
+            }
+            if(type === 'ebook') {
+                return $sce.trustAsHtml('<span class="label label-success"><i class="fa fa-book"></i> 电子书</span>');
+            }
+            if(type === 'application') {
+                return $sce.trustAsHtml('<span class="label label-success"><i class="fa fa-cogs"></i> 应用</span>');
+            }
+            return $sce.trustAsHtml('<span class="label label-success"><i class="fa fa-file"></i> 其他</span>');
+        };
+    });

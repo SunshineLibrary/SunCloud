@@ -47,6 +47,7 @@ module.exports = {
 				'public/lib/ng-grid/ng-grid.css',
 				'public/lib/sweetalert/lib/sweet-alert.css',
 				'public/lib/font-awesome/css/font-awesome.css',
+				'public/lib/css-toggle-switch/dist/toggle-switch.css'
 				//'public/lib/bootstrap-switch/dist/css/bootstrap3/bootstrap-switch.css'
 			],
 			js: [
@@ -75,7 +76,8 @@ module.exports = {
 				'public/lib/flat-ui-pro/dist/js/flat-ui-pro.js',
 				'public/lib/flat-ui-pro/docs/assets/js/application.js',
 				'public/lib/bootstrap-switch/dist/js/bootstrap-switch.js',
-				'public/lib/angular-breadcrumb/dist/angular-breadcrumb.js'
+				'public/lib/angular-breadcrumb/dist/angular-breadcrumb.js',
+				'public/lib/d3.js'
 				//'public/lib/angular-bootstrap-switch/dist/angular-bootstrap-switch.js',
 				//'public/lib/angular-bootstrap-switch/src/directives/bsSwitch.js'
                 //

@@ -1,9 +1,8 @@
 angular.module('sunpack')
     .controller('fileController',
-    ['$scope', 'file',function ($scope, file) {
+    ['$scope', 'file', 'FileDataProvider',function ($scope, file, FileDataProvider) {
         $scope.file = file;
         $scope.temp = {};
-        console.log('hi I;m in file state');
 
         $scope.showEditFileDialog = function() {
             $('#editFileDialog').modal('show');
@@ -15,7 +14,7 @@ angular.module('sunpack')
             info._id = $scope.file._id;
             info.originalname = $scope.temp.newName;
             info.description = $scope.temp.newDescription;
-            FileDataProvider.editFile(info)
+            FileDataProvider.editFileNameAndDescription(info)
                 .success(function(editedFile) {
                     $scope.file.originalname = editedFile.originalname;
                     $scope.file.description = editedFile.description;
@@ -24,7 +23,7 @@ angular.module('sunpack')
                 })
                 .error(function(err) {
                     console.error(err);
-                    $scope.error = true;
+                    //$scope.error = true;
                     swal({title: "修改失败", text: "请重试", type: "error", timer: 2000 });
                 })
         };

@@ -68,7 +68,11 @@ angular.module('sunpack')
                   myRoom: ['RoomDataProvider', '$stateParams',
                   function(RoomDataProvider, $stateParams) {
                       return RoomDataProvider.getRoom($stateParams.roomId);
-                  }]
+                  }],
+                    folders: ['RoomDataProvider', '$stateParams',
+                        function(RoomDataProvider, $stateParams) {
+                            return RoomDataProvider.getFoldersByRoom($stateParams.roomId);
+                        }]
                 },
                 ncyBreadcrumb: {
                     label: "{{myRoom.name}}"

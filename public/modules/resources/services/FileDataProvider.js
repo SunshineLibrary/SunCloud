@@ -20,7 +20,7 @@ angular.module('resources')
             var thePromise = defered.promise;
             $http({
                 method: "GET",
-                url: "/files"
+                url: "/files?populate=subject,semester,owner,school"
             }).success(function (files) {
                 defered.resolve(files);
             }).error(function (err) {
@@ -49,11 +49,19 @@ angular.module('resources')
             })
         };
 
+        var downloadFile = function(fileId) {
+            return $http({
+                method: "GET",
+                url: "/download/files/" + fileId
+            })
+        };
+
         return {
             getFile: getFile,
             getAllFiles: getAllFiles,
             deleteFile: deleteFile,
-            editFileNameAndDescription: editFileNameAndDescription
+            editFileNameAndDescription: editFileNameAndDescription,
+            downloadFile: downloadFile
 
         };
     }]);

@@ -7,10 +7,9 @@ angular.module('manage')
             $scope.temp = {};
             $scope.seletedApp = [];
             $scope.selectedRoom = $scope.myRooms[0];
-            $scope.myRooms[0].isActive = true;
             $scope.newAppName = '';
             $scope.filterOptions = {filterText: ''};
-            $scope.showingAllApps = true;
+            $scope.showingAllApps = false;
             var me = AuthService.me;
             $scope.me = me;
             // Tabs
@@ -28,16 +27,6 @@ angular.module('manage')
             _.each($scope.apps, function(app) {
                 app.room = [];
             });
-            _.each($scope.myRooms, function(myRoom) {
-                _.each(myRoom.apps, function(appId) {
-                    var theApp = _.find($scope.apps, function(app) {
-                        return app._id === appId
-                    });
-                    if(theApp) {
-                        theApp.room = theApp.room.concat(myRoom.name);
-                    }
-                })
-            });
 
             $scope.showAllApps = function() {
                 $scope.showingAllApps = true;
@@ -46,25 +35,103 @@ angular.module('manage')
                 $scope.showingAllApps = false;
             };
 
-            AppDataProvider.getAppsByRoom($scope.selectedRoom._id).then(function(appsOfTheRoom) {
-                $scope.appsOfRoom =  appsOfTheRoom;
-                $scope.otherApps = _.filter($scope.apps, function(app){
-                    return !_.findWhere($scope.appsOfRoom, {_id: app._id})
-                })
-            });
-
-            $scope.selectOneRoom = function(selectedRoom) {
-                $scope.selectedRoom  = selectedRoom;
+            if($scope.myRooms.length) {
+                $scope.myRooms[0].isActive = true;
+                _.each($scope.myRooms, function(myRoom) {
+                    _.each(myRoom.apps, function(appId) {
+                        var theApp = _.find($scope.apps, function(app) {
+                            return app._id === appId
+                        });
+                        if(theApp) {
+                            theApp.room = theApp.room.concat(myRoom.name);
+                        }
+                    })
+                });
                 AppDataProvider.getAppsByRoom($scope.selectedRoom._id).then(function(appsOfTheRoom) {
                     $scope.appsOfRoom =  appsOfTheRoom;
                     $scope.otherApps = _.filter($scope.apps, function(app){
                         return !_.findWhere($scope.appsOfRoom, {_id: app._id})
                     })
                 });
-                _.each($scope.myRooms, function(item) {
-                    item.isActive = selectedRoom._id === item._id ;
-                });
-            };
+
+                $scope.selectOneRoom = function(selectedRoom) {
+                    $scope.selectedRoom  = selectedRoom;
+                    AppDataProvider.getAppsByRoom($scope.selectedRoom._id).then(function(appsOfTheRoom) {
+                        $scope.appsOfRoom =  appsOfTheRoom;
+                        $scope.otherApps = _.filter($scope.apps, function(app){
+                            return !_.findWhere($scope.appsOfRoom, {_id: app._id})
+                        })
+                    });
+                    _.each($scope.myRooms, function(item) {
+                        item.isActive = selectedRoom._id === item._id ;
+                    });
+                };
+
+                $scope.addAppToRoom = function(app) {
+                    swal({
+                            title: "添加应用程序",
+                            text: "您确定要将"+app.name+"添加到班级"+$scope.selectedRoom.name+ "吗?",
+                            type: "warning",
+                            showCancelButton: true,
+                            cancelButtonText: "取消",
+                            confirmButtonColor: "#2ecc71",
+                            confirmButtonText: "添加",
+                            closeOnConfirm: false },
+                        function(){
+                            AppDataProvider.addAppToRoom(app._id, $scope.selectedRoom._id)
+                                .success(function() {
+                                    $scope.appsOfRoom.push(app);
+                                    $scope.otherApps = _.reject($scope.otherApps, function(theApp) {
+                                        return theApp._id === app._id;
+                                    });
+                                    var theApp = _.findWhere($scope.apps, {_id: app._id});
+                                    theApp.room.push($scope.selectedRoom.name);
+                                    swal({title: "添加成功", type: "success", timer: 1000 });
+                                })
+                                .error(function(err){
+                                    console.error(err);
+                                    swal({title: "添加失败", text: "请重试", type: 'error', timer: 1000})
+
+                                });
+                        });
+
+                };
+
+                $scope.removeAppFromRoom = function(app) {
+                    swal({
+                            title: "移除应用程序",
+                            text: "您确定要将"+app.name+"从班级"+$scope.selectedRoom.name+ "中移除吗?",
+                            type: "warning",
+                            showCancelButton: true,
+                            cancelButtonText: "取消",
+                            confirmButtonColor: "#c0392b",
+                            confirmButtonText: "移除",
+                            closeOnConfirm: false },
+                        function(){
+                            AppDataProvider.removeAppFromRoom(app._id, $scope.selectedRoom._id)
+                                .success(function() {
+                                    $scope.appsOfRoom = _.reject($scope.appsOfRoom, function(theApp) {
+                                        return theApp._id === app._id});
+                                    $scope.otherApps.push(app);
+                                    var theApp = _.findWhere($scope.apps, {_id: app._id});
+                                    theApp.room = _.without(theApp.room, $scope.selectedRoom.name);
+                                    swal({title: "移除成功", type: "success", timer: 1000 });
+                                })
+                                .error(function(err){
+                                    console.error(err);
+                                    swal({title: "移除失败", text: "请重试", type: 'error', timer: 1000})
+                                });
+                        });
+
+                };
+
+            }else {
+                $scope.claimRoom = function() {
+                    $location.path('/myrooms');
+                    $('#claimRoomDialog').modal('show');
+                }
+            }
+
 
 
             $scope.createApp = function() {
@@ -93,63 +160,6 @@ angular.module('manage')
 
             $scope.goToApp = function(appId) {
                 $location.path('/apps/' + appId);
-            };
-            $scope.addAppToRoom = function(app) {
-                swal({
-                        title: "添加应用程序",
-                        text: "您确定要将"+app.name+"添加到班级"+$scope.selectedRoom.name+ "吗?",
-                        type: "warning",
-                        showCancelButton: true,
-                        cancelButtonText: "取消",
-                        confirmButtonColor: "#2ecc71",
-                        confirmButtonText: "添加",
-                        closeOnConfirm: false },
-                    function(){
-                        AppDataProvider.addAppToRoom(app._id, $scope.selectedRoom._id)
-                            .success(function() {
-                                $scope.appsOfRoom.push(app);
-                                $scope.otherApps = _.reject($scope.otherApps, function(theApp) {
-                                    return theApp._id === app._id;
-                                });
-                                var theApp = _.findWhere($scope.apps, {_id: app._id});
-                                theApp.room.push($scope.selectedRoom.name);
-                                swal({title: "添加成功", type: "success", timer: 1000 });
-                            })
-                            .error(function(err){
-                                console.error(err);
-                                swal({title: "添加失败", text: "请重试", type: 'error', timer: 1000})
-
-                            });
-                    });
-
-            };
-
-            $scope.removeAppFromRoom = function(app) {
-                swal({
-                        title: "移除应用程序",
-                        text: "您确定要将"+app.name+"从班级"+$scope.selectedRoom.name+ "中移除吗?",
-                        type: "warning",
-                        showCancelButton: true,
-                        cancelButtonText: "取消",
-                        confirmButtonColor: "#c0392b",
-                        confirmButtonText: "移除",
-                        closeOnConfirm: false },
-                    function(){
-                        AppDataProvider.removeAppFromRoom(app._id, $scope.selectedRoom._id)
-                            .success(function() {
-                                $scope.appsOfRoom = _.reject($scope.appsOfRoom, function(theApp) {
-                                    return theApp._id === app._id});
-                                $scope.otherApps.push(app);
-                                var theApp = _.findWhere($scope.apps, {_id: app._id});
-                                theApp.room = _.without(theApp.room, $scope.selectedRoom.name);
-                                swal({title: "移除成功", type: "success", timer: 1000 });
-                            })
-                            .error(function(err){
-                                console.error(err);
-                                swal({title: "移除失败", text: "请重试", type: 'error', timer: 1000})
-                            });
-                    });
-
             };
 
 
@@ -204,4 +214,5 @@ angular.module('manage')
                             })
                     });
             }
+            console.log('--->',$scope.myRooms.length);
         }]);
