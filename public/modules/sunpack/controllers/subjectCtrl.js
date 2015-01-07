@@ -129,6 +129,11 @@ angular.module('sunpack')
                 $state.go('sunpack.subject.folder', {folderId: $scope.gridOptions.selectedItems[0]._id});
                 //$location.path('/rooms/' + $scope.gridOptions.selectedItems[0]._id);
             };
+            $('[data-toggle="tooltip"]').tooltip();
+            $('[data-toggle="popover"]').popover();
+
+            $('[data-toggle="checkbox"]').radiocheck();
+
 
             // Focus state for append/prepend inputs
             $('.input-group').on('focus', '.form-control', function () {

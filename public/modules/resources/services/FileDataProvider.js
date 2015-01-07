@@ -49,6 +49,16 @@ angular.module('resources')
             })
         };
 
+        var addDescription = function(info) {
+            return $http({
+                method: "PUT",
+                url: "/files/" + info._id,
+                data: {
+                    description: info.description
+                }
+            })
+        };
+
         var downloadFile = function(fileId) {
             return $http({
                 method: "GET",
@@ -61,7 +71,8 @@ angular.module('resources')
             getAllFiles: getAllFiles,
             deleteFile: deleteFile,
             editFileNameAndDescription: editFileNameAndDescription,
-            downloadFile: downloadFile
+            downloadFile: downloadFile,
+            addDescription: addDescription
 
         };
     }]);

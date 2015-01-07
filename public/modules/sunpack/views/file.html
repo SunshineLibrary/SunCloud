@@ -3,6 +3,7 @@
         <div ncy-breadcrumb class="breadcrumb-text ptl"></div>
     </div>
     <div class="pull-right">
+        <span class="sun-id">id: {{file._id}}</span>
         <a href="" role="button" class="btn btn-primary" ng-click="showEditFileDialog()"><i class="glyphicon glyphicon-edit"></i> 编辑</a>
         <a ng-href="/download/files/{{file._id}}" role="button" class="btn btn-primary" ><i class="fa fa-cloud-download"></i> 下载</a>
 
@@ -14,19 +15,24 @@
     <table class="">
         <tr>
             <td><strong> 描述: </strong></td>
-            <td>{{file.description}}</td>
+            <td style="padding-left:20px"><div ng-show="file.description">{{file.description}}</div><div ng-hide="file.description"><a class="btn btn-success btn-xs" href="#addDescriptionDialog" data-toggle="modal"><i class="fa fa-comments"></i> 添加描述</a></div></td>
         </tr>
         <tr>
+            <td><strong> 文件大小: </strong></td>
+            <td style="padding-left:20px">{{file.size/1024/1024 | number:2}} MB</td>
+        </tr>
+
+        <tr>
             <td><strong>创建人:  </strong></td>
-            <td>{{file.owner.name}}</td>
+            <td style="padding-left:20px">{{file.owner.name}}</td>
         </tr>
         <tr>
             <td><strong> 年级: </strong></td>
-            <td> <span ng-show="file.semester" class="inline">{{file.semester.name}}</span><span ng-hide="folder.semester"><span class="label label-default inline">暂无</span></span></td>
+            <td style="padding-left:20px"> <span ng-show="file.semester" class="inline">{{file.semester.name}}</span><span ng-hide="folder.semester"><span class="label label-default inline">暂无</span></span></td>
         </tr>
         <tr>
             <td><strong> 科目: </strong> </td>
-            <td>{{file.subject.name}}</td>
+            <td style="padding-left:20px">{{file.subject.name}}</td>
         </tr>
     </table>
     <hr/>
@@ -54,8 +60,23 @@
                         <input type="text" id="newDescription" class="form-control"  placeholder="文件描述" ng-model="temp.newDescription">
                     </div>
                     <br>
+                    <div class="input-group">
+                        <span class="input-group-btn"><button class="btn" type="button"><span class="fa fa-file"> 文件内容</span></button></span>
+
+                        <div class="form-group" style="margin-bottom: -9px">
+                            <div class="fileinput fileinput-new" data-provides="fileinput">
+                                    <span class="btn btn-inverse btn-embossed btn-file">
+                                      <span class="fileinput-new"><span class="fa fa-cloud-upload"></span> 修改文件</span>
+                                      <span class="fileinput-exists"><span class="fa fa-cloud-upload"></span> 修改文件</span>
+                                      <input type="file" name="..." nv-file-select uploader="editFileUploader">
+                                    </span>
+                                <span class="fileinput-new"><a ng-href="/download/files/{{file._id}}" style="border-bottom:1px solid;">{{file.originalname}}</a></span>
+                                <span class="fileinput-filename"></span>
+                                <a href="#" class="close fileinput-exists" data-dismiss="fileinput" style="float: none">×</a>
+                            </div>
+                        </div>
+                    </div>
                 </form>
-                <!--<span style="color: red" ng-show="temp.error">修改失败，可能由于用户名已存在。请修改用户名后重试。</span>-->
             </div>
             <div class="modal-footer">
                 <button class="btn btn-defautl" data-dismiss="modal">取消</button>
@@ -66,3 +87,21 @@
 </div>
 
 
+<div class="modal fade" id="addDescriptionDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class='modal-dialog'>
+        <div class='modal-content'>
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span></button>
+                <h4 class="modal-title">添加文件描述</h4>
+            </div>
+            <div class="modal-body">
+                <form name="addDescriptionForm"  class="form-group input-group input-group-lg">
+                    <input class="form-control" placeholder="请输入文件描述" ng-model="temp.description" required>
+                    <div class="input-group-btn">
+                        <button type="button" class="btn btn-success" ng-click="addDescription()" ng-disabled="addDescriptionForm.$invalid">确定</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

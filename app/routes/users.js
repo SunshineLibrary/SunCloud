@@ -48,7 +48,6 @@ module.exports = function(app) {
 	app.route('/students/auto').post(users.autoCreateAddStudents);
 	app.route('/students/manual').post(users.manualCreateAddStudents);
 
-
 	/**
 	 *
 	 */
@@ -73,12 +72,14 @@ module.exports = function(app) {
 	 * Sunpack
 	 */
 	app.route('/upload/files/:folderId').post(users.restifyFolder,sunpackMiddleware, files.uploadFiles);
-	app.route('/upload/file/:fileId').post(sunpackMiddleware, files.uploadFile);
+	app.route('/edit/file').post(sunpackMiddleware, files.editFile);
+	//app.route('/upload/file/:fileId').post(sunpackMiddleware, files.uploadFile);
 	app.route('/download/files/:fileId').get(files.downloadFile);
+	app.route('/repository').post(sunpackMiddleware, files.uploadRepo);
 
-
-
-	// xiaoshu login
+	/**
+	 * 	xiaoshu login
+	 */
 	app.route('/schools/get_all.json').get(tabletLog.getSchool);
 	app.route('/machines/sign_in.json').post(tabletLog.tabletLogin);
 	app.route('/machines/check_token').get(tabletLog.checkToken);

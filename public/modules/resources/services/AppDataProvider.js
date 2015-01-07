@@ -55,11 +55,11 @@ angular.module('resources')
             var defered = $q.defer();
             var appsPromise = defered.promise;
             var query = {$or: [{create_by: 'root'}, {$and: [{shared: true},{school: schoolId}]}]};
+            query = encodeURIComponent(JSON.stringify(query));
             //$or=[{\"create_by\":\"root\"},{\"$and\",[{\"create_by\":\"admin\"},{\"school\":\"schoolId\"}]}]
             $http({
                 method: "GET",
-                url: "/apps",
-                qs: { query: encodeURIComponent(JSON.stringify(query))}
+                url: "/apps?query=" + query
                 //url: "/apps?query={\"$or\": [{\"create_by\": \"root\"}, {\"$and\": [{\"create_by\": \"admin\"},{\"school\":"+ schoolId+"}]}]}"
             }).success(function (apps) {
                 defered.resolve(apps);
@@ -208,6 +208,15 @@ angular.module('resources')
             })
         };
 
+        var changeInstallationOption = function(appId, value) {
+            return $http({
+                method: "PUT",
+                url: "/apps/" + appId,
+                data: {
+                    default_installed: value
+                }
+            })
+        };
 
 
         return {
@@ -224,6 +233,7 @@ angular.module('resources')
             addAppToRoom: addAppToRoom,
             removeAppFromRoom: removeAppFromRoom,
             deleteAppFromRooms: deleteAppFromRooms,
-            deleteApk: deleteApk
+            deleteApk: deleteApk,
+            changeInstallationOption: changeInstallationOption
         };
     }]);

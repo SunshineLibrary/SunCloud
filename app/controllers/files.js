@@ -14,6 +14,7 @@ var Q = require('q');
 var fs = require('fs');
 var util = require('util');
 var file_path = __dirname + '/../../upload/sunpack/';
+var trash_path = __dirname + '/../../upload/trash/';
 
 var fileType = {
             image: ['tif', 'tiff', 'gif', 'jpeg', 'jpg', 'jif', 'jfif', 'jp2', 'jpx', 'j2k', 'j2c', 'fpx', 'pcd', 'png', 'svg'],
@@ -50,26 +51,26 @@ var fileType = {
 //    }
 //};
 
-
-
-exports.uploadFiles = function(req, res) {
-    var folderId = req.param('folderId');
-    console.log('folderId:',folderId);
-    var file = new File(req.files.file);
-    console.log(file);
-    file.owner = req.user._id;
+var getFileType = function(extension) {
     var found = false;
+    var type;
     for (var key in fileType) {
         var arr = fileType[key];
-        if (arr.indexOf(file.extension) > -1) {
-            file.type = key;
+        if (arr.indexOf(extension) > -1) {
+            type = key;
             found = true;
             break;
         }
     }
     if(!found) {
-        file.type = 'other';
+        type = 'other';
     }
+    return type;
+};
+
+var saveFile = function(file, folderId, res) {
+    file.type = getFileType(file.extension);
+    file.name = file._id.toString();
     fs.renameSync(file.path, file_path + file.name);
     Folder.findById(folderId, function(err, folder) {
         if(err) {
@@ -98,45 +99,64 @@ exports.uploadFiles = function(req, res) {
         }else {
             res.status(404).send({message: "此文件夹不存在" + folderId});
         }
-
     });
 };
 
-
-exports.uploadFile = function(req, res) {
-    var fileId = req.param('fileId');
+exports.uploadFiles = function(req, res) {
+    var folderId = req.param('folderId');
     var file = new File(req.files.file);
-    console.log(file);
-    //res.status(200).send({message:'success'});
-    //fs.renameSync(file.path, file_path + file.name);
-    //Folder.findById(folderId, function(err, folder) {
-    //    if(err) {
-    //        console.error(err);
-    //        res.status(500).send({message: "数据库错误，未能找到文件夹"});
-    //    }
-    //    if(folder) {
-    //        console.log(folder);
-    //        file.subject = folder.subject;
-    //        file.semester = folder.semester;
-    //        file.path = file_path + file.name;
-    //        file.save(function(err) {
-    //            if(err) {
-    //                res.status(500).send({message: "数据库错误，未能保存此文件"});
-    //            }
-    //            folder.files = folder.files.concat(file._id);
-    //            folder.save(function(err) {
-    //                if(err) {
-    //                    res.status(500).send({message: "数据库错误，未能保存文件夹"});
-    //                }else {
-    //                    res.status(200).send({message: "上传成功"});
-    //                }
-    //            });
-    //        });
-    //    }else {
-    //        res.status(404).send({message: "此文件夹不存在" + folderId});
-    //    }
-    //});
+    file.description = req.body.description;
+    file.owner = req.user._id;
+    saveFile(file, folderId, res);
 };
+
+exports.uploadRepo = function(req, res) {
+    var folderId = req.body.folderId;
+    var file = new File(req.files.file);
+    file.description = req.body.description;
+    file.owner = req.user._id;
+    saveFile(file, folderId, res);
+};
+
+exports.editFile = function(req, res) {
+    var fileId = req.body.fileId;
+    console.log(fileId);
+    var newFile = req.files.file;
+    File.findById(fileId, function(err, file) {
+        if(err) {
+            console.error(err);
+            res.status(500).send({message: "数据库错误， 未能找到该文件"});
+        }
+        if(file) {
+            newFile.name = file._id.toString();
+            fs.renameSync(file.path, trash_path + file.name); // move the old file to trash
+            fs.renameSync(newFile.path, file_path + newFile.name); // move the new file to sunpack
+            file.type = getFileType(newFile.extension);
+            file.originalname = newFile.extension? req.body.originalname + '.'+ newFile.extension : req.body.originalname ;
+            file.description = req.body.description;
+            file.name = newFile.name;
+            file.path = file_path + newFile.name;
+            file.size = newFile.size;
+            file.extension = newFile.extension;
+            file.mimetype = newFile.mimetype;
+            file.save(function(err) {
+                if(err) {
+                    res.status(500).send({message: "数据库错误，未能保存此文件"});
+                }else {
+                    res.status(200).send({message: "修改成功", originalname: file.originalname, description: file.description, size: file.size});
+                }
+            });
+        }else {
+            res.status(404).send({message: "此文件不存在" + fileId});
+        }
+    })
+};
+
+//exports.uploadFile = function(req, res) {
+//    var fileId = req.param('fileId');
+//    var file = new File(req.files.file);
+//    console.log(file);
+//};
 
 
 /**

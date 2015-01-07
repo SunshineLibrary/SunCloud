@@ -31,14 +31,11 @@
                 </tr>
             </table>
             <hr/>
-            <h4>我教授的班级
-                <a class="btn btn-primary pull-right" role="button" href="#claimRoomDialog" data-toggle="modal"><span class="glyphicon glyphicon-shopping-cart"></span> 认领班级</a>
-            </h4>
-            <div ng-hide="myRooms.length" align="center">
-                     <p>您还没有任何班级</p>
-                <a class="btn btn-primary" role="button" href="#claimRoomDialog" data-toggle="modal"><span class="glyphicon glyphicon-shopping-cart"></span> 认领班级</a>
-            </div>
+
             <div ng-show="myRooms.length">
+                <h4>我教授的班级
+                    <a class="btn btn-primary pull-right" role="button" href="#claimRoomDialog" data-toggle="modal"><span class="glyphicon glyphicon-shopping-cart"></span> 认领班级</a>
+                </h4>
                 <span ng-repeat="room in myRooms">
                     <a ng-href="/#/myrooms/{{room._id}}" role="button" class="btn btn-info btn-lg">
                         {{room.name}}
@@ -46,6 +43,11 @@
                     &nbsp;&nbsp;
                 </span>
             </div>
+            <div ng-hide="myRooms.length" align="center">
+                     <h4>您还没有任何班级</h4>
+                <a class="btn btn-primary" role="button" href="#claimRoomDialog" data-toggle="modal"><span class="glyphicon glyphicon-shopping-cart"></span> 认领班级</a>
+            </div>
+
             <hr/>
 
         </div>

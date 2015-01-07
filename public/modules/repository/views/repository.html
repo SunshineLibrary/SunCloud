@@ -1,37 +1,18 @@
 <div class="container-fluid">
     <div class="col-md-12 col-sm-12 col-lg-12">
         <div class="row page-header">
-            <!--图片 视频 音频 文档 电子书 其他-->
-            <!--<span class="col-md-5 col-lg-5">-->
-                <!--<div class="btn-group pull-left">-->
-                    <!--<button class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown">-->
-                        <!--请选择科目 <span class="caret"></span>-->
-                    <!--</button>-->
-                    <!--<ul role="menu" class="dropdown-menu dropdown-menu-inverse">-->
-                        <!--<li>-->
-                            <!--<a href="" ng-click="selectAllSubjects()">全部科目</a>-->
-                        <!--</li>-->
-                        <!--<li ng-repeat="subject in subjects">-->
-                            <!--<a href="" ng-click="selectSubject(subject._id)">{{subject.name}}</a>-->
-                        <!--</li>-->
-
-                    <!--</ul>-->
-                <!--</div>&lt;!&ndash; /btn-group &ndash;&gt;-->
             <div class="col-md-2">
                 <select name="" id="selectSubject" class="form-control" data-ng-options="subject._id as subject.name for subject in allSubjects" data-ng-model="selectedSubject" data-ng-change="filter()" >
-                    <!--<option style="" value="all">所有科目</option>-->
                 </select>
             </div>
             &nbsp;
             <div class="col-md-2">
                 <select name="" id="selectSemester" class="form-control" data-ng-options="subject._id as subject.name for subject in allSemesters" data-ng-model="selectedSemester" data-ng-change="filter()" >
-                    <!--<option style="" value="all">所有科目</option>-->
                 </select>
             </div>
 
             <div class="col-md-2">
                 <select name="" id="selectSchool" class="form-control" data-ng-options="subject._id as subject.name for subject in allSchools" data-ng-model="selectedSchool" data-ng-change="filter()" >
-                    <!--<option style="" value="all">所有学校</option>-->
                 </select>
             </div>
 
@@ -51,8 +32,8 @@
 
         <div class="inline">
              <ul class="nav nav-pills nav-success pull-left">
-                 <li ng-class="{true: 'active', false: 'inactive'}[showingFolders]"><a href="" ng-click="showFolders()"><i class="fa fa-folder"></i> 显示文件夹</a></li>
-                 <li ng-class="{true: 'inactive', false: 'active'}[showingFolders]"><a href="" ng-click="showFiles()"><i class="fa fa-file"></i> 显示文件</a></li>
+                 <li ng-class="{true: 'active', false: 'inactive'}[showingFolders]"><a href="" ng-click="showFolders()"><i class="fa fa-folder-o"></i> 所有文件夹</a></li>
+                 <li ng-class="{true: 'inactive', false: 'active'}[showingFolders]"><a href="" ng-click="showFiles()"><i class="fa fa-files-o"></i> 所有文件</a></li>
              </ul>
             &nbsp;&nbsp;
             <span class="pull-left" ng-hide="showingFolders">
@@ -84,7 +65,7 @@
 
 <div class="modal fade" id="addResourceDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
      aria-hidden="true" style="overflow-y:scroll">
-    <div class='modal-dialog' style="left: auto">
+    <div class='modal-dialog modal-lg' style="left: auto">
         <div class='modal-content'>
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span></button>
@@ -92,54 +73,184 @@
             </div>
             <div class="modal-body">
                 <form name="addResourceForm" novalidate>
-                    <div class="input-group">
-                        <span class="input-group-addon">科目</span>
-                        <select class="form-control select-primary" data-ng-options="subject.name for subject in subjects" data-ng-model="newResource.subject"  required>
+                    <div class="input-group focus">
+                        <span class="input-group-addon">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-th-large"></i> 科目</span>
+                        <select class="form-control select-primary"  style="width:300px" data-ng-options="subject.name for subject in subjects" data-ng-model="newResource.subject"  required>
                             <option style="display:none" value="">请选择科目</option>
                         </select>
                     </div>
-                    <br/>
-                    <div class="input-group">
-                        <span class="input-group-addon">年级</span>
-                        <select class="form-control select-primary" data-ng-options="semester.name for semester in semesters" data-ng-model="newResource.semester" required>
+                    <!--<br/>-->
+                    <div class="input-group focus" style="margin-top:10px">
+                        <span class="input-group-addon">&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-graduation-cap"></i> 年级</span>
+                        <select class="form-control select-primary" style="width:300px" data-ng-options="semester.name for semester in semesters" data-ng-model="newResource.semester" required>
                             <option style="display:none" value="">请选择年级</option>
                         </select>
                     </div>
-                    <br/>
-                    <div class="input-group">
-                        <span class="input-group-addon">文件夹</span>
+
+                    <!--<br/>-->
+                    <div class="input-group focus" style="margin-top:10px">
+                        <span class="input-group-addon"><i class="fa fa-folder-o"></i> 文件夹</span>
                         &nbsp;
                         &nbsp;
-                        <select class="form-control select-primary" style="width:auto" data-ng-options="semester.name for semester in folders" data-ng-model="newResource.folder" required>
-                            <option style="display:none" value="">请选择文件夹</option>
-                            <option value="">不放入文件夹</option>
+                        <select class="form-control select-primary" style="width:300px" data-ng-options="folder._id as folder.name for folder in theRootFolders" data-ng-model="newResource.folderId" required>
+                            <option style="display:none" value="" ng-if="theRootFolders.length">请选择文件夹</option>
+                            <option style="display:none" value="" ng-if="!theRootFolders.length">没有可选文件夹</option>
                         </select>
-                        &nbsp;
-                        <div class="pull-right">
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <span class="pull-left" style="margin-left:10px">
                             <div  ng-hide="isCreatingFolder">
-                                <button class="btn btn-primary" ng-click="toCreateFolder()"><i class="fa fa-folder-open"></i> 新建文件夹</button>
+                                <button class="btn btn-success"  ng-click="toCreateFolder()"><i class="fa fa-folder-open"></i> 新建文件夹</button>
                             </div>
                             <div ng-show="isCreatingFolder">
                                 <form class="form-group form-inline" name="newFolderForm">
-                                    <input type="text" class="form-control" style="width:200px" placeholder="请输入文件夹名" ng-model="newFolderName" required/>
+                                    <input type="text" class="form-control" style="width: 150px" placeholder="请输入文件夹名" ng-model="newFolderName"/>
                                     <button class="btn btn-default" ng-click="cancelCreate()">取消</button>
                                     <button class="btn btn-success" ng-click="createFolder()" ng-disabled="newFolderForm.$invalid">新建</button>
                                 </form>
+                                &nbsp;&nbsp;&nbsp;&nbsp;
+                                <span class="pull-right" ng-show="error.subject" style="color:red">请选择科目</span>
+                                <span class="pull-right" ng-show="error.semester" style="color:red">请选择年级</span>
+                                <span class="pull-right" ng-show="error.folder" style="color:red">请输入文件夹名</span>
+                            </div>
+                        </span>
+                    </div>
+
+                    <!--<br/>-->
+                    <div class="input-group focus"  style="margin-top:10px" >
+                        <span class="input-group-addon">&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-files-o"></i> 文件</span>
+                        <!--<input type="file" nv-file-select uploader="uploader" multiple/>-->
+
+                        <div class="form-group" style="margin-bottom: -9px">
+                            <div class="fileinput fileinput-new" data-provides="fileinput">
+                                    <span class="btn btn-inverse btn-embossed btn-file">
+                                      <span class="fileinput-new"><span class="fa fa-cloud-upload"></span> 上传文件</span>
+                                      <span class="fileinput-exists"><span class="fa fa-cloud-upload"></span> 继续上传</span>
+                                      <input type="file" name="..." nv-file-select uploader="uploader" multiple>
+                                    </span>
+                                <span class="text-info">最多可上传10个文件</span>
+                                <span class="text-danger" ng-show="error.limit">&nbsp;&nbsp;超过文件个数限制</span>
+                                <span class="fileinput-filename"></span>
+                                <a href="#" class="close fileinput-exists" data-dismiss="fileinput" style="float: none">×</a>
                             </div>
                         </div>
                     </div>
-                    <div class="pull-right" ng-show="error.subject" style="color:red">请选择科目</div>
-                    <div class="pull-right" ng-show="error.semester" style="color:red">请选择年级</div>
-                    <div class="pull-right" ng-show="error.folder" style="color:red">请输入文件夹名</div>
-                    <br/>
-                    <div class="input-group">
-                        <span class="input-group-addon">文件</span>
+
+                        <div ng-show="uploader.queue.length">
+                            <p class="pull-right"><strong>文件个数： {{uploader.queue.length}}</strong></p>
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th width="30%">文件名</th>
+                                    <th>描述</th>
+                                    <th ng-show="uploader.isHTML5">大小</th>
+                                    <th ng-show="uploader.isHTML5">进度</th>
+                                    <th>状态</th>
+                                    <th>操作</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-repeat="item in uploader.queue">
+                                    <td><strong>{{ item.file.name }}</strong></td>
+                                    <td>
+                                        <span ng-show="item.file.description">{{item.file.description}}</span>
+                                        <span ng-hide="item.file.description"><button class="btn btn-success btn-xs" ng-click="toAddDescription($index)" ng-disabled="item.isSuccess">{{item.file.description}} <i class="fa fa-newspaper-o"></i> 添加</button></span>
+                                    </td>
+                                    <td ng-show="uploader.isHTML5" nowrap>{{ item.file.size/1024/1024|number:2 }} MB</td>
+                                    <td ng-show="uploader.isHTML5">
+                                        <div class="progress" style="margin-bottom: 0;">
+                                            <div class="progress-bar" role="progressbar" ng-style="{ 'width': item.progress + '%' }"></div>
+                                        </div>
+                                    </td>
+                                    <td class="text-center">
+                                        <span ng-show="item.isSuccess"><i class="glyphicon glyphicon-ok text-success"></i></span>
+                                        <span ng-show="item.isCancel"><i class="glyphicon glyphicon-ban-circle text-warning"></i></span>
+                                        <span ng-show="item.isError"><i class="glyphicon glyphicon-remove text-danger"></i></span>
+                                    </td>
+                                    <td nowrap>
+                                        <!--<button type="button" class="btn btn-success btn-xs" ng-click="item.upload()" ng-disabled="item.isReady || item.isUploading || item.isSuccess">-->
+                                            <!--<span class="glyphicon glyphicon-upload"></span>上传-->
+                                        <!--</button>-->
+                                        <!--<button type="button" class="btn btn-warning btn-xs" ng-click="item.cancel()" ng-disabled="!item.isUploading">-->
+                                        <!--<span class="glyphicon glyphicon-ban-circle"></span>取消-->
+                                        <!--</button>-->
+                                        <button type="button" class="btn btn-success btn-xs" ng-click="toEditFile($index)" ng-disabled="item.isSuccess">
+                                            <span class="glyphicon glyphicon-edit"></span> 编辑
+                                        </button>
+                                        <button type="button" class="btn btn-danger btn-xs" ng-click="item.remove()" ng-disabled="item.isSuccess">
+                                            <span class="glyphicon glyphicon-trash"></span> 删除
+                                        </button>
+                                    </td>
+                                </tbody>
+                            </table>
+
+
+                            <div>
+                                上传进度:
+                                <div class="progress" style="">
+                                    <div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" ng-style="{ 'width': uploader.queue[0].progress + '%' }"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" ng-click="close('No')" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <!--<button type="button" ng-click="addResource()" ng-disabled="addResourceForm.$invalid" class="btn btn-success">确定</button>-->
+                <button type="button" class="btn btn-success btn-s" ng-click="uploader.uploadAll()" ng-disabled="!uploader.getNotUploadedItems().length || addResourceForm.$invalid">
+                    <span class="glyphicon glyphicon-upload"></span> 上传
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<div class="modal fade" id="editFileDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class='modal-dialog'>
+        <div class='modal-content'>
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span></button>
+                <h4 class="modal-title">编辑文件信息</h4>
+            </div>
+            <div class="modal-body">
+                <form name="editForm" class="form-group">
+                    <div class="input-group focus">
+                        <span class="input-group-btn"><button class="btn" type="button"><span class="fa fa-file"> 文件名</span></button></span>
+                        <input type="text" id="newName" class="form-control"  placeholder="文件名" ng-model="editFile.fileName" required>
+                    </div>
+                    <br>
+                    <div class="input-group focus">
+                        <span class="input-group-btn"><button class="btn" type="button"><span class="fa fa-newspaper-o"> 描述</span></button></span>
+                        <input type="text" id="newDescription" class="form-control"  placeholder="文件描述" ng-model="editFile.description" >
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" ng-click="close('No')" class="btn btn-default" data-dismiss="modal">取消</button>
-                <button type="button" ng-click="addResource()" ng-disabled="addResourceForm.$invalid" class="btn btn-success">确定</button>
+                <button class="btn btn-defautl" data-dismiss="modal">取消</button>
+                <button class="btn btn-success btn-lg" ng-click="editFile(editFile)" ng-disabled="editForm.$invalid">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="addDescriptionDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class='modal-dialog'>
+        <div class='modal-content'>
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span></button>
+                <h4 class="modal-title">添加文件描述</h4>
+            </div>
+            <div class="modal-body">
+                <form name="addDescriptionForm"  class="form-group input-group input-group-lg">
+                    <input class="form-control" placeholder="请输入文件描述" ng-model="newResource.description" required>
+                    <div class="input-group-btn">
+                        <button type="button" class="btn btn-success" ng-click="addDescription()" ng-disabled="addDescriptionForm.$invalid">确定</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

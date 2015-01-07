@@ -88,6 +88,8 @@ angular.module('users').controller('SettingsController', ['$scope', '$http', '$l
 		}).on('blur', '.form-control', function () {
 			$(this).closest('.input-group, .form-group').removeClass('focus');
 		});
+		$('[data-toggle="tooltip"]').tooltip();
+
 
 	}
 ]);

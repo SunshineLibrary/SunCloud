@@ -1,2 +1,7 @@
 /*table#subject-table tr td a { visibility:hidden;}*/
 /*table#subject-table tr:hover td a { display:inline-block; background-color:#ff0000 !important;}*/
+
+.tooltip {
+    position: fixed !important;
+    z-index: 1000 !important;
+}

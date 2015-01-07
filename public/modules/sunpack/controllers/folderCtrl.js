@@ -1,11 +1,12 @@
 angular.module('sunpack')
     .controller('folderController',
-    ['$scope', 'folder', 'RoomDataProvider', 'FolderDataProvider', 'FileDataProvider','AuthService', '$stateParams', 'FileUploader', '$state', function ($scope, folder, RoomDataProvider, FolderDataProvider, FileDataProvider,AuthService, $stateParams, FileUploader, $state) {
+    ['$scope', 'folder', 'RoomDataProvider', 'FolderDataProvider', 'FileDataProvider','AuthService', '$stateParams', 'FileUploader', '$state', '$http', function ($scope, folder, RoomDataProvider, FolderDataProvider, FileDataProvider,AuthService, $stateParams, FileUploader, $state, $http) {
         $scope.folder = folder;
         $scope.files = $scope.folder.files;
         $scope.myRoomsAssigned = [];
         $scope.error = {};
         $scope.temp = {};
+        $scope.editFile = {};
         var me = AuthService.me;
         var myRoomsPromise = RoomDataProvider.getRoomsByTeacher(me._id);
 
@@ -66,13 +67,67 @@ angular.module('sunpack')
                 })
         };
 
+        $scope.toEditFile = function(index) {
+            $scope.index = index;
+            $scope.theFile= $scope.uploader.queue[index].file;
+            var dotIndex = $scope.theFile.name.lastIndexOf('.');
+            $scope.editFile.fileName = $scope.theFile.name.substr(0, dotIndex < 0 ? $scope.theFile.name.length : dotIndex);
+            $scope.editFile.extension = $scope.theFile.name.substr(dotIndex < 0 ? $scope.theFile.name.length : dotIndex, $scope.theFile.name.length);
+            $scope.editFile.description = $scope.theFile.description;
+            $('#editFileBeforeUploadDialog').modal('show');
+        };
+        $scope.editFileNameAndDescription= function() {
+            $scope.uploader.queue[$scope.index].file.name = $scope.editFile.fileName + $scope.editFile.extension;
+            $scope.uploader.queue[$scope.index].file.description = $scope.editFile.description;
+            $('#editFileBeforeUploadDialog').modal('hide');
+        };
 
+        $scope.toAddDescription = function(index) {
+            $scope.index = index;
+            $('#addDescriptionDialog').modal('show');
+        };
+        $scope.addDescription = function() {
+            $scope.uploader.queue[$scope.index].file.description = $scope.temp.description;
+            $scope.temp.description = null;
+            $('#addDescriptionDialog').modal('hide');
+        };
+        $scope.toAddDescriptionOnRow = function(row) {
+            $scope.row = row;
+            $('#addDescriptionOnRowDialog').modal('show');
+        };
+        $scope.addDescriptionOnRow = function(row) {
+            var info = {};
+            info._id = row.entity._id;
+            info.description = $scope.temp.description;
+            FileDataProvider.addDescription(info).success(function(newFile) {
+                swal({title: '添加描述成功', type: 'success', timer: 1500});
+                $scope.row.entity.description = newFile.description;
+                $('#addDescriptionOnRowDialog').modal('hide');
+                $scope.temp.description = null;
+            }).error(function(err) {
+                console.error(err);
+                swal({title: '添加描述失败', text: '请重试',type: 'error', timer: 2000});
+            });
+        };
         $scope.uploader = new FileUploader({
             url: "/upload/files/" + folder._id,
             method: "POST",
             queueLimit: 10
         });
+        $scope.uploader.filters.push({
+            name: 'queueLimit',
+            fn: function () {
+                $scope.error.limit = (this.queue.length > 10);
+                return this.queue.length < 11;
+            }
+        });
+        $scope.uploader.onBeforeUploadItem = function(item) {
+            console.log(item);
+            console.log('~~~~~', typeof item.file.description === "undefined");
 
+            item.formData = [{description: (typeof item.file.description === "undefined") ? "": item.file.description}];
+            console.log('~~',item.formData);
+        };
         $scope.uploader.onErrorItem = function(item, response, status) {
             swal({title: " 上传失败", text: response.message,type: 'error'});
             if (status == 406) {
@@ -81,6 +136,17 @@ angular.module('sunpack')
         };
         $scope.uploader.onCompleteAll = function() {
             console.info('onCompleteAll');
+        };
+
+        $scope.editFileUploader = new FileUploader({
+            url: "/edit/file",
+            method: "POST",
+            queueLimit: 1
+        });
+        $scope.editFileUploader.onBeforeUploadItem = function(item) {
+            var name = $scope.temp.newFileName;
+            var description =  (typeof $scope.temp.newFileDescription === "undefined") ? "": $scope.temp.newFileDescription;
+            item.formData = [{fileId: $scope.row.entity._id,originalname: name,description: description}];
         };
 
         $scope.showEditFolderDialog = function() {
@@ -113,40 +179,47 @@ angular.module('sunpack')
             event.stopPropagation();
             $('#editFileDialog').modal('show');
             $scope.row = row;
-            $scope.temp.newFileName = row.entity.originalname;
+            var dotIndex = $scope.row.entity.originalname.lastIndexOf('.');
+            $scope.temp.newFileName = $scope.row.entity.originalname.substr(0, dotIndex < 0 ? $scope.row.entity.originalname.length : dotIndex);
+            $scope.temp.extension = $scope.row.entity.originalname.substr(dotIndex < 0 ? $scope.row.entity.originalname.length : dotIndex, $scope.row.entity.originalname.length);
             $scope.temp.newFileDescription = row.entity.description;
-            $scope.uploader = new FileUploader({
-                url: "/upload/file/" + $scope.row.entity._id,
-                method: "POST",
-                queueLimit: 1
-            });
         };
 
 
         $scope.editFile = function(row) {
             var info = {};
             info._id = row.entity._id;
-            info.name = $scope.temp.newFileName;
+            info.name = $scope.temp.newFileName + $scope.temp.extension;
             info.description = $scope.temp.newFileDescription;
-
-            $scope.uploader.onCompleteAll = function() {
-                console.info('onCompleteAll');
-                $('#editFileDialog').modal('hide');
-                swal({title: "修改成功", type: "success", timer: 1000 });
-            };
-            //FileDataProvider.editFileNameAndDescription(info)
-            //    .success(function(editedFile) {
-            //        $scope.row.entity.originalname = editedFile.originalname;
-            //        $scope.row.entity.description = editedFile.description;
-            //        console.log(editedFile);
-            //        console.log($scope.uploader);
-            //        //$scope.uploader.uploadAll();
-            //
-            //    })
-            //    .error(function(err) {
-            //        console.error(err);
-            //        swal({title: "修改失败", text: "请重试", type: "error", timer: 2000 });
-            //    })
+            if($scope.editFileUploader.queue.length) {
+                $scope.editFileUploader.uploadAll();
+                $scope.editFileUploader.onErrorItem = function(item, response, status) {
+                    swal({title: " 修改文件内容失败", text: response.message,type: 'error', timer: 2000});
+                    if (status == 406) {
+                        $scope.uploader.clearQueue();
+                    }
+                };
+                $scope.editFileUploader.onSuccessItem = function(item, response) {
+                    swal({title: "修改文件成功", type: 'success', timer: 2000});
+                    $('#editFileDialog').modal('hide');
+                    $scope.row.entity.originalname = response.originalname;
+                    $scope.row.entity.description = response.description;
+                    $scope.row.entity.size = response.size;
+                };
+            }else {
+                FileDataProvider.editFileNameAndDescription(info)
+                    .success(function(editedFile) {
+                        $scope.row.entity.originalname = editedFile.originalname;
+                        $scope.row.entity.description = editedFile.description;
+                        $scope.temp = {};
+                        swal({title: '修改成功', type: 'success', timer: 2000});
+                        $('#editFileDialog').modal('hide');
+                    })
+                    .error(function(err) {
+                        console.error(err);
+                        swal({title: '修改失败', text: '请重试', type: 'error'});
+                    })
+            }
         };
 
 
@@ -174,38 +247,6 @@ angular.module('sunpack')
                 });
         };
 
-
-
-        $scope.downloadFile = function (event, row) {
-            event.stopPropagation();
-            swal({
-                    title: "您确定要下载"+row.entity.originalname+"吗?",
-                    //text: "删除之后，文件信息将无法找回",
-                    type: "warning",
-                    showCancelButton: true,
-                    cancelButtonText: "取消",
-                    confirmButtonColor: "#DD6B55",
-                    confirmButtonText: "删除",
-                    closeOnConfirm: false },
-                function(){
-                    FileDataProvider.deleteFile(row.entity._id)
-                        .success(function(file){
-                            swal({title: "删除成功", type: "success", timer: 1000 });
-                            $scope.files.splice($scope.files.indexOf(row.entity),1);
-                        })
-                        .error(function(err){
-                            console.error(err);
-                            swal({title: "删除失败", text: "请重试", type: 'error'})
-                        })
-                });
-        };
-
-
-
-
-
-console.log($scope.files);
-
         $scope.gridOptions =
         {
             data: 'files',
@@ -216,15 +257,18 @@ console.log($scope.files);
             'class="ngCell {{col.cellClass}}" ng-cell></div>',
             columnDefs: [
                 {field: '_id', visible: false},
-                {field: 'type', displayName: '类型', width: '15%',cellTemplate: '<div><span ng-bind-html="row.entity.type | typeFilter"></span></div>'},
-                {field: 'originalname', displayName: '文件名称', cellTemplate: '<div><a>{{row.entity.originalname}}</a></div>'},
+                {field: 'type', displayName: '类型', width: '8%',cellTemplate: '<div><span ng-bind-html="row.entity.type | typeFilter"></span></div>'},
+                {field: 'originalname', displayName: '文件名称', width: '35%', cellTemplate: '<div><a ng-click="selectFile()">{{row.entity.originalname}}</a></div>'},
+                {field: 'description', displayName: '描述', cellTemplate: '<div ng-show="row.entity.description">' +
+                '<a title="文件描述:{{row.entity.description}}" id="info-tooltip" data-placement="right" data-toggle="tooltip"  type="button"><i class="glyphicon glyphicon-info-sign" ng-mouseover="tooltip()"></i></a>'+
+                ' {{row.entity.description}}</div><div ng-hide="row.entity.description"><button class="btn btn-xs btn-success" ng-click="toAddDescriptionOnRow(row)"><i class="fa fa-comments"></i> 添加</button></div>'},
                 {field: 'users.length', displayName: '使用人数', width: '10%'},
-                {field: 'size', displayName: '大小',width: '10%', cellTemplate: '<div>{{row.entity[col.field]/1024/1024 | number:2}} MB</div>'},
-                {field: '', displayName: '编辑', width: '15%',cellTemplate:
+                {field: 'size', displayName: '文件大小',width: '10%', cellTemplate: '<div>{{row.entity[col.field]/1024/1024 | number:2}} MB</div>'},
+                {field: '', displayName: '编辑', width: '10%',cellTemplate:
                 '<div class="ngCellText" ng-class="col.colIndex()" ng-show="showedit">' +
                 '<a class="fui-new text-success" ng-click="showEditFileDialog($event, row)"></a> &nbsp;&nbsp;' +
                 '<a class="fui-cross text-danger" ng-click="deleteFile($event,row)"></a>' +
-                '&nbsp;&nbsp;<a class="glyphicon glyphicon-download-alt text-primary" ng-click="downloadFile($event,row)"></a></div>'}
+                '&nbsp;&nbsp;<a ng-href="/download/files/{{row.entity._id}}" class="glyphicon glyphicon-download-alt text-primary"></a></div>'}
             ],
             selectedItems: []
         };
@@ -246,16 +290,46 @@ console.log($scope.files);
             $this.closest('.table').find('tbody :checkbox').radiocheck(!ch ? 'uncheck' : 'check');
         });
         // Focus state for append/prepend inputs
-        $('.input-group').on('focus', '.form-control', function () {
-            $(this).closest('.input-group, .form-group').addClass('focus');
-        }).on('blur', '.form-control', function () {
-            $(this).closest('.input-group, .form-group').removeClass('focus');
-        });
-        // Tooltips
-        $('[data-toggle="tooltip"]').tooltip();
+        //$('.input-group').on('focus', '.form-control', function () {
+        //    $(this).closest('.input-group, .form-group').addClass('focus');
+        //}).on('blur', '.form-control', function () {
+        //    $(this).closest('.input-group, .form-group').removeClass('focus');
+        //});
+        //// Tooltips
+        //$('[data-toggle="tooltip"]').tooltip();
+        //// Add style class name to a tooltips
+        //$('.tooltip').addClass(function () {
+        //    if ($(this).prev().attr('data-tooltip-style')) {
+        //        return 'tooltip-' + $(this).prev().attr('data-tooltip-style');
+        //    }
+        //});
+        //
+        //$(function () {
+        //    $('[data-toggle="tooltip"]').tooltip()
+        //})
+        $scope.tooltip = function() {
+             console.log('tool~~~~~');
+            $('[data-toggle="tooltip"]').tooltip();
+            // Add style class name to a tooltips
+            $('.tooltip').addClass(function () {
+                if ($(this).prev().attr('data-tooltip-style')) {
+                    return 'tooltip-' + $(this).prev().attr('data-tooltip-style');
+                }
+            });
+        };
+        $scope.popover = function() {
+            $('[data-toggle="popover"]').popover();
+        };
+        //$('#info-tooltip').tooltip('show');
+        //
+        ////$('[data-toggle="tooltip"]').tooltip();
+        //$( document ).ready(function() {
+        //    //$('[data-toggle="tooltip"]').tooltip("show");
+        //    $('#info-tooltip').tooltip('show');
+        //});
 
-        // Popovers
-        $('[data-toggle="popover"]').popover();
+        $('[data-toggle="checkbox"]').radiocheck();
+
 
 
     }

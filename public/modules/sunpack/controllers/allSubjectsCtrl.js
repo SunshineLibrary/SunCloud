@@ -93,6 +93,9 @@ angular.module('sunpack')
             if ($('[data-toggle="select"]').length) {
                 $('[data-toggle="select"]').select2();
             }
+            $('[data-toggle="tooltip"]').tooltip();
+            $('[data-toggle="popover"]').popover();
+
 
             //console.log($scope.subjects);
 

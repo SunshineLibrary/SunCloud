@@ -43,6 +43,7 @@ module.exports = {
 				'public/lib/bootstrap/dist/css/bootstrap.css',
 				//'public/lib/bootstrap/dist/css/bootstrap-theme.css',
 				'public/lib/flat-ui-pro/dist/css/flat-ui-pro.css',
+				'public/lib/flat-ui-pro/docs/assets/css/docs.css',
                 'public/lib/angular-ui-grid/ui-grid.css',
 				'public/lib/ng-grid/ng-grid.css',
 				'public/lib/sweetalert/lib/sweet-alert.css',

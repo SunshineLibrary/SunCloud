@@ -1,53 +1,29 @@
 
 <div>
     <div class="page-header" style="margin-top:20px">
-        <span ng-hide="editorEnabled">
+        <span  ng-hide="editorEnabled">
             <span class="h3">{{app.name}}</span>&nbsp;
             <a href="" ng-click="enableEditor()" class="glyphicon glyphicon-edit" ng-show="isRootOrAdminOrSelf"></a>
         </span>
+
         <span ng-show="editorEnabled" class="form-inline">
             <input type="text" style="color: black; font-size: large" class="form-control" ng-model="editablename"/>
             <a role="button" ng-click="save()" class="btn btn-primary btn-info glyphicon glyphicon-ok" >保存</a>
             <a role="button" ng-click="disableEditor()" class="btn btn-default glyphicon glyphicon-remove" >取消</a>
         </span>
-
-        &nbsp;
-        <span><a href=""><i class="fa fa-anchor"></i></a></span>
-        &nbsp;
-        <span><a href=""><i class="fa fa-share-alt"></i></a></span>
-        <span ng-hide="editor2Enabled">
-            <span class="label label-primary" ng-click="enableEditor2()">需要手动推送给班级</span>
-        </span>
-        <span ng-show="editor2Enabled">
-            <select class="form-control select select-inverse select-block mbl" id="pushAppSelect" ng-model="default_installed">
-                    <option value="false">需要手动推送给班级</option>
-                    <option value="true">默认分配给所有班级</option>
-            </select>
+        &nbsp;&nbsp;
+        <span class="onoffswitch" style="margin-top:15px;margin-left:10px" ng-show="isRootOrAdminOrSelf">
+            <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" ng-model="default_installed" ng-change="changeOption()">
+            <label class="onoffswitch-label" for="myonoffswitch">
+                <span class="onoffswitch-inner"></span>
+                <span class="onoffswitch-switch"></span>
+            </label>
         </span>
 
-
-
-        <!--<span class="bootstrap-switch-square">-->
-            <!--<input type="checkbox" style="width:600px" checked data-toggle="switch" data-on-text="手动推送" data-off-text="否"  name="pushAppSwitch" id="pushAppSwitch" />-->
-        <!--</span>-->
-        <span class="bootstrap-switch-square" ng-show="isSelf">
+          <span class="bootstrap-switch-square" ng-show="isSelf" style="margin-left:180px;margin-top: -10px">
             <input type="checkbox" data-size="xx-large" checked data-toggle="switch" data-on-text="共享" data-off-text="不共享" data-handle-width="200px" data-label-width="200px" name="shareSwitch" id="shareSwitch" />
         </span>
-        <!-- Square switch -->
 
-        <!--<div class="bootstrap-switch-square">-->
-            <!--<input type="checkbox" checked data-toggle="switch" id="custom-switch-03" data-on-text="<span class='fui-check'></span>" data-off-text="<span class='fui-cross'></span>" />-->
-        <!--</div>-->
-
-        <!--<span ng-hide="editor2Enabled">-->
-            <!--<span class="h3">{{item.name}}</span>-->
-            <!--<a href="" ng-click="editor2Enabled=!editor2Enabled" class="glyphicon glyphicon-edit"></a>-->
-        <!--</span>-->
-
-        <!--<span ng-show="editor2Enabled">-->
-            <!--<select  class="form-control" style="width:auto" ng-model="item" ng-options="item.name for item in pushOptions">-->
-            <!--</select>-->
-        <!--</span>-->
         <span class="pull-right">
             <a ng-show="isRootOrAdminOrSelf" role="button" class="btn btn-primary" href="#uploadApkDialog" data-toggle="modal"><i class="glyphicon glyphicon-cloud-upload"></i> 上传安装包</a>
             <a role="button" class="btn btn-primary" href="" ng-click="toAssignApp()"><i class="glyphicon glyphicon-gift"></i> 分配给班级</a>
@@ -88,7 +64,7 @@
 <!--------------------------------Modal--------------------->
 <div class="modal fade" id="assignAppDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
      aria-hidden="true" style="overflow-y:scroll">
-    <div class='modal-dialog' style="left: auto">
+    <div class='modal-dialog modal-sm' style="left: auto">
         <div class='modal-content'>
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span></button>
@@ -102,14 +78,14 @@
                 <!--</label>-->
                 <!--selected：{{selectedRooms2}}-->
                 <!--<!--<button class="btn btn-success pull-right" ng-click="assignToRooms()"> 分配</button>-->
-                <div style="margin-left:180px">
+                <div align="right">
                     <button class="btn btn-primary" ng-click="checkAll()">全选</button>
-                    <button class="btn btn-default" ng-click="uncheckAll()">全不选</button>
+                    <button class="btn btn-inverse" ng-click="uncheckAll()">全不选</button>
                 </div>
-
-                <ul class="assign-class-list-long-{{myRooms.length > 5}}">
+                <hr/>
+                <ul class="assign-class" ng-show="myRooms.length">
                     <li  ng-repeat="room in myRooms">
-                        <checkbox median class="btn-success" style="margin-top:7px" ng-model="selected[$index]"></checkbox> &nbsp;&nbsp;&nbsp;&nbsp;{{room.name}}
+                        <checkbox small class="btn-success" style="margin-top:2px" data-ng-model="selected[$index]"></checkbox> &nbsp;&nbsp;{{room.name}}
                     </li>
                 </ul>
 
@@ -137,18 +113,31 @@
             </div>
             <div class='modal-body'>
                 <div align="center">
-                    <input type="file" nv-file-select uploader="uploader">
+                    <!--<input type="file" nv-file-select uploader="uploader">-->
+                    <div class="form-group" style="margin-bottom: -9px">
+                        <div class="fileinput fileinput-new" data-provides="fileinput">
+                                    <span class="btn btn-inverse btn-embossed btn-file">
+                                      <span class="fileinput-new"><span class="fa fa-cloud-upload"></span> 上传安装包</span>
+                                      <span class="fileinput-exists"><span class="fa fa-cloud-upload"></span> 上传安装包</span>
+                                      <input type="file" name="..." nv-file-select uploader="uploader">
+                                    </span>
+                            <span class="fileinput-exists"> 一次只能上传一个文件</span>
+                            <!--<span class="fileinput-filename"></span>-->
+                            <!--<a href="#" class="close fileinput-exists" data-dismiss="fileinput" style="float: none">×</a>-->
+                        </div>
+                    </div>
                     <span style="color: red" ng-show="error.extension">只能上传后缀名为apk的文件</span>
                     <span style="color: red" ng-show="error.limit">一次只能上传一个文件，请删除其他文件</span>
+                    <span style="color: red" ng-show="error.package">此文件内部包名和之前包名不一致， 请确认该安装包是否正确。 <br/>
+                        若确认正确，请先删除之前已上传的安装包。</span>
                 </div>
 
-                <br>
                 <br>
                 <div ng-show="uploader.queue.length">
                 <table class="table">
                     <thead>
                     <tr>
-                        <th width="50%">文件名</th>
+                        <th width="30%">文件名</th>
                         <th ng-show="uploader.isHTML5">大小</th>
                         <!--<th ng-show="uploader.isHTML5">Progress</th>-->
                         <th>状态</th>
@@ -165,9 +154,9 @@
                             <!--</div>-->
                         <!--</td>-->
                         <td class="text-center">
-                            <span ng-show="item.isSuccess"><i class="glyphicon glyphicon-ok"></i></span>
-                            <span ng-show="item.isCancel"><i class="glyphicon glyphicon-ban-circle"></i></span>
-                            <span ng-show="item.isError"><i class="glyphicon glyphicon-remove"></i></span>
+                            <span ng-show="item.isSuccess"><i class="glyphicon glyphicon-ok text-success"></i></span>
+                            <span ng-show="item.isCancel"><i class="glyphicon glyphicon-ban-circle text-inverse"></i></span>
+                            <span ng-show="item.isError"><i class="glyphicon glyphicon-remove text-danger"></i></span>
                         </td>
                         <td nowrap>
                             <!--<button type="button" class="btn btn-success btn-xs" ng-click="item.upload()" ng-disabled="item.isReady || item.isUploading || item.isSuccess">-->
@@ -193,7 +182,7 @@
                     </div>
                     </div>
                     <div class="form-group pull-right">
-                        <button type="button" class="btn btn-default btn-s" data-dismiss="modal">
+                        <button type="button" class="btn btn-s" data-dismiss="modal">
                             <span class="glyphicon glyphicon-remove-circle"></span> 关闭
                         </button>
                         <button type="button" class="btn btn-success btn-s" ng-click="uploader.queue[0].upload()" ng-disabled="!uploader.getNotUploadedItems().length">

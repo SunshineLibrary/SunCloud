@@ -8,13 +8,15 @@ angular.module('resources')
             console.log(me);
             $scope.roles = AuthService.me.roles;
             $scope.myRooms = myRooms;
+            console.log($scope.myRooms);
             $scope.rooms = [];
             $scope.error = {};
             $scope.editorEnabled = false;
             $scope.editor2Enabled = false;
             $scope.selectedRooms = [];
             $scope.selected = [];
-            $scope.pushOptions = [{value: false, name: '需要手动分配给班级'},{value: true, name: '默认分配给所有班级'}];
+            $scope.default_installed = $scope.app.default_installed;
+            //$scope.pushOptions = [{value: false, name: '需要手动分配给班级'},{value: true, name: '默认分配给所有班级'}];
             console.log('share',$scope.app.shared);
             $scope.isSelf = theApp.owner !== null && theApp.owner !== undefined && (theApp.owner.toString() === me._id.toString());
             $scope.isRootOrAdminOrSelf = me.roles.indexOf('root') > -1 || (me.roles.indexOf('admin') > -1 && theApp.school && me.school.toString() === theApp.school.toString()) || $scope.isSelf;
@@ -58,10 +60,22 @@ angular.module('resources')
                 $scope.editor2Enabled = false;
             };
 
-            $('#pushAppSelect').on('change', function(){
+            //$('#pushAppSelect').on('change', function(){
+            //    console.log($scope.default_installed);
+            //    console.log()
+            //});
+            $scope.changeOption = function() {
                 console.log($scope.default_installed);
-                console.log()
-            });
+                AppDataProvider.changeInstallationOption($scope.app._id, $scope.default_installed)
+                    .success(function() {
+                        //$scope.default_installed = newApp.default_installed;
+                    console.log('changed success');
+                })
+                    .error(function(err) {
+                        swal({title: '修改失败', text: '请重试', timer: 2000 });
+                    console.error(err);
+                });
+            };
 
             var hasTheApp = function(roomId) {
                 var deferred = $q.defer();
@@ -169,13 +183,18 @@ angular.module('resources')
                 }
                 $scope.uploader.clearQueue();
                 $scope.app.package = response.package;
+                $scope.error = {};
             };
 
             $scope.uploader.onErrorItem = function(item, response, status) {
                 swal({title: " 上传失败", text: response.message,type: 'error'});
                 if (status == 406) {
-                    $scope.uploader.clearQueue();
+                    $scope.error.package = true;
+                    //$scope.uploader.clearQueue();
                 }
+            };
+            $scope.uploaderAddingFile = function(item) {
+                $scope.error.package = false;
             };
 
             $scope.uploader.filters.push({
@@ -253,6 +272,16 @@ angular.module('resources')
                 $('[data-toggle="select"]').select2();
             }
             $("select").select2({dropdownCssClass: 'dropdown-inverse'});
+            // Focus state for append/prepend inputs
+            $('.input-group').on('focus', '.form-control', function () {
+                $(this).closest('.input-group, .form-group').addClass('focus');
+            }).on('blur', '.form-control', function () {
+                $(this).closest('.input-group, .form-group').removeClass('focus');
+            });
+            $('[data-toggle="checkbox"]').radiocheck();
+            $('[data-toggle="radio"]').radiocheck();
+
+
 
             //$('#change-color-switch').bootstrapSwitch('onColor', 'success');
             //$('#change-color-switch').bootstrapSwitch('offColor', 'danger');

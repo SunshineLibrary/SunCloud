@@ -163,20 +163,24 @@ angular.module('schoolManage')
 
         var getMyRooms = function(me) {
             var defered = $q.defer();
-            //var myRooms = [];
             var query;
             if(me.roles.indexOf('teacher') > -1 && me.roles.indexOf('admin') > -1  ) {
                 query = {$or: [{school: me.school}, {$and: [{type: 'teaching'},{teachers: me._id}]}]};
-
+                console.log('teacher and admin')
             }else if(me.roles.indexOf('admin') > -1) {
-                query = {school: me._id, type: 'admin'}
+                query = {school: me._id, type: 'admin'};
+                console.info('only admin');
             }else {
-                query = {teachers: me._id}
+                query = {"teachers": me._id};
+                console.log(me._id);
+                console.info('only teacher');
             }
+            query = encodeURIComponent(JSON.stringify(query));
+            //"{\"teachers\":\"5475817d24936fad47c7c74d\"}"
             $http({
                 method: "GET",
-                url: "/rooms/",
-                qs: { query: encodeURIComponent(JSON.stringify(query))}
+                url: "/rooms?query=" + query
+                //params: { query: encodeURIComponent(JSON.stringify(query))}
             }).success(function(rooms) {
                 defered.resolve(rooms);
             }).error(function(err) {
