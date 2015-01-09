@@ -57,18 +57,35 @@ angular.module('sunpack')
                 info._id = row.entity._id;
                 info.name = $scope.temp.newName;
                 info.semester = $scope.temp.newSemester._id;
-                FolderDataProvider.editFolderNameAndSemester(info)
-                    .success(function(editedFolder) {
-                        $scope.row.entity.name = editedFolder.name;
-                        $scope.row.entity.semester = $scope.temp.newSemester;
-                        $scope.row.entity.updated_at = editedFolder.updated_at;
-                        $('#editFolderDialog').modal('hide');
-                        swal({title: "修改成功", type: "success", timer: 1000 });
-                    })
-                    .error(function(err) {
-                        console.error(err);
-                        swal({title: "修改失败", text: "请重试", type: "error", timer: 2000 });
-                    })
+
+                if (row.entity.semester._id.toString() === info.semester.toString()) {
+                    FolderDataProvider.editFolderName(info)
+                        .success(function(editedFolder) {
+                            $scope.row.entity.name = editedFolder.name;
+                            $scope.row.entity.updated_at = editedFolder.updated_at;
+                            $('#editFolderDialog').modal('hide');
+                            swal({title: "修改成功", type: "success", timer: 1000 });
+                        })
+                        .error(function(err) {
+                            console.error(err);
+                            $scope.error = true;
+                            swal({title: "修改失败", text: "请重试", type: "error", timer: 2000 });
+                        })
+                }else {
+                    FolderDataProvider.editFolderNameAndSemester(info)
+                        .success(function(editedFolder) {
+                            $scope.row.entity.name = editedFolder.name;
+                            $scope.row.entity.semester = $scope.temp.newSemester;
+                            $scope.row.entity.updated_at = editedFolder.updated_at;
+                            $('#editFolderDialog').modal('hide');
+                            swal({title: "修改成功", type: "success", timer: 1000 });
+                        })
+                        .error(function(err) {
+                            console.error(err);
+                            $scope.error = true;
+                            swal({title: "修改失败", text: err, type: "error", timer: 2000 });
+                        })
+                }
             };
 
 

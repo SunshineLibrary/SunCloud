@@ -7,14 +7,14 @@
     <div class="">
         <div class="pull-right">
             <span class="sun-id">id: {{folder._id}}</span>
-            <a autofocus ng-click="toAssignFolder()" data-toggle="modal" role="button" class="btn btn-primary"><i class="glyphicon glyphicon-gift"></i> 分配给班级</a>
+            <a  ng-click="toAssignFolder()" data-toggle="modal" role="button" class="btn btn-primary"><i class="glyphicon glyphicon-gift"></i> 分配给班级</a>
             <a ng-click="showEditFolderDialog()" role="button" class="btn btn-primary"><i class="glyphicon glyphicon-edit"></i> 编辑</a>
         </div>
 
         <div><strong>适用年级</strong>: &nbsp;  <span ng-show="folder.semester" class="inline">{{folder.semester.name}}</span><span ng-hide="folder.semester"><span class="label label-default inline">暂无</span></span></div>
         <div><strong>分配班级</strong>: &nbsp;
              <span ng-repeat="room in myRoomsAssigned" class="row-fluid" ng-show="myRoomsAssigned.length">
-            <a class="label label-success label-lg inline" ng-href="/#/myrooms/{{room._id}}">{{room.name}}</a>
+            <a class="label label-info label-lg inline" ng-href="/#/myrooms/{{room._id}}">{{room.name}}</a>
             </span>
             <span  ng-hide="myRoomsAssigned.length">
                 <span class="label label-default">暂无</span>
@@ -221,7 +221,7 @@
                     <!--<button type="button" class="btn btn-success btn-s" ng-click="uploader.uploadAll()" ng-disabled="!uploader.getNotUploadedItems().length">-->
                         <!--<span class="glyphicon glyphicon-upload"></span> 上传所有-->
                     <!--</button>-->
-                    <button type="button" ng-click="close('No')" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="button" ng-click="close('No')" class="btn" data-dismiss="modal"><i class="fa fa-times-circle"></i>关闭</button>
                     <!--<button type="button" ng-click="addResource()" ng-disabled="addResourceForm.$invalid" class="btn btn-success">确定</button>-->
                     <button type="button" class="btn btn-success btn-s" ng-click="uploader.uploadAll()" ng-disabled="!uploader.getNotUploadedItems().length">
                         <span class="glyphicon glyphicon-upload"></span> 上传
@@ -252,7 +252,7 @@
                     <br>
                     <div class="input-group">
                         <span class="input-group-btn"><button class="btn" type="button"><span class="fa fa-graduation-cap">适用年级</span></button></span>
-                        <select class="form-control select-primary" id="selectSemester" data-ng-options="semester.name for semester in semesters" data-ng-model="temp.newSemester" required>
+                        <select class="form-control select-primary" id="selectSemester" data-ng-options="semester.name for semester in semesters" data-ng-model="temp.newSemester" data-ng-change="changeSemester()" required>
                         </select>
                     </div>
                 </form>
@@ -287,23 +287,21 @@
                         <input type="text" id="newFileDescription" class="form-control"  placeholder="文件描述" ng-model="temp.newFileDescription">
                     </div>
                     <br/>
-
-                    <div class="input-group">
-                        <span class="input-group-btn"><button class="btn" type="button"><span class="fa fa-file"> 文件内容</span></button></span>
-
-                        <div class="form-group" style="margin-bottom: -9px">
-                            <div class="fileinput fileinput-new" data-provides="fileinput">
+                        <!--<span class="input-group-btn"><button class="btn" type="button"><span class="fa fa-file"> 文件内容</span></button></span>-->
+                    <strong>原文件:</strong> <span class="fileinput-new "><a ng-href="/download/files/{{row.entity._id}}" style="border-bottom:1px solid;">{{row.entity.originalname}}</a></span>
+                    <div class="form-group" style="margin-bottom: 0px; margin-left:60px">
+                        <div class="fileinput fileinput-new" data-provides="fileinput">
                                     <span class="btn btn-inverse btn-embossed btn-file">
                                       <span class="fileinput-new"><span class="fa fa-cloud-upload"></span> 修改文件</span>
                                       <span class="fileinput-exists"><span class="fa fa-cloud-upload"></span> 修改文件</span>
                                       <input type="file" name="..." nv-file-select uploader="editFileUploader">
                                     </span>
-                                <span class="fileinput-new"><a ng-href="/download/files/{{row.entity._id}}" style="border-bottom:1px solid;">{{row.entity.originalname}}</a></span>
-                                <span class="fileinput-filename"></span>
-                                <a href="#" class="close fileinput-exists" data-dismiss="fileinput" style="float: none">×</a>
-                            </div>
+
+                            <span class="fileinput-filename"></span>
+                            <a href="#" class="close fileinput-exists" data-dismiss="fileinput" style="float: none">×</a>
                         </div>
                     </div>
+
                 </form>
 
             </div>
@@ -383,6 +381,15 @@
         </div>
     </div>
 </div>
+
+<script>
+    // Prevent jQuery UI dialog from blocking focusin
+    $(document).on('focus', function(e) {
+        if ($(event.target).closest(".mce-window").length) {
+            e.stopImmediatePropagation();
+        }
+    });
+</script>
 
 
 

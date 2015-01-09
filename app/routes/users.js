@@ -7,6 +7,11 @@ var passport = require('passport');
 var mongoose = require('mongoose');
 var restify = require('express-restify-mongoose');
 var multer = require('multer');
+var File = mongoose.model('File');
+var express = require('express');
+var path = require('path');
+
+
 
 module.exports = function(app) {
 	// User Routes
@@ -22,11 +27,31 @@ module.exports = function(app) {
 	var multerMiddleware = multer({dest: __dirname+ '/../../upload/tmp'});
 	var sunpackMiddleware = multer({dest: __dirname+ '/../../upload/tmp'});
 
+	//app.set('X-Frame-Options', 'SAMEORIGIN');
 
+	app.route('/lib/ViewerJS/').get(users.setHeader);
 	// Setting up the users profile api
 	app.route('/me').get(users.me);
 	app.route('/users').put(users.update);
 	app.route('/users/accounts').delete(users.removeOAuthProvider);
+	app.use('/sunpack/:fileId', function(req, res, next) {
+		var fileId = req.param('fileId');
+		File.findById(fileId, function(err, file) {
+			if(err) {
+				next(err);
+			}else {
+				if(!file) {
+					next('Not Found')
+				}else {
+					console.log(file.mimetype);
+					res.set('content-type', file.mimetype);
+					next();
+				}
+			}
+		});
+	});
+	app.use(express.static(path.resolve('./upload')));
+
 
 	// Setting up the users password api
 	app.route('/users/password').post(users.changePassword);
@@ -76,6 +101,9 @@ module.exports = function(app) {
 	//app.route('/upload/file/:fileId').post(sunpackMiddleware, files.uploadFile);
 	app.route('/download/files/:fileId').get(files.downloadFile);
 	app.route('/repository').post(sunpackMiddleware, files.uploadRepo);
+	app.route('/folders/semester/:folderId').put(folders.editFolder);
+	app.route('/view/files/:fileId').get(files.viewFile);
+	app.route('/folders/room/:roomId').get(folders.getFoldersByRoom);
 
 	/**
 	 * 	xiaoshu login
@@ -236,6 +264,9 @@ module.exports = function(app) {
 	app.param('userId', users.userByID);
 	app.param('roomId', rooms.getRoomById);
 	app.param('schoolId', schools.getSchoolById);
+	app.param('folderId', folders.getFolderById);
+	app.param('fileId', files.getFileById);
+
 
 
 

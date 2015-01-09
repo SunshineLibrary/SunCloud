@@ -1,0 +1,40 @@
+<div class="">
+    <div class="" style="margin-top:10px">
+        <div ncy-breadcrumb class="breadcrumb-text ptl"></div>
+    </div>
+    <!--<div><strong>创建人:</strong>&nbsp; <span>{{file.owner.name}}</span></div>-->
+    <!--<div><strong>年级:</strong> &nbsp;  <span ng-show="file.semester" class="inline">{{file.semester.name}}</span><span ng-hide="folder.semester"><span class="label label-default inline">暂无</span></span></div>-->
+    <!--<div><strong>科目:</strong> &nbsp; {{file.subject.name}}</div>-->
+    <table class="">
+        <tr>
+            <td><strong> 描述: </strong></td>
+            <td style="padding-left:20px"><div ng-show="file.description">{{file.description}}</div><div ng-hide="file.description"><span class="label label-default">暂无</span></div></td>
+        </tr>
+        <tr>
+            <td><strong> 文件大小: </strong></td>
+            <td style="padding-left:20px">{{file.size/1024/1024 | number:2}} MB</td>
+        </tr>
+
+        <tr>
+            <td><strong>创建人:  </strong></td>
+            <td style="padding-left:20px">{{file.owner.name}}</td>
+        </tr>
+        <tr>
+            <td><strong> 科目: </strong> </td>
+            <td style="padding-left:20px">{{file.subject.name}}</td>
+        </tr>
+        <tr>
+            <td><strong> 年级: </strong></td>
+            <td style="padding-left:20px"> <span ng-show="file.semester" class="inline">{{file.semester.name}}</span><span ng-hide="folder.semester"><span class="label label-default inline">暂无</span></span></td>
+        </tr>
+
+    </table>
+    <hr/>
+    <div class="col-md-12 col-lg-12">
+        <!--<canvas id="the-canvas" style="border:1px solid black;width:100%"/>-->
+        <!--<iframe src="/view/files/{{file._id}}" width="800px" height="600px" />-->
+
+    </div>
+
+</div>
+

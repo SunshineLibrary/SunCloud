@@ -1,8 +1,24 @@
 angular.module('sunpack')
     .controller('fileController',
-    ['$scope', 'file', 'FileDataProvider', 'FileUploader',function ($scope, file, FileDataProvider, FileUploader) {
+    ['$scope', 'file', 'FileDataProvider', 'FileUploader','$http', '$sce',function ($scope, file, FileDataProvider, FileUploader, $http, $sce) {
         $scope.file = file;
         $scope.temp = {};
+        var mimetype = $scope.file.mimetype;
+        if(mimetype.indexOf('pdf') > -1) {
+            $scope.isPDF = true;
+        }else if(mimetype.indexOf('video') > -1) {
+            $scope.isVideo = true;
+        }else if(mimetype.indexOf('audio') > -1) {
+            $scope.isAudio = true;
+        }else if(mimetype.indexOf('image') > -1) {
+            $scope.isImage = true;
+        }else if(mimetype.indexOf('text') > -1) {
+            $scope.isText = true;
+        }else {
+            $scope.isOther = true;
+        }
+
+
 
         $scope.editFileUploader = new FileUploader({
             url: "/edit/file",
@@ -85,9 +101,98 @@ angular.module('sunpack')
         });
         $('[data-toggle="tooltip"]').tooltip();
         $('[data-toggle="popover"]').popover();
+        $.fn.scrollView = function () {
+            return this.each(function () {
+                $('html, body').animate({
+                    scrollTop: $(this).offset().top -53
+                }, 1000);
+            });
+        };
+        $scope.gotoPreview = function() {
+            $('#anchor').scrollView();
+        };
+
+        $scope.fileUrl = $sce.trustAsResourceUrl('/sunpack/' + file._id);
 
 
+        $scope.getSrc = function (fileId) {
+            return '/sunpack/' + fileId  ;
+            //return '/lib/ViewerJS/#../../sunpack/' + fileId + '&output=embed' ;
+            //return 'www.google.com'
+        };
 
+//
+        // If absolute URL from the remote server is provided, configure the CORS
+        // header on that server.
+        //
+        //var url = '/view/files/' + file._id;
+
+        //
+        // Disable workers to avoid yet another cross-origin issue (workers need
+        // the URL of the script to be loaded, and dynamically loading a cross-origin
+        // script does not work).
+        //
+        // PDFJS.disableWorker = true;
+
+        //
+        // In cases when the pdf.worker.js is located at the different folder than the
+        // pdf.js's one, or the pdf.js is executed via eval(), the workerSrc property
+        // shall be specified.
+        //
+        // PDFJS.workerSrc = '../../build/pdf.worker.js';
+
+        //
+// Fetch the PDF document from the URL using promises
+////
+//        $http.get(url).success(function(pdf) {
+//            //console.log(success);
+//                pdf.getPage(1).then(function(page) {
+//                    var scale = 1.5;
+//                    var viewport = page.getViewport(scale);
+//
+//                    //
+//                    // Prepare canvas using PDF page dimensions
+//                    //
+//                    var canvas = document.getElementById('the-canvas');
+//                    var context = canvas.getContext('2d');
+//                    canvas.height = viewport.height;
+//                    canvas.width = viewport.width;
+//
+//                    //
+//                    // Render PDF page into canvas context
+//                    //
+//                    var renderContext = {
+//                        canvasContext: context,
+//                        viewport: viewport
+//                    };
+//                    page.render(renderContext);
+//                });
+//        });
+//        PDFJS.getDocument(url).then(function(pdf) {
+//            console.log(pdf);
+//            // Using promise to fetch the page
+//            pdf.getPage(1).then(function(page) {
+//                var scale = 1;
+//                var viewport = page.getViewport(scale);
+//
+//                //
+//                // Prepare canvas using PDF page dimensions
+//                //
+//                var canvas = document.getElementById('the-canvas');
+//                var context = canvas.getContext('2d');
+//                canvas.height = viewport.height;
+//                canvas.width = viewport.width;
+//
+//                //
+//                // Render PDF page into canvas context
+//                //
+//                var renderContext = {
+//                    canvasContext: context,
+//                    viewport: viewport
+//                };
+//                page.render(renderContext);
+//            });
+//        });
 
 
     }]);

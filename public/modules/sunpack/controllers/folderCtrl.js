@@ -1,6 +1,6 @@
 angular.module('sunpack')
     .controller('folderController',
-    ['$scope', 'folder', 'RoomDataProvider', 'FolderDataProvider', 'FileDataProvider','AuthService', '$stateParams', 'FileUploader', '$state', '$http', function ($scope, folder, RoomDataProvider, FolderDataProvider, FileDataProvider,AuthService, $stateParams, FileUploader, $state, $http) {
+    ['$scope', 'folder', 'RoomDataProvider', 'FolderDataProvider', 'FileDataProvider','AuthService', '$stateParams', 'FileUploader', '$state', '$timeout', function ($scope, folder, RoomDataProvider, FolderDataProvider, FileDataProvider,AuthService, $stateParams, FileUploader, $state, $timeout) {
         $scope.folder = folder;
         $scope.files = $scope.folder.files;
         $scope.myRoomsAssigned = [];
@@ -134,8 +134,17 @@ angular.module('sunpack')
                 $scope.uploader.clearQueue();
             }
         };
+        $scope.uploader.onSuccessItem = function(item, response) {
+            $scope.files.push(response);
+        };
         $scope.uploader.onCompleteAll = function() {
             console.info('onCompleteAll');
+            $timeout(function() {
+                swal({title: "上传成功", type: 'success', timer: 2000});
+                $('#uploadFileDialog').modal('hide');
+                $scope.uploader.clearQueue();
+                console.log('update with timeout fired')
+            }, 2000);
         };
 
         $scope.editFileUploader = new FileUploader({
@@ -161,18 +170,33 @@ angular.module('sunpack')
             info._id = $scope.folder._id;
             info.name = $scope.temp.newName;
             info.semester = $scope.temp.newSemester._id;
-            FolderDataProvider.editFolderNameAndSemester(info)
-                .success(function(editedFolder) {
-                    $scope.folder.name = editedFolder.name;
-                    $scope.folder.semester = $scope.temp.newSemester;
-                    $('#editFolderDialog').modal('hide');
-                    swal({title: "修改成功", type: "success", timer: 1000 });
-                })
-                .error(function(err) {
-                    console.error(err);
-                    $scope.error = true;
-                    swal({title: "修改失败", text: "请重试", type: "error", timer: 2000 });
-                })
+            if (folder.semester._id.toString() === info.semester.toString()) {
+                FolderDataProvider.editFolderName(info)
+                    .success(function(editedFolder) {
+                        $scope.folder.name = editedFolder.name;
+                        $('#editFolderDialog').modal('hide');
+                        swal({title: "修改成功", type: "success", timer: 1000 });
+                    })
+                    .error(function(err) {
+                        console.error(err);
+                        $scope.error = true;
+                        swal({title: "修改失败", text: "请重试", type: "error", timer: 2000 });
+                    })
+            }else {
+                FolderDataProvider.editFolderNameAndSemester(info)
+                    .success(function(editedFolder) {
+                        $scope.folder.name = editedFolder.name;
+                        $scope.folder.semester = $scope.temp.newSemester;
+                        $('#editFolderDialog').modal('hide');
+                        swal({title: "修改成功", type: "success", timer: 1000 });
+                    })
+                    .error(function(err) {
+                        console.error(err);
+                        $scope.error = true;
+                        swal({title: "修改失败", text: err, type: "error", timer: 2000 });
+                    })
+            }
+
         };
 
         $scope.showEditFileDialog = function(event, row) {
@@ -258,12 +282,12 @@ angular.module('sunpack')
             columnDefs: [
                 {field: '_id', visible: false},
                 {field: 'type', displayName: '类型', width: '8%',cellTemplate: '<div><span ng-bind-html="row.entity.type | typeFilter"></span></div>'},
-                {field: 'originalname', displayName: '文件名称', width: '35%', cellTemplate: '<div><a ng-click="selectFile()">{{row.entity.originalname}}</a></div>'},
+                {field: 'originalname', displayName: '文件名称', width: '35%', cellTemplate: '<div><a ng-click="selectFile(row.entity._id)">{{row.entity.originalname}}</a></div>'},
                 {field: 'description', displayName: '描述', cellTemplate: '<div ng-show="row.entity.description">' +
-                '<a title="文件描述:{{row.entity.description}}" id="info-tooltip" data-placement="right" data-toggle="tooltip"  type="button"><i class="glyphicon glyphicon-info-sign" ng-mouseover="tooltip()"></i></a>'+
+                '<a title="文件描述:{{row.entity.description}}" id="info-tooltip" data-placement="right" data-toggle="tooltip"  type="button"><i class="glyphicon glyphicon-info-sign text-success" ng-mouseover="tooltip()"></i></a>'+
                 ' {{row.entity.description}}</div><div ng-hide="row.entity.description"><button class="btn btn-xs btn-success" ng-click="toAddDescriptionOnRow(row)"><i class="fa fa-comments"></i> 添加</button></div>'},
                 {field: 'users.length', displayName: '使用人数', width: '10%'},
-                {field: 'size', displayName: '文件大小',width: '10%', cellTemplate: '<div>{{row.entity[col.field]/1024/1024 | number:2}} MB</div>'},
+                {field: 'size', displayName: '文件大小',width: '10%', cellTemplate: '<div>{{row.entity[col.field] | fileSizeFilter }} </div>'},
                 {field: '', displayName: '编辑', width: '10%',cellTemplate:
                 '<div class="ngCellText" ng-class="col.colIndex()" ng-show="showedit">' +
                 '<a class="fui-new text-success" ng-click="showEditFileDialog($event, row)"></a> &nbsp;&nbsp;' +
@@ -274,8 +298,8 @@ angular.module('sunpack')
         };
 
 
-        $scope.selectFile = function () {
-            $state.go('sunpack.subject.folder.file', {fileId: $scope.gridOptions.selectedItems[0]._id});
+        $scope.selectFile = function (fileId) {
+            $state.go('sunpack.subject.folder.file', {fileId: fileId});
         };
 
 
@@ -289,12 +313,12 @@ angular.module('sunpack')
             var ch = $this.prop('checked');
             $this.closest('.table').find('tbody :checkbox').radiocheck(!ch ? 'uncheck' : 'check');
         });
-        // Focus state for append/prepend inputs
-        //$('.input-group').on('focus', '.form-control', function () {
-        //    $(this).closest('.input-group, .form-group').addClass('focus');
-        //}).on('blur', '.form-control', function () {
-        //    $(this).closest('.input-group, .form-group').removeClass('focus');
-        //});
+        //Focus state for append/prepend inputs
+        $('.input-group').on('focus', '.form-control', function () {
+            $(this).closest('.input-group, .form-group').addClass('focus');
+        }).on('blur', '.form-control', function () {
+            $(this).closest('.input-group, .form-group').removeClass('focus');
+        });
         //// Tooltips
         //$('[data-toggle="tooltip"]').tooltip();
         //// Add style class name to a tooltips
@@ -329,7 +353,12 @@ angular.module('sunpack')
         //});
 
         $('[data-toggle="checkbox"]').radiocheck();
-
+        // Prevent jQuery UI dialog from blocking focusin
+        $(document).on('focusin', function(e) {
+            if ($(event.target).closest(".mce-window").length) {
+                e.stopImmediatePropagation();
+            }
+        });
 
 
     }
@@ -338,23 +367,23 @@ angular.module('sunpack')
     .filter('typeFilter', function($sce) {
         return function(type) {
             if(type === 'image') {
-                return $sce.trustAsHtml('<span class="label label-success"><i class="fa fa-image"></i> 图片</span>');
+                return $sce.trustAsHtml('<span class="label label-info"><i class="fa fa-image"></i> 图片</span>');
             }
             if(type === 'audio') {
-                return $sce.trustAsHtml('<span class="label label-success"><i class="fa fa-music"></i> 音频</span>');
+                return $sce.trustAsHtml('<span class="label label-info"><i class="fa fa-music"></i> 音频</span>');
             }
             if(type === 'video') {
-                return $sce.trustAsHtml('<span class="label label-success"><i class="fa fa-video-camera"></i> 视频</span>');
+                return $sce.trustAsHtml('<span class="label label-info"><i class="fa fa-video-camera"></i> 视频</span>');
             }
             if(type === 'doc') {
-                return $sce.trustAsHtml('<span class="label label-success"><i class="fa fa-file-text"></i> 文档</span>');
+                return $sce.trustAsHtml('<span class="label label-info"><i class="fa fa-file-text"></i> 文档</span>');
             }
             if(type === 'ebook') {
-                return $sce.trustAsHtml('<span class="label label-success"><i class="fa fa-book"></i> 电子书</span>');
+                return $sce.trustAsHtml('<span class="label label-info"><i class="fa fa-book"></i> 电子书</span>');
             }
             if(type === 'application') {
-                return $sce.trustAsHtml('<span class="label label-success"><i class="fa fa-cogs"></i> 应用</span>');
+                return $sce.trustAsHtml('<span class="label label-info"><i class="fa fa-cogs"></i> 应用</span>');
             }
-            return $sce.trustAsHtml('<span class="label label-success"><i class="fa fa-file"></i> 其他</span>');
+            return $sce.trustAsHtml('<span class="label label-info"><i class="fa fa-file"></i> 其他</span>');
         };
     });

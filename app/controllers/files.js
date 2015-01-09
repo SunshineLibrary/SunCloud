@@ -51,6 +51,8 @@ var fileType = {
 //    }
 //};
 
+
+
 var getFileType = function(extension) {
     var found = false;
     var type;
@@ -92,13 +94,27 @@ var saveFile = function(file, folderId, res) {
                     if(err) {
                         res.status(500).send({message: "数据库错误，未能保存文件夹"});
                     }else {
-                        res.status(200).send({message: "上传成功"});
+                        res.status(200).send(file);
                     }
                 });
             });
         }else {
             res.status(404).send({message: "此文件夹不存在" + folderId});
         }
+    });
+};
+
+
+exports.getFileById = function (req, res, next, fileId) {
+    File.findById(fileId, function(err, file) {
+        if(err) {
+            return next(err);
+        }
+        if(!file) {
+            return next(new Error('未能找到该文件夹' + fileId));
+        }
+        req.file = file;
+        next();
     });
 };
 
@@ -158,6 +174,37 @@ exports.editFile = function(req, res) {
 //    console.log(file);
 //};
 
+exports.viewFile = function(req, res) {
+    var fileId = req.param('fileId');
+    var file = req.file;
+    console.log(file.path);
+
+    var options = {
+        root: file_path,
+        dotfiles: 'deny',
+        headers: {
+            'x-timestamp': Date.now(),
+            'x-sent': true,
+            'X-Frame-Options': 'SAMEORIGIN'
+            //res.set('X-Frame-Options', 'SAMEORIGIN');
+}
+    };
+
+    res.sendFile(file.name, options, function (err) {
+        if (err) {
+            console.log(err);
+            res.status(err.status).end();
+        }
+        else {
+            console.log('Sent:', file.path);
+        }
+    });
+    //res.send(file.path);
+    //res.redirect(file.path);
+    //res.send(file.path)
+
+
+};
 
 /**
  * When deleting a folder, also delete files in it.
@@ -190,6 +237,7 @@ exports.downloadFile = function(req, res) {
             res.status(500).send({message: "数据库错误，请重试"});
         }else {
             console.log(file.originalname);
+            res.set('X-Frame-Options', 'SAMEORIGIN');
             res.download(file_path + file.name, file.originalname, function(err) {
                 if(err) {
                     console.error(err);

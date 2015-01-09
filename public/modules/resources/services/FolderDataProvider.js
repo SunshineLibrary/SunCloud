@@ -15,6 +15,20 @@ angular.module('resources')
             return thePromise;
         };
 
+        var getFolderMin = function(folderId) {
+            var defered = $q.defer();
+            var thePromise = defered.promise;
+            $http({
+                method: "GET",
+                url: "/folders/" + folderId + "?populate=subject,semester"
+            }).success(function(folder){
+                defered.resolve(folder);
+            }).error(function(err){
+                defered.reject(err);
+            });
+            return thePromise;
+        };
+
         var getAllFolders = function () {
             var defered = $q.defer();
             var thePromise = defered.promise;
@@ -43,6 +57,22 @@ angular.module('resources')
                 console.log(err);
             });
             return thePromise;
+        };
+
+        var getFoldersByTeacher = function(teacherId) {
+            var defered = $q.defer();
+            var thePromise = defered.promise;
+            $http({
+                method: "GET",
+                url: "/folders?owner=" + teacherId + "&populate=subject,semester&sort=subject"
+            }).success(function (folders) {
+                defered.resolve(folders);
+            }).error(function (err) {
+                defered.reject(err);
+                console.log(err);
+            });
+            return thePromise;
+
         };
 
         var getFoldersCountByTeacherAndSubject = function(teacherId, subjectId) {
@@ -86,10 +116,22 @@ angular.module('resources')
             })
         };
 
-        var editFolderNameAndSemester = function(info) {
+
+        var editFolderName = function(info) {
             return $http({
                 method: "PUT",
                 url: "/folders/" + info._id,
+                data: {
+                    name: info.name,
+                    updated_at: Date.now()
+                }
+            })
+        };
+
+        var editFolderNameAndSemester = function(info) {
+            return $http({
+                method: "PUT",
+                url: "/folders/semester/" + info._id,
                 data: {
                     name: info.name,
                     semester: info.semester,
@@ -115,11 +157,14 @@ angular.module('resources')
 
         return {
             getFolder: getFolder,
+            getFolderMin: getFolderMin,
             getAllFolders: getAllFolders,
             getFoldersByTeacherAndSubject: getFoldersByTeacherAndSubject,
+            getFoldersByTeacher: getFoldersByTeacher,
             getFoldersCountByTeacherAndSubject: getFoldersCountByTeacherAndSubject,
             createFolder: createFolder,
             addFolderToRooms: addFolderToRooms,
+            editFolderName: editFolderName,
             editFolderNameAndSemester: editFolderNameAndSemester,
             deleteFolder: deleteFolder
         };

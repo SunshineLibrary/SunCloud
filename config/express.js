@@ -20,6 +20,10 @@ var express = require('express'),
 	consolidate = require('consolidate'),
 	path = require('path');
 
+//var mongoose = require('mongoose');
+
+//var File = mongoose.model('File');
+
 module.exports = function(db) {
 	// Initialize express app
 	var app = express();
@@ -111,7 +115,29 @@ module.exports = function(db) {
 
 
 	// Setting the app router and static folder
+	app.use(function(req, res, next) {
+		console.log('header');
+		res.set('X-Frame-Options', 'SAMEORIGIN');
+		next();
+	});
+	//app.use('/sunpack/:fileId', function(req, res, next) {
+	//	var fileId = req.param('fileId');
+	//	File.findById(fileId, function(err, file) {
+	//		if(err) {
+	//			next(err);
+	//		}else {
+	//			if(!file) {
+	//				next('Not Found')
+	//			}else {
+	//				console.log(file.mimetype);
+	//				res.set('content-type', file.mimetype);
+	//				next();
+	//			}
+	//		}
+	//	});
+	//});
 	app.use(express.static(path.resolve('./public')));
+	//app.use(express.static(path.resolve('./ViewerJS')));
 	app.use(express.static(path.resolve('./bower_components')));
 	//app.use(express.static(__dirname + '/files'));
 	//app.use(express.static(__dirname + '/uploads'));

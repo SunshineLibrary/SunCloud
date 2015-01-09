@@ -28,7 +28,8 @@
 
             <div class="pill-pane" id="myRooms" ng-hide="showingAllApps">
                 <div ng-show="myRooms.length">
-                    <div class="col-lg-4 col-md-4" style="margin-top:65px">
+                    <div class="col-lg-4 col-md-4" style="margin-top:-5px">
+                        <h4 align="center">我的班级</h4>
                         <ul id="roomsList" class="list-group">
                             <li ng-repeat="roomItem in myRooms"  ng-class="{active: roomItem.isActive}" style="list-style-type:none" >
                                 <a ng-click="selectOneRoom(roomItem)" href="" class="list-group-item list-group-item-success" ng-class="{active: roomItem.isActive}">
@@ -38,7 +39,7 @@
                         </ul>
                     </div>
                     <div class="col-lg-8 col-md-8">
-                        <h3 align="center">{{selectedRoom.name}}的应用程序</h3>
+                        <h4 align="center">{{selectedRoom.name}}的应用程序</h4>
                         <div class="myapps">
                             <table class="table" ng-show="appsOfRoom.length">
                                 <caption><h6 align="center" style="color:#27ae60">已经推送的应用程序</h6></caption>
