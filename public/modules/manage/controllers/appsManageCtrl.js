@@ -168,20 +168,21 @@ angular.module('manage')
                 data: 'apps',
                 multiSelect: false,
                 filterOptions: $scope.filterOptions,
+                enableColumnResize: true,
                 rowTemplate: '<div  ng-mouseover="$parent.showedit=true" ng-mouseleave="$parent.showedit=false" ng-style="{\'cursor\': row.cursor, \'z-index\': col.zIndex() }" ' +
                 'ng-repeat="col in renderedColumns" ng-class="col.colIndex()" ' +
                 'class="ngCell {{col.cellClass}}" ng-cell></div>',
                 columnDefs: [
                     {field: '_id', visible: false},
                     {field: 'name', displayName: '应用程序名称', width: '15%'},// cellTemplate:'<div class="ngCellText" ng-class="col.colIndex()"><a href="/#/apps/{{row.entity._id}}">{{row.getProperty(col.field)}}</a></div>'},
-                    {field: 'package', displayName: '应用的包名', cellTemplate:'<div class="ngCellText" ng-class="col.colIndex()" ng-show="row.entity.package">' +
+                    {field: 'package', displayName: '应用的包名', width: '20%', cellTemplate:'<div class="ngCellText" ng-class="col.colIndex()" ng-show="row.entity.package">' +
                     '{{row.getProperty(col.field)}}</div>' +
                     '<div ng-hide="row.entity.package"><span class="label label-default">暂无</span></div>'},
-                    {field:'room', displayName: '分配班级', width: '50%',cellTemplate:'<div class="ngCellText" ng-class="col.colIndex()" ' +
+                    {field:'room', displayName: '分配班级',cellTemplate:'<div class="ngCellText" ng-class="col.colIndex()" ' +
                     'ng-show="row.entity.room.length"><span ng-repeat="r in row.entity.room"><span class="label label-info inline"> {{r}}</span>&nbsp;&nbsp;</span></div>' +
                     '<div ng-hide="row.entity.room.length"><span class="label label-default">暂无</span></div>'},
                     {field: '', displayName: '操作',width:'5%',cellTemplate:
-                    '<div class="ngCellText" ng-class="col.colIndex()" ng-show="row.entity.owner === me._id">' +
+                    '<div class="ngCellText" ng-class="col.colIndex()" ng-show="row.entity.owner.toString() === me._id.toString()">' +
                     '<a class="fui-cross text-danger" role="button" ng-click="deleteApp($event, row)"></a></div>'}
                 ],
                 selectedItems: $scope.seletedApp

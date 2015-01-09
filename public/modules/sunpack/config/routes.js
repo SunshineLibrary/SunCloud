@@ -72,10 +72,44 @@ angular.module('sunpack')
                     folders: ['RoomDataProvider', '$stateParams',
                         function(RoomDataProvider, $stateParams) {
                             return RoomDataProvider.getFoldersByRoom($stateParams.roomId);
-                        }]
+                        }],
+                    myFolders: ['FolderDataProvider', 'AuthService',
+                    function(FolderDataProvider, AuthService) {
+                        return FolderDataProvider.getFoldersByTeacher(AuthService.me._id);
+                    }]
                 },
                 ncyBreadcrumb: {
                     label: "{{myRoom.name}}"
+                }
+            })
+            .state('sunpack.myroom.folder', {
+                url: '/:folderId',
+                controller: 'myRoomFolderController',
+                templateUrl: __templates + 'myroomFolder.html',
+                resolve: {
+                    folder: ['FolderDataProvider', '$stateParams',
+                        function(FolderDataProvider, $stateParams) {
+                            return FolderDataProvider.getFolder($stateParams.folderId);
+                        }
+                    ]
+                },
+                ncyBreadcrumb: {
+                    label: '{{folder.name}}'
+                }
+            })
+            .state('sunpack.myroom.folder.file', {
+                url: '/:fileId',
+                controller: 'myRoomFileController',
+                templateUrl: __templates + 'myroomFile.html',
+                resolve: {
+                    file: ['FileDataProvider', '$stateParams',
+                        function(FileDataProvider, $stateParams) {
+                            return FileDataProvider.getFile($stateParams.fileId);
+                        }
+                    ]
+                },
+                ncyBreadcrumb: {
+                    label: '{{file.originalname}}'
                 }
             })
             .state('sunpack.repo', {

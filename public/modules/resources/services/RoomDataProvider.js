@@ -301,14 +301,34 @@ angular.module('schoolManage')
             var thePromise = defered.promise;
             $http({
                 method: "GET",
-                url: "/rooms/" + roomId + "?populate=sunpack"
-            }).success(function(room) {
-                defered.resolve(room.sunpack);
+                url: "/folders/room/" + roomId
+            }).success(function(folders) {
+                defered.resolve(folders);
             }).error(function(err){
                 console.error(err);
                 defered.reject(err);
             });
             return thePromise;
+        };
+
+        var addFoldersToRoom = function(roomId, folderIds) {
+            return $http({
+                method: "PUT",
+                url: "/rooms/" + roomId,
+                data: {
+                    $push: {sunpack: {$each: folderIds}}
+                }
+            })
+        };
+
+        var removeFolderFromRoom = function(roomId, folderId) {
+            return $http({
+                method: "PUT",
+                url: "/rooms/" + roomId,
+                data: {
+                    $pull: {sunpack: folderId}
+                }
+            })
         };
 
         return {
@@ -334,6 +354,9 @@ angular.module('schoolManage')
             addStudentsToRoom: addStudentsToRoom,
             addTeachersToRoom: addTeachersToRoom,
             getMyRooms: getMyRooms,
-            getFoldersByRoom: getFoldersByRoom
+            getFoldersByRoom: getFoldersByRoom,
+            addFoldersToRoom: addFoldersToRoom,
+            removeFolderFromRoom: removeFolderFromRoom
+
         };
     }]);

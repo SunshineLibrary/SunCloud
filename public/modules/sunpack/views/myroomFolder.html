@@ -1,0 +1,35 @@
+<div ui-view>
+    <div class="" style="margin-top:10px">
+        <div ncy-breadcrumb class="breadcrumb-text ptl"></div>
+    </div>
+    <!--<button title="Tooltip on top" data-placement="top" data-toggle="tooltip" class="btn btn-default mrs" type="button" ng-mouseover="tooltip()">Tooltip on top</button>-->
+
+    <div class="">
+        <div><strong>适用年级</strong>: &nbsp;  <span ng-show="folder.semester" class="inline">{{folder.semester.name}}</span><span ng-hide="folder.semester"><span class="label label-default inline">暂无</span></span></div>
+        <div><strong>班级使用情况</strong>: &nbsp;</div>
+            <hr/>
+
+        </div>
+    <div class="container">
+        <div class="col-md-12 col-lg-12">
+
+            <div ng-show="folder.files.length">
+                <!--<a  role="button" class="btn btn-primary pull-right" data-toggle="modal" href="#uploadFileDialog"><span class="glyphicon glyphicon-file"></span> 创建书包文件夹</a>-->
+                <!--<br/>-->
+                <div class="table">
+                    <div class="gridStyle" ng-grid="gridOptions"></div>
+                </div>
+            </div>
+
+            <div ng-hide="folder.files.length" align="center">
+                <h4>该文件夹还没有任何文件</h4>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+

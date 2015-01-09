@@ -10,6 +10,12 @@ var _ = require('underscore'),
 	Room = mongoose.model('Room'),
 	App = mongoose.model('App');
 
+
+exports.setHeader = function(req, res, next) {
+	console.log('xframe');
+	res.set('X-Frame-Options', 'SAMEORIGIN');
+	next();
+};
 /**
  * User middleware
  */
