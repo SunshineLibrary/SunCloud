@@ -1,0 +1,57 @@
+<ui-view>
+    <div class="" style="margin-top:10px">
+        <div ncy-breadcrumb class="breadcrumb-text ptl"></div>
+    </div>
+    <div class="inline">
+        <ul class="nav nav-pills nav-success pull-left">
+            <li ng-class="{true: 'active', false: 'inactive'}[showingFiles]"><a href="" ng-click="showFiles()"><i class="fa fa-files-o"></i> 所有文件</a></li>
+            <li ng-class="{true: 'inactive', false: 'active'}[showingFiles]"><a href="" ng-click="showFolders()"><i class="fa fa-folder-o"></i> 所有文件夹</a></li>
+        </ul>
+        &nbsp;&nbsp;
+            <span class="pull-left" ng-show="showingFiles&&sharedFiles.length">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <button class="btn btn-success">全部</button>
+                <button class="btn btn-primary">文档</button>
+                <button class="btn btn-primary">电子书</button>
+                <button class="btn btn-primary">视频</button>
+                <button class="btn btn-primary">音频</button>
+                <button class="btn btn-primary">图片</button>
+                <button class="btn btn-primary">其他</button>
+            </span>
+        <span  ng-repeat="semester in semesters">
+            <button class="btn btn-inverse" ng-click="goto(semester._id)">{{semester.name}}</button>
+        </span>
+    </div>
+
+
+    <div ng-if="showingFiles">
+        <div ng-show="sharedFiles.length">
+            <!--<a  role="button" class="btn btn-primary pull-right" data-toggle="modal" href="#createFolderDialog"><span class="fui-folder"></span> 创建书包文件夹</a>-->
+            <br/>
+            <div class="table">
+                <div class="gridStyle" ng-grid="gridOptions1"></div>
+            </div>
+        </div>
+        <br/>
+        <div ng-hide="sharedFiles.length" align="center">
+            <h4>没有任何文件</h4>
+            <!--<a role="button" class="btn btn-success" data-toggle="modal" href="#createFolderDialog"><span class="fui-folder"></span> 创建书包文件夹</a>-->
+        </div>
+    </div>
+    <div ng-if="!showingFiles">
+        <div ng-show="sharedFolders.length">
+            <!--<a  role="button" class="btn btn-primary pull-right" data-toggle="modal" href="#createFolderDialog"><span class="fui-folder"></span> 创建书包文件夹</a>-->
+            <br/>
+            <div class="table">
+                <div class="gridStyle" ng-grid="gridOptions2"></div>
+            </div>
+        </div>
+        <br/>
+        <div ng-hide="sharedFolders.length" align="center">
+            <h4>没有任何文件夹</h4>
+            <!--<a role="button" class="btn btn-success" data-toggle="modal" href="#createFolderDialog"><span class="fui-folder"></span> 创建书包文件夹</a>-->
+        </div>
+    </div>
+
+</ui-view>
+

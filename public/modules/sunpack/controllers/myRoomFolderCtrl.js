@@ -28,6 +28,9 @@ angular.module('sunpack')
         $scope.selectFile = function (fileId) {
             $state.go('sunpack.myroom.folder.file', {fileId: fileId});
         };
+        $scope.toFolderPage = function() {
+            $state.go('sunpack.subject.folder', {subjectId: folder.subject._id,folderId: folder._id})
+        }
     }
     ]
 );

@@ -1,9 +1,11 @@
 angular.module('sunpack')
     .controller('fileController',
-    ['$scope', 'file', 'FileDataProvider', 'FileUploader','$http', '$sce', '$state', '$stateParams', function ($scope, file, FileDataProvider, FileUploader, $http, $sce, $state, $stateParams) {
+    ['$scope', 'file', 'FileDataProvider', 'FileUploader','$http', '$sce', '$state', '$timeout', function ($scope, file, FileDataProvider, FileUploader, $http, $sce, $state, $timeout) {
         $scope.file = file;
         $scope.temp = {};
+        $scope.shareFile = $scope.file.shared;
         var mimetype = $scope.file.mimetype;
+        $scope.isSetting = false;
         if(mimetype.indexOf('pdf') > -1) {
             $scope.isPDF = true;
         }else if(mimetype.indexOf('video') > -1) {
@@ -110,6 +112,22 @@ angular.module('sunpack')
         };
         $scope.gotoPreview = function() {
             $('#anchor').scrollView();
+        };
+
+        $scope.changeShare = function() {
+            $scope.isSetting = !$scope.isSetting;
+        };
+        $scope.changeOption = function() {
+            console.log($scope.shareFile);
+            FileDataProvider.changeShareOption($scope.file._id, $scope.shareFile)
+                .success(function(editedFile) {
+                    $scope.file.shared = editedFile.shared;
+                    $scope.shareFile = $scope.file.shared;
+                })
+                .error(function(err) {
+                    console.error(err);
+                    swal({title: '修改共享选项失败', type: 'error', timer: 2000});
+                });
         };
 
         //var myPlayer = videojs('sunvideo');

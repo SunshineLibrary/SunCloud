@@ -60,23 +60,55 @@ angular.module('sunpack')
                     //label: "语文"
                 }
             })
+            .state('sunpack.subject.folder', {
+                url: '/:folderId',
+                controller: 'folderController',
+                templateUrl: __templates + 'folder.html',
+                resolve: {
+                    folder: ['FolderDataProvider', '$stateParams',
+                        function(FolderDataProvider, $stateParams) {
+                            return FolderDataProvider.getFolder($stateParams.folderId);
+                        }
+                    ]
+                },
+                ncyBreadcrumb: {
+                    label: '{{folder.name}}'
+                    //parent: 'sunpack.subject'
+                }
+            })
+            .state('sunpack.subject.folder.file', {
+                url: '/:fileId',
+                controller: 'fileController',
+                templateUrl: __templates + 'file.html',
+                resolve: {
+                    file: ['FileDataProvider', '$stateParams',
+                        function(FileDataProvider, $stateParams) {
+                            return FileDataProvider.getFile($stateParams.fileId);
+                        }
+                    ]
+                },
+                ncyBreadcrumb: {
+                    label: '{{file.originalname}}'
+                    //parent: 'sunpack.subject'
+                }
+            })
             .state('sunpack.myroom', {
                 url: '/myrooms/:roomId',
                 controller: 'myRoomPackController',
                 templateUrl: __templates + 'myroom.html',
                 resolve: {
-                  myRoom: ['RoomDataProvider', '$stateParams',
-                  function(RoomDataProvider, $stateParams) {
-                      return RoomDataProvider.getRoom($stateParams.roomId);
-                  }],
+                    myRoom: ['RoomDataProvider', '$stateParams',
+                        function(RoomDataProvider, $stateParams) {
+                            return RoomDataProvider.getRoom($stateParams.roomId);
+                        }],
                     folders: ['RoomDataProvider', '$stateParams',
                         function(RoomDataProvider, $stateParams) {
                             return RoomDataProvider.getFoldersByRoom($stateParams.roomId);
                         }],
                     myFolders: ['FolderDataProvider', 'AuthService',
-                    function(FolderDataProvider, AuthService) {
-                        return FolderDataProvider.getFoldersByTeacher(AuthService.me._id);
-                    }]
+                        function(FolderDataProvider, AuthService) {
+                            return FolderDataProvider.getFoldersByTeacher(AuthService.me._id);
+                        }]
                 },
                 ncyBreadcrumb: {
                     label: "{{myRoom.name}}"
@@ -113,43 +145,57 @@ angular.module('sunpack')
                 }
             })
             .state('sunpack.repo', {
-                url: '/repo/:subjectId',
+                url: '/repo',
                 controller: 'repoController',
                 templateUrl: __templates + 'repo.html',
                 ncyBreadcrumb: {
                     label: "资源库"
                 }
             })
-            .state('sunpack.subject.folder', {
-                url: '/:folderId',
-                controller: 'folderController',
-                templateUrl: __templates + 'folder.html',
+            .state('sunpack.repo.subject', {
+                url: '/subject/:subjectId',
+                controller: 'repoSubjectController',
+                templateUrl: __templates + 'repoSubject.html',
                 resolve: {
-                    folder: ['FolderDataProvider', '$stateParams',
-                        function(FolderDataProvider, $stateParams) {
-                            return FolderDataProvider.getFolder($stateParams.folderId);
+                    subject: ['SubjectDataProvider', '$stateParams',
+                        function(SubjectDataProvider, $stateParams) {
+                            return SubjectDataProvider.getSubject($stateParams.subjectId);
                         }
-                    ]
+                    ],
+                    sharedFolders: ['FolderDataProvider', '$stateParams',
+                    function(FolderDataProvider, $stateParams) {
+                        return FolderDataProvider.getSharedFoldersBySubject($stateParams.subjectId)
+                    }],
+                    sharedFiles: ['FileDataProvider', '$stateParams',
+                        function(FileDataProvider, $stateParams) {
+                            return FileDataProvider.getSharedFilesBySubject($stateParams.subjectId)
+                        }]
                 },
                 ncyBreadcrumb: {
-                    label: '{{folder.name}}'
-                    //parent: 'sunpack.subject'
+                    label: "{{subject.name}}"
                 }
             })
-            .state('sunpack.subject.folder.file', {
-                url: '/:fileId',
-                controller: 'fileController',
-                templateUrl: __templates + 'file.html',
+            .state('sunpack.repo.subject.semester', {
+                url: '/semesters/:semesterId',
+                controller: 'repoSemesterController',
+                templateUrl: __templates + 'repoSemester.html',
                 resolve: {
-                    file: ['FileDataProvider', '$stateParams',
-                        function(FileDataProvider, $stateParams) {
-                            return FileDataProvider.getFile($stateParams.fileId);
+                    semester: ['SemesterDataProvider', '$stateParams',
+                        function(SemesterDataProvider, $stateParams) {
+                            return SemesterDataProvider.getSemester($stateParams.semesterId);
                         }
-                    ]
+                    ],
+                    sharedFoldersOfSemester: ['FolderDataProvider', '$stateParams',
+                        function(FolderDataProvider, $stateParams) {
+                            return FolderDataProvider.getSharedFoldersBySubjectAndSemester($stateParams.subjectId, $stateParams.semesterId)
+                        }],
+                    sharedFilesOfSemester: ['FileDataProvider', '$stateParams',
+                        function(FileDataProvider, $stateParams) {
+                            return FileDataProvider.getSharedFilesBySubjectAndSemester($stateParams.subjectId, $stateParams.semesterId)
+                        }]
                 },
                 ncyBreadcrumb: {
-                    label: '{{file.originalname}}'
-                    //parent: 'sunpack.subject'
+                    label: "{{semester.name}}"
                 }
             })
         ;

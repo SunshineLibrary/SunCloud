@@ -76,8 +76,13 @@
         <div class="span4  col-md-4 col-lg-4">
             <div class="" align="center">
                 <!--<button class="btn btn-primary"><i class="fa fa-university"></i> 查看资源库</button>-->
-                <h5>查看资源库</h5>
+                <h5>查看资源库
+                    <button class="btn btn-success pull-right" ng-click="gotoRepo()"><i class=""></i>查看所有</button>
+                </h5>
                 <hr/>
+                <br/>
+                <br/>
+
                 <!--<br/>-->
                 <!--<br/>-->
                 <form action="" class="form-horizontal" role="form">
@@ -93,7 +98,7 @@
                             </select>
                         </div>
 
-                        <button class="btn btn-success col-md-2" ng-click="gotoRepo()"><i class=""></i>查看</button>
+                        <button class="btn btn-primary col-md-2" ng-click="gotoRepo()"><i class=""></i>查看</button>
                     </div>
 
                 </form>

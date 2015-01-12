@@ -5,35 +5,65 @@
     <!--<div><strong>创建人:</strong>&nbsp; <span>{{file.owner.name}}</span></div>-->
     <!--<div><strong>年级:</strong> &nbsp;  <span ng-show="file.semester" class="inline">{{file.semester.name}}</span><span ng-hide="folder.semester"><span class="label label-default inline">暂无</span></span></div>-->
     <!--<div><strong>科目:</strong> &nbsp; {{file.subject.name}}</div>-->
+    <div class="pull-right">
+        <span class="sun-id">id: {{file._id}}</span>
+        <a href="" ng-hide="isOther || isAudio" ng-click="gotoPreview()" class="btn btn-primary"><i class="fa fa-eye"></i> 预览</a>
+        <a ng-href="/download/files/{{file._id}}" role="button" class="btn btn-primary" ><i class="fa fa-cloud-download"></i> 下载</a>
+    </div>
     <table class="">
         <tr>
             <td><strong> 描述: </strong></td>
             <td style="padding-left:20px"><div ng-show="file.description">{{file.description}}</div><div ng-hide="file.description"><span class="label label-default">暂无</span></div></td>
         </tr>
         <tr>
-            <td><strong> 文件大小: </strong></td>
-            <td style="padding-left:20px">{{file.size/1024/1024 | number:2}} MB</td>
-        </tr>
-
-        <tr>
             <td><strong>创建人:  </strong></td>
             <td style="padding-left:20px">{{file.owner.name}}</td>
+            <td><strong> 大小: </strong></td>
+            <td style="padding-left:20px">{{file.size | fileSizeFilter}}</td>
+            <!--<td style="padding-left:20px">{{file.size/1024/1024 | number:2}} MB</td>-->
         </tr>
         <tr>
             <td><strong> 科目: </strong> </td>
             <td style="padding-left:20px">{{file.subject.name}}</td>
-        </tr>
-        <tr>
             <td><strong> 年级: </strong></td>
             <td style="padding-left:20px"> <span ng-show="file.semester" class="inline">{{file.semester.name}}</span><span ng-hide="folder.semester"><span class="label label-default inline">暂无</span></span></td>
         </tr>
-
     </table>
-    <hr/>
-    <div class="col-md-12 col-lg-12">
-        <!--<canvas id="the-canvas" style="border:1px solid black;width:100%"/>-->
-        <!--<iframe src="/view/files/{{file._id}}" width="800px" height="600px" />-->
 
+    <hr/>
+    <!--<div class="col-md-12 col-lg-12">-->
+    <div>
+        <a id="anchor"> </a>
+        <div ng-if="isPDF || isText">
+            <!--<a href="" class="anchor" id="previewAnchor"></a>-->
+            <iframe ng-src="{{fileUrl}}" width='100%' height="800" autoplay=0 webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+        </div>
+        <div ng-if="isImage" align="center" style="width:100%">
+            <img ng-src="{{fileUrl}}" alt="阳光书包文件预览">
+
+        </div>
+        <div ng-if="isVideo" >
+            <div  style="width:600px;height:400px; margin-left:250px">
+                <video   id="sunvideo" class="video-js" preload="auto" data-setup="{}" controls>
+                    <source ng-src="{{videoUrl}}" type="{{file.mimetype}}">
+                    <!--<source src="http://iurevych.github.com/Flat-UI-videos/big_buck_bunny.mp4" type="video/mp4">-->
+                    <!--<source src="http://iurevych.github.com/Flat-UI-videos/big_buck_bunny.webm" type="video/webm">-->
+                </video>
+            </div>
+
+        </div>
+
+        <div ng-if="isAudio" align="center">
+            <audio controls>
+                <source ng-src="{{fileUrl}}" type="{{file.mimetype}}">
+            </audio>
+        </div>
+
+        <div ng-if="isOther" align="center">
+            <h5 >该文件格式无法预览</h5>
+            <p>您可以下载后在本地查看</p>
+            <a ng-href="/download/files/{{file._id}}" role="button" class="btn btn-success" ><i class="fa fa-cloud-download"></i> 下载</a>
+        </div>
     </div>
 
 </div>

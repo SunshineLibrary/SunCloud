@@ -80,7 +80,7 @@ angular.module('sunpack')
             };
             $scope.gotoRepo = function() {
               $scope.label = '资源库';
-                $state.go()
+                $state.go('sunpack.repo')
             };
 
             $(document).ready(function(){

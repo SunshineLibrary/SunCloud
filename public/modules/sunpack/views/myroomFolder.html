@@ -5,6 +5,7 @@
     <!--<button title="Tooltip on top" data-placement="top" data-toggle="tooltip" class="btn btn-default mrs" type="button" ng-mouseover="tooltip()">Tooltip on top</button>-->
 
     <div class="">
+        <div><strong>科目</strong>: &nbsp;  <span ng-show="folder.subject" class="inline">{{folder.subject.name}}</span><span ng-hide="folder.subject"><span class="label label-default inline">暂无</span></span></div>
         <div><strong>适用年级</strong>: &nbsp;  <span ng-show="folder.semester" class="inline">{{folder.semester.name}}</span><span ng-hide="folder.semester"><span class="label label-default inline">暂无</span></span></div>
         <div><strong>班级使用情况</strong>: &nbsp;</div>
             <hr/>
@@ -23,6 +24,7 @@
 
             <div ng-hide="folder.files.length" align="center">
                 <h4>该文件夹还没有任何文件</h4>
+                <button class="btn btn-success" ng-click="toFolderPage()"><i class="fa fa-share"></i> 去添加文件</button>
             </div>
 
         </div>

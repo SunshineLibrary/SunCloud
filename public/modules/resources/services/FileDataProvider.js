@@ -66,13 +66,58 @@ angular.module('resources')
             })
         };
 
+        var changeShareOption = function(fileId, value) {
+            return $http({
+                method: "PUT",
+                url: "/files/" + fileId,
+                data: {
+                    shared: value
+                }
+            })
+        };
+
+        var getSharedFilesBySubject = function(subjectId) {
+            var defered = $q.defer();
+            var thePromise = defered.promise;
+            $http({
+                method: "GET",
+                url: "/files?shared=true&subject=" + subjectId + "&populate=semester"
+            }).success(function (files) {
+                defered.resolve(files);
+                console.log(files);
+            }).error(function (err) {
+                defered.reject(err);
+                console.log(err);
+            });
+            return thePromise;
+        };
+
+        var getSharedFilesBySubjectAndSemester = function(subjectId, semesterId) {
+            var defered = $q.defer();
+            var thePromise = defered.promise;
+            $http({
+                method: "GET",
+                url: "/files?shared=true&subject=" + subjectId + "&semester=" + semesterId
+            }).success(function (folders) {
+                defered.resolve(folders);
+            }).error(function (err) {
+                defered.reject(err);
+                console.log(err);
+            });
+            return thePromise;
+        };
+
+
         return {
             getFile: getFile,
             getAllFiles: getAllFiles,
             deleteFile: deleteFile,
             editFileNameAndDescription: editFileNameAndDescription,
             downloadFile: downloadFile,
-            addDescription: addDescription
+            addDescription: addDescription,
+            changeShareOption: changeShareOption,
+            getSharedFilesBySubject: getSharedFilesBySubject,
+            getSharedFilesBySubjectAndSemester: getSharedFilesBySubjectAndSemester
 
         };
     }]);

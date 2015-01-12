@@ -56,15 +56,6 @@ var fileType = {
 var getFileType = function(mimetype, extension) {
     var found = false;
     var type;
-    if (mimetype.indexOf('image') > -1) {
-        type = 'image'
-    }else if(mimetype.indexOf('audio') > -1) {
-        type = 'audio'
-    }else if(mimetype.indexOf('video') > -1) {
-        type = 'video'
-    }else if (mimetype.indexOf('text') > -1) {
-        type = 'doc'
-    }
 
     for (var key in fileType) {
         var arr = fileType[key];
@@ -77,6 +68,16 @@ var getFileType = function(mimetype, extension) {
     if(!found) {
         type = 'other';
     }
+    if (mimetype.indexOf('image') > -1) {
+        type = 'image'
+    }else if(mimetype.indexOf('audio') > -1) {
+        type = 'audio'
+    }else if(mimetype.indexOf('video') > -1) {
+        type = 'video'
+    }else if (mimetype.indexOf('text') > -1) {
+        type = 'doc'
+    }
+
     return type;
 };
 
