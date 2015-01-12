@@ -28,7 +28,8 @@ angular.module('resources')
         var me = AuthService.me;
         $scope.isRootOrAdmin = me.roles.indexOf('root') > -1 || (me.roles.indexOf('admin') > -1 && me.school.toString() === school._id.toString()) ;
 
-        console.log(me);
+        console.log(admins, '~~~~');
+        //console.log(me);
 
         $scope.createRoom = function() {
             if ($scope.tempRoom.name.length > 15) {
@@ -55,7 +56,7 @@ angular.module('resources')
                     $scope.rooms.push(tempRoom);
                     $scope.tempRoom = {};
                     $('#createRoomDialog').modal('hide');
-                    //swal({title: "创建班级成功", type: "success", timer: 1000 });
+                    swal({title: "创建班级成功", type: "success", timer: 1000 });
                     $location.path('/rooms/' + tempRoom._id);
                 })
                 .error(function(err){
@@ -296,9 +297,9 @@ angular.module('resources')
             var info = {};
             info.name = $scope.newAdmin.name;
             info.username = $scope.newAdmin.username;
-            info.school = me.school;
+            info.school = $stateParams.schoolId;
             info.roles = ['admin', 'teacher'];
-            TeacherDataProvider.createAdmin(info)
+            TeacherDataProvider.createTeacher(info)
                 .success(function(newAdmin) {
                     $scope.newAdmin = null;
                     swal({title: "创建成功", type: 'success', timer: 1000});

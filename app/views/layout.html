@@ -54,10 +54,9 @@
 	{% for jsFile in jsFiles %}
 	<script type="text/javascript" src="{{jsFile}}"></script>
 	<script src="//vjs.zencdn.net/4.7/video.js"></script>
-	<script src="//cdnjs.cloudflare.com/ajax/libs/jquery-scrollTo/1.4.14/jquery.scrollTo.min.js"></script>
 
 	{% endfor %}
-	<script type="text/javascript" src="/modules/assets/js/application.js"></script>
+	<!--<script type="text/javascript" src="/modules/assets/js/application.js"></script>-->
 
 	{% if process.env.NODE_ENV === 'development' %}
 	<!--Livereload script rendered -->

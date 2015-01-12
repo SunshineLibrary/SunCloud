@@ -34,10 +34,10 @@
 
             <div ng-show="myRooms.length">
                 <h4>我教授的班级
-                    <a class="btn btn-primary pull-right" role="button" href="#claimRoomDialog" data-toggle="modal"><span class="glyphicon glyphicon-shopping-cart"></span> 认领班级</a>
+                    <a class="btn btn-sm btn-primary pull-right" role="button" href="#claimRoomDialog" data-toggle="modal"><span class="glyphicon glyphicon-shopping-cart"></span> 认领班级</a>
                 </h4>
                 <span ng-repeat="room in myRooms">
-                    <a ng-href="/#/myrooms/{{room._id}}" role="button" class="btn btn-info btn-lg">
+                    <a ng-href="/#/myrooms/{{room._id}}" role="button" class="btn btn-info">
                         {{room.name}}
                     </a>
                     &nbsp;&nbsp;

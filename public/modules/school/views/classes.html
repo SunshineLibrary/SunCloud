@@ -59,12 +59,12 @@
                 <form name="editForm" class="form-group">
                     <div class="input-group">
                         <span class="input-group-btn"><button class="btn" type="button"><span class="fui-tag">班级名</span></button></span>
-                        <input type="text" id="newName" class="form-control"  ng-model="room.newName" required>
+                        <input autofocus="" tabindex="1" type="text" id="newName" class="form-control"  ng-model="room.newName" required>
                     </div>
                     <br>
                     <div class="input-group">
                         <span class="input-group-btn"><button class="btn" type="button">班级编号</button></span>
-                        <input type="text" id="newCode" class="form-control" ng-model="room.newCode">
+                        <input tabindex="2" type="text" id="newCode" class="form-control" ng-model="room.newCode">
                     </div>
                     <p style="color: green">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;班级编号全校唯一，可用于自动生成班级学生账号.</p>
 
@@ -74,7 +74,7 @@
             </div>
             <div class="modal-footer">
                 <button class="btn btn-defautl" data-dismiss="modal">取消</button>
-                <button class="btn btn-success btn-lg" ng-click="editRoom(row)" ng-disabled="editForm.$invalid">确定</button>
+                <button tabindex="3" class="btn btn-success btn-lg" ng-click="editRoom(row)" ng-disabled="editForm.$invalid">确定</button>
             </div>
         </div>
     </div>

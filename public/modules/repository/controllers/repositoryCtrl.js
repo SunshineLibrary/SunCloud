@@ -32,16 +32,23 @@ angular.module('repository')
         $scope.selectedSemester = $scope.allSemesters[0]._id;
         $scope.selectedSchool = $scope.allSchools[0]._id;
 
-        $scope.$watch('selectedSchool', function(newSchool) {
-            if(newSchool) {
-                $scope.theTeachers = _.filter($scope.teachers, function(teacher) {
-                    return newSchool.indexOf(teacher.school) > -1
-                });
-                var teacherIds = _.map($scope.theTeachers, function(teacher) {return teacher._id});
-                $scope.allTeachers = [{_id: teacherIds, name: '所有老师'}].concat($scope.theTeachers);
-                $scope.selectedTeacher = $scope.allTeachers[0]._id;
-            }
-        });
+        //$scope.theTeachers = _.filter($scope.teachers, function(teacher) {
+        //    return newSchool.indexOf(teacher.school) > -1
+        //});
+        var teacherIds = _.map($scope.teachers, function(teacher) {return teacher._id});
+        $scope.allTeachers = [{_id: teacherIds, name: '所有老师'}].concat($scope.teachers);
+        $scope.selectedTeacher = $scope.allTeachers[0]._id;
+        //
+        //$scope.$watch('selectedSchool', function(newSchool) {
+        //    if(newSchool) {
+        //        $scope.theTeachers = _.filter($scope.teachers, function(teacher) {
+        //            return newSchool.indexOf(teacher.school) > -1
+        //        });
+        //        var teacherIds = _.map($scope.theTeachers, function(teacher) {return teacher._id});
+        //        $scope.allTeachers = [{_id: teacherIds, name: '所有老师'}].concat($scope.theTeachers);
+        //        $scope.selectedTeacher = $scope.allTeachers[0]._id;
+        //    }
+        //});
 
         $scope.$watchGroup(['newResource.subject', 'newResource.semester'], function(newValue) {
            if(newValue) {
@@ -53,8 +60,16 @@ angular.module('repository')
         });
 
 
-        $scope.filter = function() {
+        $scope.filter = function(selectedSchool, selectedTeacher) {
             console.log($scope.selectedTeacher);
+            if(selectedSchool) {
+                $scope.theTeachers = _.filter($scope.teachers, function(teacher) {
+                    return selectedSchool.indexOf(teacher.school) > -1
+                });
+                var teacherIds = _.map($scope.theTeachers, function(teacher) {return teacher._id});
+                $scope.allTeachers = [{_id: teacherIds, name: '所有老师'}].concat($scope.theTeachers);
+                $scope.selectedTeacher = $scope.allTeachers[0]._id;
+            }
            if($scope.showingFolders) {
                $scope.displayFolders = _.filter($scope.folders, function(folder) {
                    return ($scope.selectedSubject.indexOf(folder.subject._id) > -1) && ($scope.selectedSemester.indexOf(folder.semester._id) > -1) && ($scope.selectedSchool.indexOf(folder.school._id) > -1) && ($scope.selectedTeacher.indexOf(folder.owner._id) > -1)
@@ -65,7 +80,6 @@ angular.module('repository')
                $scope.displayFiles = _.filter($scope.files, function(file) {
                    return ($scope.selectedSubject.indexOf(file.subject._id) > -1) && ($scope.selectedSemester.indexOf(file.semester._id) > -1) && ($scope.selectedSchool.indexOf(file.school._id) > -1) && ($scope.selectedTeacher.indexOf(file.owner._id) > -1)
                });
-               console.log($scope.displayFiles);
            }
         };
 

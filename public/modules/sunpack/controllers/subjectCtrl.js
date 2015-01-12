@@ -13,8 +13,6 @@ angular.module('sunpack')
 
             SemesterDataProvider.getAllSemesters().then(function(semesters) {
                 $scope.semesters = semesters;
-                console.log($scope.semesters);
-
             });
 
 

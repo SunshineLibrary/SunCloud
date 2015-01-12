@@ -13,7 +13,7 @@ angular.module('schoolManage')
             $scope.selectedTeachers = [];
             $scope.filterOptions = {filterText: ''};
             $scope.selected = [];
-            $scope.checkall = true;
+            $scope.checkall = false;
             var me = AuthService.me;
 
             var allTeachersPromise = TeacherDataProvider.getTeachersBySchool(me.school);
@@ -51,18 +51,24 @@ angular.module('schoolManage')
 
             };
 
+            //$scope.checkAll = function() {
+            //    if($scope.checkall) {
+            //        $scope.selected = _.map($scope.selected, function(item) {
+            //            return true;
+            //        });
+            //    }else {
+            //        $scope.selected = _.map($scope.selected, function(item) {
+            //            return false;
+            //        })
+            //    }
+            //    $scope.checkall = !$scope.checkall;
+            //
+            //};
             $scope.checkAll = function() {
-                if($scope.checkall) {
-                    $scope.selected = _.map($scope.selected, function(item) {
-                        return true;
-                    });
-                }else {
-                    $scope.selected = _.map($scope.selected, function(item) {
-                        return false;
-                    })
-                }
-                $scope.checkall = !$scope.checkall;
-
+                //_.each($scope.selected, function(selection) {
+                //    selection = $scope.checkall;
+                //})
+                $scope.selected = _.map($scope.selected, function() {return $scope.checkall})
             };
 
             $scope.createAppAccess = function() {
@@ -108,6 +114,10 @@ angular.module('schoolManage')
                 selectedItems: $scope.selectedTeachers,
                 filterOptions: $scope.filterOptions
             };
+            $('[data-toggle="checkbox"]').radiocheck();
+            //$('[data-toggle="radio"]').radiocheck();
+
+
 
 
         }

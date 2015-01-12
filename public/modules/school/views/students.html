@@ -28,15 +28,27 @@
             </div>
             <div class="modal-body">
                 <form  name="studentForm" class="form-group">
-                    <input type="text" class="form-control" placeholder="*新学生姓名" ng-model="newStudent.name" required>
-                    <br>
-                    <input type="text" class="form-control" placeholder="*新学生用户名" ng-model="newStudent.username" required>
-                    <br/>
-                    <div class="input-group">
-                        <span class="input-group-btn">
-                            <button class="btn" type="button"><span class="fui-calendar">生日</span></button></span>
-                            <input type="text" class="form-control" name="birthday" placeholder="yyyy-mm-dd  (如 2000-01-01)" ng-model="newStudent.birthday" ng-pattern="/^(\d{4})\-(\d{2})\-(\d{2})$/"/>
+                    <div class="input-group new focus">
+                        <span class="input-group-addon"><i class="fui-user"></i>姓名</span>
+                        <input type="text" class="form-control" placeholder="*新学生姓名" ng-model="newStudent.name" required>
                     </div>
+                    <!--<input type="text" class="form-control" placeholder="*新学生姓名" ng-model="newStudent.name" required>-->
+                    <br>
+                    <div class="input-group new focus">
+                        <span class="input-group-addon">用户名</span>
+                        <input type="text" class="form-control" placeholder="*新学生用户名" ng-model="newStudent.username" required>
+                    </div>
+                    <!--<input type="text" class="form-control" placeholder="*新学生用户名" ng-model="newStudent.username" required>-->
+                    <br/>
+                    <div class="input-group new focus">
+                        <span class="input-group-addon"><span class="fui-calendar">生日</span></span>
+                        <input type="text" class="form-control" name="birthday" placeholder="yyyy-mm-dd  (如 2000-01-01)" ng-model="newStudent.birthday" ng-pattern="/^(\d{4})\-(\d{2})\-(\d{2})$/"/>
+                    </div>
+                    <!--<div class="input-group">-->
+                        <!--<span class="input-group-btn">-->
+                            <!--<button class="btn" type="button"><span class="fui-calendar">生日</span></button></span>-->
+                            <!--<input type="text" class="form-control" name="birthday" placeholder="yyyy-mm-dd  (如 2000-01-01)" ng-model="newStudent.birthday" ng-pattern="/^(\d{4})\-(\d{2})\-(\d{2})$/"/>-->
+                    <!--</div>-->
                     <span class="sun-error" ng-show="studentForm.birthday.$error.pattern">生日格式应为 yyyy-mm-dd，如 2000-01-01.<br/>如果只知道月份不知道是哪天，请统一使用1号</span>
                 </form>
 
@@ -92,19 +104,19 @@
                         <!--<label for="newName">&nbsp;&nbsp;&nbsp;姓名</label>-->
                         <!--<input type="text" id="newName" class="form-control" style="width:400px" placeholder="新姓名" ng-model="temp.newName" required>-->
                     <!--</div>-->
-                    <div class="input-group">
+                    <div class="input-group edit">
                         <span class="input-group-btn">
                             <button class="btn" type="button"><span class="fui-user">姓名</span></button></span>
                         <input type="text" class="form-control" id="newName" placeholder="新姓名" ng-model="temp.newName" required/>
                     </div>
                     <br>
-                    <div class="input-group">
+                    <div class="input-group edit">
                         <span class="input-group-btn">
                             <button class="btn" type="button"><span>用户名</span></button></span>
                         <input type="text" class="form-control" id="newUsername" placeholder="新用户名" ng-model="temp.newUsername" required/>
                     </div>
                     <br/>
-                    <div class="input-group">
+                    <div class="input-group edit">
                         <span class="input-group-btn">
                             <button class="btn" type="button"><span class="fui-calendar">生日</span></button></span>
                         <input type="text" class="form-control" name="birthday" placeholder="yyyy-mm-dd  (如 2000-01-01)" ng-model="temp.newBirthday" ng-pattern="/^(\d{4})\-(\d{2})\-(\d{2})$/"/>

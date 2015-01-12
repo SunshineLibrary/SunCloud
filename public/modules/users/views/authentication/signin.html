@@ -11,13 +11,13 @@
 
 		<form data-ng-submit="signin()" class="signin form-horizontal" autocomplete="off">
 			<fieldset>
-				<div class="input-group">
-					<span class="input-group-btn"><button class="btn" type="button"><span class="fui-user">用户名</span></button></span>
+				<div class="input-group focus">
+					<span class="input-group-addon">用户名</span>
                     <input type="text" style="float:left" id="username" name="username" class="form-control" data-ng-model="credentials.username">
 				</div>
 				<br/>
-				<div class="input-group">
-					<span class="input-group-btn"><button class="btn" type="button"><span class="fui-lock"> 密码</span></button></span>
+				<div class="input-group focus">
+					<span class="input-group-addon"><i class="fa fa-lock"></i> 密码</span>
 					<input type="password" id="password" name="password" class="form-control" data-ng-model="credentials.password">
 				</div>
 				<br/>
@@ -27,9 +27,12 @@
 				<div class="forgot-password" align = 'center'>
 					<!--<a href="/#/password/forgot">忘记密码？</a>-->
 					<!--<button title="请联系学校管理员，在老师页面重置密码" data-placement="bottom" data-toggle="tooltip" class="btn btn-default mrs" type="button">忘记密码？</button>-->
-					<a data-content="请联系学校管理员，让其在老师页面重置密码" width="auto" data-placement="right" data-toggle="popover" data-container="body" data-original-title="" title="">
-					 忘记密码？
-					</a>
+					<!--<a data-content="请联系学校管理员，让其在老师页面重置密码" width="auto" data-placement="right" data-toggle="tooltip" data-container="body" data-original-title="" title="">-->
+					 <!--忘记密码？-->
+					<!--</a>-->
+					<a title="请联系学校管理员，让其在老师页面重置密码" data-placement="right" data-toggle="tooltip" ng-mouseover="tooltip()">忘记密码？</a>
+
+					<!--<a href=""></a>-->
 
 				</div>
 				<div data-ng-show="error" class="text-center text-danger">
