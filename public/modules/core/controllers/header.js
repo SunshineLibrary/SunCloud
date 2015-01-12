@@ -7,7 +7,6 @@ angular.module('core').controller('HeaderController', ['$scope', 'Authentication
 		$scope.menu = Menus.getMenu('topbar');
 		$scope.$state = $state;
 		$scope.user = Authentication.user;
-		console.log($scope.user);
 
 		if(!$scope.user) {
 			$location.path('/signin');

@@ -53,9 +53,19 @@ var fileType = {
 
 
 
-var getFileType = function(extension) {
+var getFileType = function(mimetype, extension) {
     var found = false;
     var type;
+    if (mimetype.indexOf('image') > -1) {
+        type = 'image'
+    }else if(mimetype.indexOf('audio') > -1) {
+        type = 'audio'
+    }else if(mimetype.indexOf('video') > -1) {
+        type = 'video'
+    }else if (mimetype.indexOf('text') > -1) {
+        type = 'doc'
+    }
+
     for (var key in fileType) {
         var arr = fileType[key];
         if (arr.indexOf(extension) > -1) {
@@ -71,7 +81,7 @@ var getFileType = function(extension) {
 };
 
 var saveFile = function(file, folderId, res) {
-    file.type = getFileType(file.extension);
+    file.type = getFileType(file.mimetype, file.extension);
     file.name = file._id.toString();
     fs.renameSync(file.path, file_path + file.name);
     Folder.findById(folderId, function(err, folder) {
@@ -147,7 +157,7 @@ exports.editFile = function(req, res) {
             newFile.name = file._id.toString();
             fs.renameSync(file.path, trash_path + file.name); // move the old file to trash
             fs.renameSync(newFile.path, file_path + newFile.name); // move the new file to sunpack
-            file.type = getFileType(newFile.extension);
+            file.type = getFileType(newFile.mimetype, newFile.extension);
             file.originalname = newFile.extension? req.body.originalname + '.'+ newFile.extension : req.body.originalname ;
             file.description = req.body.description;
             file.name = newFile.name;

@@ -389,43 +389,13 @@ angular.module('resources')
                 });
         };
 
-        //$scope.showEditStudentDialog = function(event, row) {
-        //    event.stopPropagation();
-        //    $('#editStudentDialog').modal('show');
-        //    $scope.row = row;
-        //    $scope.student.newName = row.entity.name;
-        //    $scope.student.newUsername = row.entity.username;
-        //    $scope.student.newBirthday = row.entity.birthday;
-        //};
-        //$scope.editStudent = function(row) {
-        //    var info = {};
-        //    info._id = row.entity._id;
-        //    info.name = $scope.student.newName;
-        //    info.username = $scope.student.newUsername;
-        //    info.birthday = $scope.student.newBirthday;
-        //    StudentDataProvider.editStudentNameBirthday(info)
-        //        .success(function(editedStudent) {
-        //            $scope.row.entity.name = editedStudent.name;
-        //            $scope.row.entity.username = editedStudent.username;
-        //            $scope.row.entity.birthday = editedStudent.birthday;
-        //            $('#editStudentDialog').modal('hide');
-        //            swal({title: "修改成功", type: "success", timer: 1000 });
-        //        })
-        //        .error(function(err) {
-        //            console.error(err);
-        //            $scope.editStudentError = true;
-        //            swal({title: "修改失败", text: "请重试", type: "error", timer: 2000 });
-        //        })
-        //};
-
-
-        $scope.showEditStudentDialog = function(event, student) {
+        $scope.showEditStudentDialog = function(event, row) {
             event.stopPropagation();
             $('#editStudentDialog').modal('show');
-            //$scope.student = student;
-            $scope.student.newName = student.name;
-            $scope.student.newUsername = student.username;
-            $scope.student.newBirthday = student.birthday;
+            $scope.row = row;
+            $scope.student.newName = row.entity.name;
+            $scope.student.newUsername = row.entity.username;
+            $scope.student.newBirthday = row.entity.birthday;
         };
         $scope.editStudent = function(row) {
             var info = {};
@@ -435,7 +405,7 @@ angular.module('resources')
             info.birthday = $scope.student.newBirthday;
             StudentDataProvider.editStudentNameBirthday(info)
                 .success(function(editedStudent) {
-                    $scope.student.name = editedStudent.name;
+                    $scope.row.entity.name = editedStudent.name;
                     $scope.row.entity.username = editedStudent.username;
                     $scope.row.entity.birthday = editedStudent.birthday;
                     $('#editStudentDialog').modal('hide');
@@ -447,6 +417,36 @@ angular.module('resources')
                     swal({title: "修改失败", text: "请重试", type: "error", timer: 2000 });
                 })
         };
+
+
+        //$scope.showEditStudentDialog = function(event, student) {
+        //    event.stopPropagation();
+        //    $('#editStudentDialog').modal('show');
+        //    //$scope.student = student;
+        //    $scope.student.newName = student.name;
+        //    $scope.student.newUsername = student.username;
+        //    $scope.student.newBirthday = student.birthday;
+        //};
+        //$scope.editStudent = function(row) {
+        //    var info = {};
+        //    info._id = row.entity._id;
+        //    info.name = $scope.student.newName;
+        //    info.username = $scope.student.newUsername;
+        //    info.birthday = $scope.student.newBirthday;
+        //    StudentDataProvider.editStudentNameBirthday(info)
+        //        .success(function(editedStudent) {
+        //            $scope.student.name = editedStudent.name;
+        //            $scope.row.entity.username = editedStudent.username;
+        //            $scope.row.entity.birthday = editedStudent.birthday;
+        //            $('#editStudentDialog').modal('hide');
+        //            swal({title: "修改成功", type: "success", timer: 1000 });
+        //        })
+        //        .error(function(err) {
+        //            console.error(err);
+        //            $scope.editStudentError = true;
+        //            swal({title: "修改失败", text: "请重试", type: "error", timer: 2000 });
+        //        })
+        //};
 
         $scope.showEditTeacherDialog = function(event, row) {
             event.stopPropagation();

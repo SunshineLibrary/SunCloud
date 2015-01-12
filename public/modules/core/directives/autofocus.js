@@ -5,7 +5,7 @@ angular.module('core').directive('autofocus', ['$timeout', function($timeout) {
         restrict: 'A',
         link : function($scope, $element) {
             $timeout(function() {
-                console.log($element[0]);
+                //console.log($element[0]);
                 $element[0].focus();
             });
         }

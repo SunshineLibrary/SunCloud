@@ -43,7 +43,15 @@
                 <table class="sun-table">
                     <tr>
                         <th width="25%">
-                            <a role="button"  class="btn btn-success" style="width:70px" ng-click="checkAll()"><span ng-show="checkall">全&nbsp;&nbsp;&nbsp;选</span><span ng-hide="checkall">全不选</span></a>
+                            <checkbox median class="btn btn-inverse" style="margin-top:7px;margin-left:15px" ng-model="checkall" ng-change="checkAll()"></checkbox> &nbsp;&nbsp;&nbsp;&nbsp;
+
+                            <!--<label class="checkbox" for="checkbox" style="margin-left:15px" >-->
+                                <!--<input type="checkbox" data-toggle="checkbox" style="margin-left:15px" ng-model="selected[$index]" id="checkbox">-->
+                            <!--</label>-->
+                            <!--<checkbox  class="btn btn-primary" style="margin-left:15px" ng-click="checkAll()"></checkbox>-->
+
+                            <!--<input type="checkbox" data-toggle="checkbox" ng-model="newTeacher.isAdmin" id="checkbox1">-->
+                            <!--<a role="button"  class="btn btn-success" style="width:70px" ng-click="checkAll()"><span ng-show="checkall">全&nbsp;&nbsp;&nbsp;选</span><span ng-hide="checkall">全不选</span></a>-->
                         </th>
                         <th>老师姓名</th>
                         <th>老师用户名</th>
@@ -51,6 +59,9 @@
                     <tr ng-repeat="teacher in teachers">
                         <td>
                             <checkbox median class="btn btn-primary" style="margin-top:7px;margin-left:15px" ng-model="selected[$index]"></checkbox> &nbsp;&nbsp;&nbsp;&nbsp;
+                            <!--<label class="checkbox" for="checkbox-{{$index}}">-->
+                                <!--<input type="checkbox" data-toggle="checkbox" ng-model="selected[$index]" id="checkbox-{{$index}}">-->
+                            <!--</label>-->
                         </td>
                         <td>{{teacher.name}}</td>
                         <td>{{teacher.username}}</td>

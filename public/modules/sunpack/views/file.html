@@ -1,3 +1,6 @@
+<script>
+    var myPlayer = videojs('sunvideo');
+</script>
 <div class="">
     <div class="" style="margin-top:10px">
         <div ncy-breadcrumb class="breadcrumb-text ptl"></div>
@@ -22,7 +25,7 @@
             <td><strong>创建人:  </strong></td>
             <td style="padding-left:20px">{{file.owner.name}}</td>
             <td><strong> 大小: </strong></td>
-            <td style="padding-left:20px">{{file.size | fileSizeFilter}} </td>
+            <td style="padding-left:20px">{{file.size | fileSizeFilter}}</td>
             <!--<td style="padding-left:20px">{{file.size/1024/1024 | number:2}} MB</td>-->
         </tr>
         <tr>
@@ -48,8 +51,8 @@
         </div>
         <div ng-if="isVideo" >
             <div  style="width:600px;height:400px; margin-left:250px">
-                <video class="video-js" preload="auto" data-setup="{}" >
-                    <source ng-src="{{fileUrl}}" type="{{file.mimetype}}">
+                <video   id="sunvideo" class="video-js" preload="auto" data-setup="{}" controls>
+                    <source ng-src="{{videoUrl}}" type="{{file.mimetype}}">
                     <!--<source src="http://iurevych.github.com/Flat-UI-videos/big_buck_bunny.mp4" type="video/mp4">-->
                     <!--<source src="http://iurevych.github.com/Flat-UI-videos/big_buck_bunny.webm" type="video/webm">-->
                 </video>

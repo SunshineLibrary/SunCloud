@@ -12,12 +12,12 @@
             </div>
 
             <div class="col-md-2">
-                <select name="" id="selectSchool" class="form-control" data-ng-options="subject._id as subject.name for subject in allSchools" data-ng-model="selectedSchool" data-ng-change="filter()" >
+                <select name="" id="selectSchool" class="form-control" data-ng-options="subject._id as subject.name for subject in allSchools" data-ng-model="selectedSchool" data-ng-change="filter(selectedSchool, null)" >
                 </select>
             </div>
 
             <div class="col-md-2">
-                <select name="" id="selectTeacher" class="form-control" data-ng-options="teacher._id as teacher.name for teacher in allTeachers" data-ng-model="selectedTeacher" data-ng-change="filter()" >
+                <select name="" id="selectTeacher" class="form-control" data-ng-options="teacher._id as teacher.name for teacher in allTeachers" data-ng-model="selectedTeacher" data-ng-change="filter(null, selectedTeacher)" >
                 </select>
             </div>
 
@@ -48,11 +48,11 @@
             </span>
         </div>
 
-        <div class="table" ng-show="showingFolders">
+        <div class="table" ng-if="showingFolders">
             <div class="gridStyle style1" ng-grid="gridOptions" ng-click="selectFolder()"></div>
         </div>
 
-        <div class="table" ng-hide="showingFolders">
+        <div class="table" ng-if="!showingFolders">
             <div class="gridStyle style1" ng-grid="gridOptions2" ng-click="selectFile()"></div>
         </div>
     </div>

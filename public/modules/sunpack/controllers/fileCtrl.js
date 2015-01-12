@@ -1,6 +1,6 @@
 angular.module('sunpack')
     .controller('fileController',
-    ['$scope', 'file', 'FileDataProvider', 'FileUploader','$http', '$sce',function ($scope, file, FileDataProvider, FileUploader, $http, $sce) {
+    ['$scope', 'file', 'FileDataProvider', 'FileUploader','$http', '$sce', '$state', '$stateParams', function ($scope, file, FileDataProvider, FileUploader, $http, $sce, $state, $stateParams) {
         $scope.file = file;
         $scope.temp = {};
         var mimetype = $scope.file.mimetype;
@@ -112,14 +112,23 @@ angular.module('sunpack')
             $('#anchor').scrollView();
         };
 
+        //var myPlayer = videojs('sunvideo');
+
         $scope.fileUrl = $sce.trustAsResourceUrl('/sunpack/' + file._id);
+        $scope.videoUrl = $sce.trustAsResourceUrl('/sunpack/' + file._id);
+
+        //$state.transitionTo($state.current, $stateParams, {
+        //    reload: true,
+        //    inherit: false,
+        //    notify: true
+        //});
 
 
-        $scope.getSrc = function (fileId) {
-            return '/sunpack/' + fileId  ;
-            //return '/lib/ViewerJS/#../../sunpack/' + fileId + '&output=embed' ;
-            //return 'www.google.com'
-        };
+        //$scope.getSrc = function (fileId) {
+        //    return '/sunpack/' + fileId  ;
+        //    //return '/lib/ViewerJS/#../../sunpack/' + fileId + '&output=embed' ;
+        //    //return 'www.google.com'
+        //};
 
 //
         // If absolute URL from the remote server is provided, configure the CORS
