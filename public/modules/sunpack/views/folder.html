@@ -28,6 +28,11 @@
             <div ng-show="folder.files.length">
                 <!--<a  role="button" class="btn btn-primary pull-right" data-toggle="modal" href="#uploadFileDialog"><span class="glyphicon glyphicon-file"></span> 创建书包文件夹</a>-->
                 <!--<br/>-->
+                <div class="inner-addon left-addon pull-right" style="">
+                    <i class="glyphicon glyphicon-search"></i>
+                    <input type="search" class="form-control" style="width: 250px"  placeholder="搜索" ng-model="filterOptions.filterText"/>
+                </div>
+                <br/>
                 <div class="table">
                     <div class="gridStyle" ng-grid="gridOptions"></div>
                 </div>
@@ -35,7 +40,7 @@
 
             <div ng-hide="folder.files.length" align="center">
                 <h4>还没有任何文件</h4>
-                <a role="button" class="btn btn-success" data-toggle="modal" href="#createFilerDialog"><span class="fa fa-university"></span> 查看教学资源库</a>
+                <a role="button" class="btn btn-success" data-toggle="modal" ng-click="gotoRepo()"><span class="fa fa-university"></span> 查看教学资源库</a>
                 或者
                 <a role="button" class="btn btn-success" data-toggle="modal" href="#uploadFileDialog"><span class="fa fa-cloud-upload"></span> 上传教学资源</a>
 
@@ -49,7 +54,7 @@
                 <!--<i class="glyphicon glyphicon-info-sign"></i>-->
                 <a title="资源库为您推荐相关教学资源，您可以把它们加入您的教学文件夹中，推送给学生" data-placement="top" data-toggle="tooltip"  type="button"><i class="glyphicon glyphicon-info-sign" ng-mouseover="tooltip()"></i></a>
                 <br/>
-                <a role="button" align="center" class="btn btn-info" data-toggle="modal" href="#createFilerDialog"><span class="fa fa-university"></span> 查看教学资源库</a>
+                <a role="button" align="center" class="btn btn-info" data-toggle="modal" ng-click="gotoRepo()"><span class="fa fa-university"></span> 查看教学资源库</a>
                 <!--<button data-content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus." data-placement="top" data-toggle="popover" data-container="body" class="btn btn-default" type="button" data-original-title="" title="" ng-mouseover="popover()">-->
                     <!--Popover on top-->
                 <!--</button>-->
@@ -170,7 +175,7 @@
                                 <span ng-show="item.file.description">{{item.file.description}}</span>
                                 <span ng-hide="item.file.description"><button class="btn btn-success btn-xs" ng-click="toAddDescription($index)" ng-disabled="item.isSuccess">{{item.file.description}} <i class="fa fa-newspaper-o"></i> 添加</button></span>
                             </td>
-                            <td ng-show="uploader.isHTML5" nowrap>{{ item.file.size/1024/1024|number:2 }} MB</td>
+                            <td ng-show="uploader.isHTML5" nowrap>{{ item.file.size | fileSizeFilter }}</td>
                             <td ng-show="uploader.isHTML5">
                                 <div class="progress" style="margin-bottom: 0;">
                                     <div class="progress-bar" role="progressbar" ng-style="{ 'width': item.progress + '%' }"></div>
@@ -279,12 +284,12 @@
                 <form name="editFileForm" class="form-group">
                     <div class="input-group">
                         <span class="input-group-btn"><button class="btn" type="button"><span class="fa fa-file-o"> 文件名</span></button></span>
-                        <input type="text" id="newFileName" class="form-control"  placeholder="文件名" ng-model="temp.newFileName" required>
+                        <input tabindex="1" type="text" id="newFileName" class="form-control"  placeholder="文件名" ng-model="temp.newFileName" required>
                     </div>
                     <br/>
                     <div class="input-group">
                         <span class="input-group-btn"><button class="btn" type="button"><span class="fa fa-newspaper-o"> 文件描述</span></button></span>
-                        <input type="text" id="newFileDescription" class="form-control"  placeholder="文件描述" ng-model="temp.newFileDescription">
+                        <input tabindex="2" type="text" id="newFileDescription" class="form-control"  placeholder="文件描述" ng-model="temp.newFileDescription">
                     </div>
                     <br/>
                         <!--<span class="input-group-btn"><button class="btn" type="button"><span class="fa fa-file"> 文件内容</span></button></span>-->

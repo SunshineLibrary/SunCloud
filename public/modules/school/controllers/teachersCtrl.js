@@ -23,7 +23,7 @@ angular.module('schoolManage')
                 'class="ngCell {{col.cellClass}}" ng-cell></div>',
                 columnDefs: [
                     {field: '_id', visible: false},
-                    {field: 'name', displayName: '姓名'},
+                    {field: 'name', displayName: '姓名', cellTemplate: '<a href="">{{row.entity.name}}</a>'},
                     {field: 'username', displayName: '用户名'},
                     {field: 'roles', displayName: '超级管理员', cellTemplate: '<div>{{row.entity.roles | isAdminFilter}}</div>'},
                     {field: 'email', displayName: '邮箱'},

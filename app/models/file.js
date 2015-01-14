@@ -51,7 +51,13 @@ var FileSchema = new Schema({
     users: [{
         type: Schema.Types.ObjectId,
         ref: 'User'
-    }]
+    }],
+    like: [{
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    }],
+    created_at: Date,
+    updated_at: Date
 });
 
 mongoose.model('File', FileSchema);

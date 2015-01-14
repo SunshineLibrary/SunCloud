@@ -1,5 +1,7 @@
 <div class="container-fluid">
-    <h4 class="tableTitle pull-left">所有老师 &nbsp;&nbsp;</h4>
+    <h4 class="tableTitle pull-left">所有老师
+        <span class="label label-info small" style="font-size: small;color:white">{{teachers.length}} 人</span> &nbsp;&nbsp;
+    </h4>
 
     <div class=" pull-right" style="margin-top:10px">
         <a role="button" class="btn btn-primary" href="#createTeacherDialog" data-toggle="modal"><i class="glyphicon glyphicon-plus"></i>创建老师</a>
@@ -11,10 +13,19 @@
     </div>
     <br>
     <br>
-    <div class="table">
+    <div class="table" ng-show="teachers.length">
         <div class="gridStyle" ng-grid="gridOptions" ng-click="selectTeacher()"></div>
     </div>
 
+    <div ng-if="!teachers.length">
+        <br/>
+        <br/>
+        <h4 align="center">还没有任何学生
+            <br/>
+            <br/>
+            <a role="button" class="btn btn-primary" href="#createTeacherDialog" data-toggle="modal"><i class="glyphicon glyphicon-plus"></i>创建老师</a>
+        </h4>
+    </div>
 </div>
 
 <!-------------------Modal----------------------->
@@ -64,27 +75,27 @@
                 <form name="editForm" class="form-group">
                     <div class="input-group">
                         <span class="input-group-btn"><button class="btn" type="button"><span class="fui-user"> 姓名</span></button></span>
-                        <input type="text" id="newName" class="form-control" placeholder="新姓名" ng-model="temp.newName" required>
+                        <input tabindex="1" type="text" id="newName" class="form-control" placeholder="新姓名" ng-model="temp.newName" required>
                     </div>
                     <br>
                     <div class="input-group">
                         <span class="input-group-btn"><button class="btn" type="button"><span>  用户名</span></button></span>
-                        <input type="text" id="newUsername" class="form-control" placeholder="新用户名" ng-model="temp.newUsername" required>
+                        <input tabindex="2" type="text" id="newUsername" class="form-control" placeholder="新用户名" ng-model="temp.newUsername" required>
                     </div>
                     <br>
                     <div class="input-group">
                         <span class="input-group-btn"><button class="btn" type="button"><span class="glyphicon glyphicon-phone">电话</span></button></span>
-                        <input type="text" id="newPhone" class="form-control"  placeholder="电话号码" ng-model="temp.newPhone">
+                        <input tabindex="3" type="text" id="newPhone" class="form-control"  placeholder="电话号码" ng-model="temp.newPhone">
                     </div>
                     <br>
                     <div class="input-group">
                         <span class="input-group-btn"><button class="btn" type="button"><span class="glyphicon glyphicon-envelope">邮箱</span></button></span>
-                        <input type="text" id="newEmail" class="form-control"  placeholder="邮箱" ng-model="temp.newEmail">
+                        <input tabindex="4" type="text" id="newEmail" class="form-control"  placeholder="邮箱" ng-model="temp.newEmail">
                     </div>
                     <!--<br>-->
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     <label class="checkbox" for="checkbox2">
-                        <input type="checkbox" data-toggle="checkbox" ng-model="temp.isAdmin" id="checkbox2">   是否具有超级管理员权限
+                        <input tabindex="5" type="checkbox" data-toggle="checkbox" ng-model="temp.isAdmin" id="checkbox2">   是否具有超级管理员权限
                     </label>
                     <!--<input type="checkbox" ng-model="temp.isAdmin"/> &nbsp;&nbsp;&nbsp;是否具有超级管理员权限-->
 
@@ -93,7 +104,7 @@
             </div>
             <div class="modal-footer">
                 <button class="btn btn-defautl" data-dismiss="modal">取消</button>
-                <button class="btn btn-success btn-lg" ng-click="editTeacher(row)" ng-disabled="editForm.$invalid">确定</button>
+                <button tabindex="6" class="btn btn-success btn-lg" ng-click="editTeacher(row)" ng-disabled="editForm.$invalid">确定</button>
             </div>
         </div>
     </div>

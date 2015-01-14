@@ -69,6 +69,8 @@ module.exports = {
 				'public/lib/angular-ui-grid/ui-grid.js',
 				'public/lib/ng-grid/ng-grid-2.0.13.min.js',
 				'public/lib/moment/moment.js',
+				'public/lib/angular-moment/angular-moment.js',
+				'public/lib/moment/locale/zh-cn.js',
 				//'public/lib/bootstrap/dist/js/bootstrap.min.js',
 				'public/lib/sweetalert/lib/sweet-alert.min.js',
 				'public/lib/angular-file-upload/angular-file-upload.js',
@@ -81,7 +83,13 @@ module.exports = {
 				'public/lib/angular-breadcrumb/dist/angular-breadcrumb.js',
 				'public/lib/d3.js',
 				'public/lib/pdfjs/build/generic/build/pdf.js',
-				'public/lib/pdfjs/build/generic/web/compatibility.js'
+				'public/lib/pdfjs/build/generic/web/compatibility.js',
+				'public/lib/jquery-timeago/jquery.timeago.js',
+				'public/lib/jquery-timeago/locales/jquery.timeago.zh-CN.js'
+
+				//'public/lib/smart-time-ago/lib/timeago.js',
+				//'public/lib/smart-time-ago/lib/locales/timeago.zh-cn.js'
+
 
 
 				//'public/lib/angular-bootstrap-switch/dist/angular-bootstrap-switch.js',

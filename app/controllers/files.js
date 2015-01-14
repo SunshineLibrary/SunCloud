@@ -56,15 +56,6 @@ var fileType = {
 var getFileType = function(mimetype, extension) {
     var found = false;
     var type;
-    if (mimetype.indexOf('image') > -1) {
-        type = 'image'
-    }else if(mimetype.indexOf('audio') > -1) {
-        type = 'audio'
-    }else if(mimetype.indexOf('video') > -1) {
-        type = 'video'
-    }else if (mimetype.indexOf('text') > -1) {
-        type = 'doc'
-    }
 
     for (var key in fileType) {
         var arr = fileType[key];
@@ -77,6 +68,16 @@ var getFileType = function(mimetype, extension) {
     if(!found) {
         type = 'other';
     }
+    if (mimetype.indexOf('image') > -1) {
+        type = 'image'
+    }else if(mimetype.indexOf('audio') > -1) {
+        type = 'audio'
+    }else if(mimetype.indexOf('video') > -1) {
+        type = 'video'
+    }else if (mimetype.indexOf('text') > -1) {
+        type = 'doc'
+    }
+
     return type;
 };
 
@@ -100,6 +101,7 @@ var saveFile = function(file, folderId, res) {
                     res.status(500).send({message: "数据库错误，未能保存此文件"});
                 }
                 folder.files = folder.files.concat(file._id);
+                folder.updated_at = Date.now();
                 folder.save(function(err) {
                     if(err) {
                         res.status(500).send({message: "数据库错误，未能保存文件夹"});
@@ -133,6 +135,7 @@ exports.uploadFiles = function(req, res) {
     var file = new File(req.files.file);
     file.description = req.body.description;
     file.owner = req.user._id;
+    file.created_at = Date.now();
     saveFile(file, folderId, res);
 };
 
@@ -141,6 +144,7 @@ exports.uploadRepo = function(req, res) {
     var file = new File(req.files.file);
     file.description = req.body.description;
     file.owner = req.user._id;
+    file.created_at = Date.now();
     saveFile(file, folderId, res);
 };
 
@@ -165,6 +169,7 @@ exports.editFile = function(req, res) {
             file.size = newFile.size;
             file.extension = newFile.extension;
             file.mimetype = newFile.mimetype;
+            file.updated_at = Date.now();
             file.save(function(err) {
                 if(err) {
                     res.status(500).send({message: "数据库错误，未能保存此文件"});
@@ -217,25 +222,38 @@ exports.viewFile = function(req, res) {
 };
 
 /**
- * When deleting a folder, also delete files in it.
+ *  * When delete the file, delete the file in database record, in sunpack folder and in the ref of Folder
+ * @param req
  * @param res
- * @param result
- * @param done
  */
-exports.deleteFolder = function(res, result, done) {
-    console.log(result);
-    var folder = result[0];
-    async.each(folder.files, function(file, callback) {
-        File.findOneAndRemove(file, function(err) {
-            callback(err);
-        })
-    }, function(err) {
+exports.deleteFile = function(req, res) {
+    var file = req.file;
+    var folderId = req.query.folderId;
+    File.findByIdAndRemove(file._id, function(err) {
         if(err) {
-            done(err);
+            res.status(500).send({message: '数据库错误，未能删除文件'})
         }else {
-            done();
+            fs.renameSync(file.path, trash_path + file.name); // move the old file to trash
+            Folder.findById(folderId, function(err, folder) {
+                if(err) {
+                    res.status(500).send({message: '数据库错误，未能找到文件所在的文件夹'});
+                }else if(!folder) {
+                    res.status(200).send({message: '删除成功'});
+                }else {
+                    console.log(folder);
+                    folder.files.splice(folder.files.indexOf(file._id), 1);
+                    folder.updated_at = Date.now();
+                    folder.save(function(err) {
+                        if(err) {
+                            res.status(500).send({message: '数据库错误，未能删除文件引用'})
+                        }else {
+                            res.status(200).send({message: '删除成功'});
+                        }
+                    })
+                }
+            })
         }
-    })
+    });
 };
 
 exports.downloadFile = function(req, res) {

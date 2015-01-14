@@ -1,0 +1,38 @@
+<ui-view>
+    <div class="" style="margin-top:10px">
+        <div ncy-breadcrumb class="breadcrumb-text ptl"></div>
+    </div>
+
+    <ul class="">
+        <li ng-repeat="semester in semesters" class="subject-list mo-info col-md-4 col-lg-4" >
+            <div class="featured-grid-outer">
+                <a ng-href="/#/sunpack/repo/subject/{{subject._id}}/semesters/{{semester._id}}" class="featured-grid-link-semester subject-image-{{$index}}">
+                <!--<div >-->
+                    <span  class="featured-grid-inner">
+
+                            <span class="showcase-name">
+                                <h3>{{semester.name}}</h3>
+                            </span>
+                        <br/>
+                        <br/>
+
+                         <span class="inline file-count">
+                            <i class="fa fa-folder-o"></i> &nbsp;{{semester.sharedFoldersCount}} &nbsp;&nbsp;&nbsp;&nbsp;
+                             <i class="fa fa-files-o"></i> &nbsp;{{semester.sharedFilesCount}}
+                        </span>
+                    </span>
+                    <!--2个文件夹  2个文件-->
+
+                </a>
+                <!--<div class="featured-grid-more-info">-->
+                    <!--These projects all use GitHub Wikis to share documentation and helpful r...-->
+                    <!--<div class="featured-showcase-meta">-->
+                        <!--<span class="tooltipped tooltipped-n meta-info" aria-label="8 Repositories"><span class="octicon octicon-repo"></span> 8</span>-->
+                        <!--<span class="tooltipped tooltipped-n tooltipped-multiline meta-info" aria-label="5 Languages: Scala, Java, JavaScript, Ruby, and Objective-C."><span class="octicon octicon-code"></span> 5</span>-->
+                    <!--</div>-->
+                <!--</div>-->
+            </div>
+        </li>
+    </ul>
+
+</ui-view>

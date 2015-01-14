@@ -1,6 +1,8 @@
 <div class="container-fluid">
     <!--<div class="jumbotron" style="margin-top:-40px">-->
-        <h4 class="tableTitle pull-left">所有学生  &nbsp;&nbsp;</h4>
+        <h4 class="tableTitle pull-left">所有学生
+            <span class="label label-info small" style="font-size: small;color:white">{{students.length}} 人</span> &nbsp;&nbsp;
+           </h4>
         <div class=" pull-right" style="margin-top:10px">
             <a role="button" class="btn btn-primary " href="#createStudentDialog" data-toggle="modal"><i class="fa fa-user"></i> 创建学生</a>
             <a role="button" class="btn btn-primary " href="#createStudentBatchDialog" data-toggle="modal"><i class="fa fa-users"></i> 批量创建</a>
@@ -12,8 +14,18 @@
         </div>
     <!--</div>-->
     <br/><br/>
-    <div class="table">
+    <div class="table" ng-show="students.length">
         <div class="gridStyle style1" ng-grid="gridOptions" ng-click="selectStudent()"></div>
+    </div>
+
+    <div ng-if="!students.length">
+        <br/>
+        <br/>
+        <h4 align="center">还没有任何学生
+            <br/>
+            <br/>
+            <a role="button" class="btn btn-primary " href="#createStudentDialog" data-toggle="modal"><i class="fa fa-user"></i> 创建学生</a>
+        </h4>
     </div>
 
 </div>
@@ -107,19 +119,19 @@
                     <div class="input-group edit">
                         <span class="input-group-btn">
                             <button class="btn" type="button"><span class="fui-user">姓名</span></button></span>
-                        <input type="text" class="form-control" id="newName" placeholder="新姓名" ng-model="temp.newName" required/>
+                        <input tabindex="1" type="text" class="form-control" id="newName" placeholder="新姓名" ng-model="temp.newName" required/>
                     </div>
                     <br>
                     <div class="input-group edit">
                         <span class="input-group-btn">
                             <button class="btn" type="button"><span>用户名</span></button></span>
-                        <input type="text" class="form-control" id="newUsername" placeholder="新用户名" ng-model="temp.newUsername" required/>
+                        <input tabindex="2" type="text" class="form-control" id="newUsername" placeholder="新用户名" ng-model="temp.newUsername" required/>
                     </div>
                     <br/>
                     <div class="input-group edit">
                         <span class="input-group-btn">
                             <button class="btn" type="button"><span class="fui-calendar">生日</span></button></span>
-                        <input type="text" class="form-control" name="birthday" placeholder="yyyy-mm-dd  (如 2000-01-01)" ng-model="temp.newBirthday" ng-pattern="/^(\d{4})\-(\d{2})\-(\d{2})$/"/>
+                        <input tabindex="3" type="text" class="form-control" name="birthday" placeholder="yyyy-mm-dd  (如 2000-01-01)" ng-model="temp.newBirthday" ng-pattern="/^(\d{4})\-(\d{2})\-(\d{2})$/"/>
                     </div>
                     <span class="sun-error" ng-show="editForm.birthday.$error.pattern">生日格式应为 yyyy-mm-dd，如 2000-01-01.<br/>如果只知道月份不知道是哪天，请统一使用1号</span>
 
@@ -128,7 +140,7 @@
             </div>
             <div class="modal-footer">
                 <button class="btn btn-defautl" data-dismiss="modal">取消</button>
-                <button class="btn btn-success btn-lg" ng-click="editStudent(row)" ng-disabled="editForm.$invalid">确定</button>
+                <button tabindex="4" class="btn btn-success btn-lg" ng-click="editStudent(row)" ng-disabled="editForm.$invalid">确定</button>
             </div>
         </div>
     </div>

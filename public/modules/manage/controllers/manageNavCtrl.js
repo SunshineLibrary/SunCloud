@@ -9,6 +9,7 @@ angular.module('manage')
             $scope.items = [
                 {name: '我的设备', state: 'myDevice'},
                 {name: '应用程序', state: 'appsManage'},
+                {name: '登录管理', state: 'logManage'},
                 {name: '锁屏管理', state: 'lockView'},
                 {name:'设置', state: 'mySetting'}];
 

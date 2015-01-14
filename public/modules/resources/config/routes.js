@@ -109,5 +109,9 @@ angular.module('resources').config(['$stateProvider',
         window.history.back();
 
     };
-});
-
+}).run(function(amMoment) {
+        amMoment.changeLocale('zh-cn');
+    })
+    .constant('angularMomentConfig', {
+        timezone: 'Beijing' // e.g. 'Europe/London'
+    });

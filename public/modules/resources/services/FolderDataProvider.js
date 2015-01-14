@@ -6,7 +6,7 @@ angular.module('resources')
             var thePromise = defered.promise;
             $http({
                 method: "GET",
-                url: "/folders/" + folderId + "?populate=files,semester"
+                url: "/folders/" + folderId + "?populate=files,semester,subject"
             }).success(function(folder){
                 defered.resolve(folder);
             }).error(function(err){
@@ -154,6 +154,65 @@ angular.module('resources')
         //    })
         //}
 
+        var getSharedFoldersBySubject = function(subjectId) {
+            var defered = $q.defer();
+            var thePromise = defered.promise;
+            $http({
+                method: "GET",
+                url: "/folders?subject=" + subjectId
+            }).success(function (folders) {
+                defered.resolve(folders);
+            }).error(function (err) {
+                defered.reject(err);
+                console.log(err);
+            });
+            return thePromise;
+        };
+
+        var getSharedFoldersBySubjectCount = function(subjectId) {
+            var defered = $q.defer();
+            var thePromise = defered.promise;
+            $http({
+                method: "GET",
+                url: "/folders/count?subject=" + subjectId
+            }).success(function (count) {
+                defered.resolve(count.count);
+            }).error(function (err) {
+                defered.reject(err);
+                console.log(err);
+            });
+            return thePromise;
+        };
+
+        var getSharedFoldersBySubjectAndSemester = function(subjectId, semesterId) {
+            var defered = $q.defer();
+            var thePromise = defered.promise;
+            $http({
+                method: "GET",
+                url: "/folders?subject=" + subjectId + "&semester=" + semesterId
+            }).success(function (folders) {
+                defered.resolve(folders);
+            }).error(function (err) {
+                defered.reject(err);
+                console.log(err);
+            });
+            return thePromise;
+        };
+
+        var getSharedFoldersBySubjectAndSemesterCount = function(subjectId, semesterId) {
+            var defered = $q.defer();
+            var thePromise = defered.promise;
+            $http({
+                method: "GET",
+                url: "/folders/count?subject=" + subjectId + "&semester=" + semesterId
+            }).success(function (count) {
+                defered.resolve(count.count);
+            }).error(function (err) {
+                defered.reject(err);
+                console.log(err);
+            });
+            return thePromise;
+        };
 
         return {
             getFolder: getFolder,
@@ -166,6 +225,10 @@ angular.module('resources')
             addFolderToRooms: addFolderToRooms,
             editFolderName: editFolderName,
             editFolderNameAndSemester: editFolderNameAndSemester,
-            deleteFolder: deleteFolder
+            deleteFolder: deleteFolder,
+            getSharedFoldersBySubject: getSharedFoldersBySubject,
+            getSharedFoldersBySubjectCount: getSharedFoldersBySubjectCount,
+            getSharedFoldersBySubjectAndSemester: getSharedFoldersBySubjectAndSemester,
+            getSharedFoldersBySubjectAndSemesterCount: getSharedFoldersBySubjectAndSemesterCount
         };
     }]);

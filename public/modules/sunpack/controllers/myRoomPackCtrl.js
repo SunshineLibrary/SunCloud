@@ -1,13 +1,31 @@
 angular.module('sunpack')
     .controller('myRoomPackController',
-    ['$scope', '$state','myRoom', 'folders', 'myFolders', 'FolderDataProvider','RoomDataProvider', function ($scope, $state, myRoom, folders, myFolders,FolderDataProvider, RoomDataProvider) {
-        $scope.myRoom = myRoom;
-        $scope.folders = folders;
+    ['$scope', '$state', '$stateParams','myRoom', 'folders', 'myFolders', 'FolderDataProvider','RoomDataProvider', '$rootScope', function ($scope, $state, $stateParams,myRoom, folders, myFolders,FolderDataProvider, RoomDataProvider, $rootScope) {
+        //$scope.myRoom = myRoom;
+        //$scope.folders = folders;
+        console.log('myroom enter');
+        console.log($scope.myRooms);
         $scope.myFolders = myFolders;
         $scope.selected = [];
         $scope.temp = {};
         $scope.error = {};
-        console.log($scope.myRoom.sunpack);
+        //console.log($scope.myRoom.sunpack);
+        $scope.myRoom = _.findWhere($scope.myRooms, {_id: $stateParams.roomId});
+        $scope.folders = folders;
+
+
+
+            //console.log($scope.myRoom);
+
+        //console.log(typeof $scope.myRoom.foldersByMe);
+        //console.log($scope.myRoom['foldersByMe']);
+        //console.log(JSON.stringify($scope.myRoom));
+
+
+        //console.log($scope.myRoom.name);
+        //
+        //$scope.folders = $scope.myRoom.foldersByMe;
+        //console.log($scope.folders);
 
         var subjectIds = _.map($scope.subjects, function(subject) {return subject._id});
         var semesterIds = _.map($scope.semesters, function(semester) {return semester._id});
@@ -15,6 +33,13 @@ angular.module('sunpack')
         $scope.selectedSubject = $scope.allSubjects[0]._id;
         $scope.allSemesters = [{name: '所有年级', _id: semesterIds }].concat($scope.semesters);
         $scope.selectedSemester = $scope.allSemesters[0]._id;
+        //
+        //$scope.$watch('folders', function(newValue, oldValue) {
+        //    if(newValue) {
+        //        console.log('.....', newValue);
+        //        $scope.myRoom.foldersByMe = $scope.folders;
+        //    }
+        //});
 
 
         $scope.gridOptions =
@@ -22,7 +47,7 @@ angular.module('sunpack')
             data: 'folders',
             multiSelect: false,
             enableColumnResize: true,
-            rowTemplate: '<div  ng-mouseover="$parent.showedit=true" ng-mouseleave="$parent.showedit=false" ng-style="{\'cursor\': row.cursor, \'z-index\': col.zIndex() }" ' +
+            rowTemplate: '<div  ng-mouseover="$parent.showedit=true" ng-mouseout="$parent.showedit=false" ng-style="{\'cursor\': row.cursor, \'z-index\': col.zIndex() }" ' +
             'ng-repeat="col in renderedColumns" ng-class="col.colIndex()" ' +
             'class="ngCell {{col.cellClass}}" ng-cell></div>',
             columnDefs: [
@@ -32,8 +57,8 @@ angular.module('sunpack')
                 {field: 'subject.name', displayName: '科目'},
                 {field: 'semester.name', displayName: '年级'},
                 {field: 'download', displayName: '下载情况'},
-                {field: 'created_at', displayName: '创建时间'},
-                {field: 'updated_at', displayName: '更新时间'},
+                {field: 'created_at', displayName: '创建时间', cellTemplate: '<span class="label label-success" am-time-ago="row.entity.created_at"></span>'},
+                {field: 'updated_at', displayName: '更新时间', cellTemplate: '<span class="label label-success" am-time-ago="row.entity.updated_at"></span>'},
                 {field: '', displayName: '移出', width: '5%',cellTemplate:
                 '<div class="ngCellText" ng-class="col.colIndex()" ng-show="showedit">' +
                 //'<a class="fui-new text-success" ng-click="showEditFolderDialog($event, row)"></a> &nbsp;&nbsp;' +
@@ -44,7 +69,7 @@ angular.module('sunpack')
 
         $scope.$watchGroup(['selectedSubject', 'selectedSemester'], function(newValue) {
             if(newValue) {
-                console.log(newValue);
+                //console.log(newValue);
                 _.each($scope.myFolders, function(folder) {
                     folder.show = newValue[0].indexOf(folder.subject._id) > -1 && newValue[1].indexOf(folder.semester._id) > -1;
                 })
@@ -66,8 +91,8 @@ angular.module('sunpack')
         };
 
         var getFoldersNotIn = function() {
-            $scope.foldersNotIn = _.filter($scope.myFolders, function(folder) {
-                return $scope.myRoom.sunpack.indexOf(folder._id) === -1;
+            $scope.foldersNotIn = _.reject($scope.myFolders, function(folder) {
+                return _.findWhere($scope.folders, {_id: folder._id})
             });
             _.each($scope.foldersNotIn, function(folder) {
                 folder.selected = false;
@@ -104,7 +129,7 @@ angular.module('sunpack')
                     //});
                     $('#addFoldersDialog').modal('hide');
                     swal({title: '添加成功', type: 'success', timer: 1500});
-
+                    $rootScope.$broadcast('addFoldersToRoom', {roomId: newRoom._id, num: selectedFolders.length});
                 })
                 .error(function(err) {
                     console.error(err);
@@ -129,7 +154,7 @@ angular.module('sunpack')
                             $scope.myRoom = newRoom;
                             swal({title: "移出成功", type: "success", timer: 1000 });
                             $scope.folders.splice($scope.folders.indexOf(row.entity),1);
-                            //$scope.foldersNotIn.push(row.entity);
+                            $rootScope.$broadcast('removeFolderFromRoom', {roomId: newRoom._id});
                         })
                         .error(function(err) {
                             console.error(err);

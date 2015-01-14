@@ -1,4 +1,5 @@
 <div>
+    <!--<span class="small sun-id" >id: {{theRoom._id}}</span>-->
     <div class="class-header">
         <span ng-hide="editorEnabled">
         <span class="h4">{{theRoom.name}}
@@ -10,6 +11,7 @@
             <a role="button" ng-click="save()" class="btn btn-primary btn-info glyphicon glyphicon-ok" >保存</a>
             <a role="button" ng-click="disableEditor()" class="btn btn-default glyphicon glyphicon-remove" >取消</a>
         </span>
+
         <div>
             <a href class="btn btn-danger btn-sm pull-right" style="margin:0 5px" ng-click="disclaimRoom()" ng-show="theRoom.type==='admin'"><span class="glyphicon glyphicon-leaf"></span>  取消认领</a>
             <a href class="btn btn-danger btn-sm pull-right" style="margin:0 5px" ng-click="deleteRoom()" ng-show="theRoom.type==='teaching'"><span class="glyphicon glyphicon-trash"></span>  删除小组</a>
@@ -26,6 +28,7 @@
                     <li><a href="" ng-click="toAddStudentsFromOtherRoom()"><i class="fa fa-paw"></i>&nbsp; 从其他班级添加</a></li>
                 </ul>
             </div>
+
             <!--<a class="btn btn-warning btn-sm pull-right"  ng-click="toAddStudents()">从学生列表中添加</a>-->
             <!--<a class="btn btn-warning btn-sm pull-right" id="room-btn-createStudents" href="#addStudentsBatchDialog2" data-toggle="modal">批量创建并添加</a>-->
         </div>
@@ -105,20 +108,20 @@
             </div>
             <div class="modal-body">
                 <form name="editForm" class="form-group">
-                    <div class="input-group">
+                    <div class="input-group edit">
                         <span class="input-group-btn"><button class="btn" type="button"><span class="fui-user">姓名</span></button></span>
-                        <input type="text" id="newName" class="form-control"  placeholder="新姓名" ng-model="temp.newName" required>
+                        <input tabindex="1" type="text" id="newName" class="form-control"  placeholder="新姓名" ng-model="temp.newName" required>
                     </div>
                     <br>
-                    <div class="input-group">
+                    <div class="input-group edit">
                         <span class="input-group-btn"><button class="btn" type="button"><span class="">用户名</span></button></span>
-                        <input type="text" id="newUsername" class="form-control" placeholder="新用户名" ng-model="temp.newUsername" required>
+                        <input tabindex="2" type="text" id="newUsername" class="form-control" placeholder="新用户名" ng-model="temp.newUsername" required>
                     </div>
                     <br/>
-                    <div class="input-group">
+                    <div class="input-group edit">
                         <span class="input-group-btn">
                             <button class="btn" type="button"><span class="fui-calendar">生日</span></button></span>
-                        <input type="text" class="form-control" name="birthday" placeholder="yyyy-mm-dd  (如 2000-01-01)" ng-model="temp.newBirthday" ng-pattern="/^(\d{4})\-(\d{2})\-(\d{2})$/"/>
+                        <input tabindex="3" type="text" class="form-control" name="birthday" placeholder="yyyy-mm-dd  (如 2000-01-01)" ng-model="temp.newBirthday" ng-pattern="/^(\d{4})\-(\d{2})\-(\d{2})$/"/>
                     </div>
                     <span class="sun-error" ng-show="editForm.birthday.$error.pattern">生日格式应为 yyyy-mm-dd，如 2000-01-01.<br/>如果只知道月份不知道是哪天，请统一使用1号</span>
 
@@ -127,7 +130,7 @@
             </div>
             <div class="modal-footer">
                 <button class="btn btn-defautl" data-dismiss="modal">取消</button>
-                <button class="btn btn-success btn-lg" ng-click="editStudent(row)" ng-disabled="editForm.$invalid">确定</button>
+                <button tabindex="4" class="btn btn-success btn-lg" ng-click="editStudent(row)" ng-disabled="editForm.$invalid">确定</button>
             </div>
         </div>
     </div>
@@ -273,15 +276,27 @@
             </div>
             <div class="modal-body">
                 <form  name="studentForm" class="form-group">
-                    <input type="text" class="form-control" placeholder="*新学生姓名" ng-model="newStudent.name" required>
+                    <div class="input-group new focus">
+                        <span class="input-group-addon"><i class="fui-user"></i>姓名</span>
+                        <input type="text" class="form-control" placeholder="*新学生姓名" ng-model="newStudent.name" required>
+                    </div>
+                    <!--<input type="text" class="form-control" placeholder="*新学生姓名" ng-model="newStudent.name" required>-->
                     <br>
-                    <input type="text" class="form-control" placeholder="*新学生用户名" ng-model="newStudent.username" required>
+                    <div class="input-group new focus">
+                        <span class="input-group-addon">用户名</span>
+                        <input type="text" class="form-control" placeholder="*新学生用户名" ng-model="newStudent.username" required>
+                    </div>
+                    <!--<input type="text" class="form-control" placeholder="*新学生用户名" ng-model="newStudent.username" required>-->
                     <br/>
-                    <div class="input-group">
-                        <span class="input-group-btn">
-                            <button class="btn" type="button"><span class="fui-calendar">生日</span></button></span>
+                    <div class="input-group new focus">
+                        <span class="input-group-addon"><span class="fui-calendar">生日</span></span>
                         <input type="text" class="form-control" name="birthday" placeholder="yyyy-mm-dd  (如 2000-01-01)" ng-model="newStudent.birthday" ng-pattern="/^(\d{4})\-(\d{2})\-(\d{2})$/"/>
                     </div>
+                    <!--<div class="input-group">-->
+                        <!--<span class="input-group-btn">-->
+                            <!--<button class="btn" type="button"><span class="fui-calendar">生日</span></button></span>-->
+                        <!--<input type="text" class="form-control" name="birthday" placeholder="yyyy-mm-dd  (如 2000-01-01)" ng-model="newStudent.birthday" ng-pattern="/^(\d{4})\-(\d{2})\-(\d{2})$/"/>-->
+                    <!--</div>-->
                     <span class="sun-error" ng-show="studentForm.birthday.$error.pattern">生日格式应为 yyyy-mm-dd，如 2000-01-01.<br/>如果只知道月份不知道是哪天，请统一使用1号</span>
                 </form>
 

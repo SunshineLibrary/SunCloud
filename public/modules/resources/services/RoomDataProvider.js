@@ -311,6 +311,28 @@ angular.module('schoolManage')
             return thePromise;
         };
 
+        var getFoldersByRoomAndTeacher = function(roomId, teacherId) {
+            var defered = $q.defer();
+            var thePromise = defered.promise;
+            $http({
+                method: "GET",
+                url: "/folders/room/" + roomId + '/teacher/' + teacherId
+            }).success(function(folders) {
+                defered.resolve(folders);
+            }).error(function(err){
+                console.error(err);
+                defered.reject(err);
+            });
+            return thePromise;
+        };
+
+        var getFoldersCountByRoomAndTeacher = function(roomId, teacherId) {
+            return $http({
+                method: "GET",
+                url: "/count/folders/room/" + roomId + '/teacher/' + teacherId
+            })
+        };
+
         var addFoldersToRoom = function(roomId, folderIds) {
             return $http({
                 method: "PUT",
@@ -330,6 +352,20 @@ angular.module('schoolManage')
                 }
             })
         };
+        //
+        //var getFoldersOfMyRooms = function(teacherId) {
+        //    var defered = $q.defer();
+        //    var thePromise = defered.promise;
+        //    $http({
+        //        method: "GET",
+        //        url: "/rooms/" + roomId + "?populate=teachers,students,school"
+        //    }).success(function(room){
+        //        defered.resolve(room);
+        //    }).error(function(err){
+        //        defered.reject(err);
+        //    });
+        //    return thePromise;
+        //};
 
         return {
             createAdminRoom: createAdminRoom,
@@ -355,6 +391,8 @@ angular.module('schoolManage')
             addTeachersToRoom: addTeachersToRoom,
             getMyRooms: getMyRooms,
             getFoldersByRoom: getFoldersByRoom,
+            getFoldersByRoomAndTeacher: getFoldersByRoomAndTeacher,
+            getFoldersCountByRoomAndTeacher: getFoldersCountByRoomAndTeacher,
             addFoldersToRoom: addFoldersToRoom,
             removeFolderFromRoom: removeFolderFromRoom
 

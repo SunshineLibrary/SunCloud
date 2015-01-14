@@ -72,7 +72,7 @@
             </tr>
             <tr>
                 <td><strong>上次同步</strong></td>
-                <td>{{tablet.lastUpdate}}</td>
+                <td><span am-time-ago="tablet.lastUpdate"></span></td>
             </tr>
         </table>
 
@@ -85,7 +85,7 @@
             <th>登出时间</th>
             <tr ng-repeat="record in xiaoshuHistory">
                 <td><a ng-href="/#/tablets/{{record.tabletId._id}}">{{record.tabletId.machine_id}}</a></td>
-                <td>{{record.logout_at}}</td>
+                <td>{{record.logout_at | amDateFormat:'L , a h:mm:ss '}}</td>
             </tr>
         </table>
         <div ng-hide="xiaoshuHistory.length">
