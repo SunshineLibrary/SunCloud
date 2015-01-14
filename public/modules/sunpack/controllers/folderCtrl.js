@@ -1,12 +1,13 @@
 angular.module('sunpack')
     .controller('folderController',
-    ['$scope', 'folder', 'RoomDataProvider', 'FolderDataProvider', 'FileDataProvider','AuthService', '$stateParams', 'FileUploader', '$state', '$timeout', function ($scope, folder, RoomDataProvider, FolderDataProvider, FileDataProvider,AuthService, $stateParams, FileUploader, $state, $timeout) {
+    ['$scope', 'folder', 'RoomDataProvider', 'FolderDataProvider', 'FileDataProvider','AuthService', '$stateParams', 'FileUploader', '$state', '$timeout', '$rootScope', function ($scope, folder, RoomDataProvider, FolderDataProvider, FileDataProvider,AuthService, $stateParams, FileUploader, $state, $timeout, $rootScope) {
         $scope.folder = folder;
         $scope.files = $scope.folder.files;
         $scope.myRoomsAssigned = [];
         $scope.error = {};
         $scope.temp = {};
         $scope.editFile = {};
+        $scope.filterOptions = {filterText: ''};
         var me = AuthService.me;
         var myRoomsPromise = RoomDataProvider.getRoomsByTeacher(me._id);
 
@@ -136,6 +137,7 @@ angular.module('sunpack')
         };
         $scope.uploader.onSuccessItem = function(item, response) {
             $scope.files.push(response);
+            $rootScope.$broadcast('addFile', {folderId: folder._id, updated_at: Date.now()});
         };
         $scope.uploader.onCompleteAll = function() {
             console.info('onCompleteAll');
@@ -259,10 +261,11 @@ angular.module('sunpack')
                     confirmButtonText: "删除",
                     closeOnConfirm: false },
                 function(){
-                    FileDataProvider.deleteFile(row.entity._id)
+                    FileDataProvider.deleteFileFromFolder(row.entity._id, folder._id)
                         .success(function(file){
                             swal({title: "删除成功", type: "success", timer: 1000 });
                             $scope.files.splice($scope.files.indexOf(row.entity),1);
+                            $rootScope.$broadcast('deleteFile', {folderId: folder._id, updated_at: Date.now()});
                         })
                         .error(function(err){
                             console.error(err);
@@ -294,12 +297,18 @@ angular.module('sunpack')
                 '<a class="fui-cross text-danger" ng-click="deleteFile($event,row)"></a>' +
                 '&nbsp;&nbsp;<a ng-href="/download/files/{{row.entity._id}}" class="glyphicon glyphicon-download-alt text-primary"></a></div>'}
             ],
-            selectedItems: []
+            selectedItems: [],
+            filterOptions: $scope.filterOptions
         };
 
 
         $scope.selectFile = function (fileId) {
             $state.go('sunpack.subject.folder.file', {fileId: fileId});
+        };
+
+        $scope.gotoRepo = function() {
+            console.log($scope.folder);
+            $state.go('sunpack.repo.subject.semester', {subjectId: $scope.folder.subject._id, semesterId: $scope.folder.semester._id})
         };
 
 
@@ -363,27 +372,4 @@ angular.module('sunpack')
 
     }
     ]
-)
-    .filter('typeFilter', function($sce) {
-        return function(type) {
-            if(type === 'image') {
-                return $sce.trustAsHtml('<span class="label label-info"><i class="fa fa-image"></i> 图片</span>');
-            }
-            if(type === 'audio') {
-                return $sce.trustAsHtml('<span class="label label-info"><i class="fa fa-music"></i> 音频</span>');
-            }
-            if(type === 'video') {
-                return $sce.trustAsHtml('<span class="label label-info"><i class="fa fa-video-camera"></i> 视频</span>');
-            }
-            if(type === 'doc') {
-                return $sce.trustAsHtml('<span class="label label-info"><i class="fa fa-file-text"></i> 文档</span>');
-            }
-            if(type === 'ebook') {
-                return $sce.trustAsHtml('<span class="label label-info"><i class="fa fa-book"></i> 电子书</span>');
-            }
-            if(type === 'application') {
-                return $sce.trustAsHtml('<span class="label label-info"><i class="fa fa-cogs"></i> 应用</span>');
-            }
-            return $sce.trustAsHtml('<span class="label label-info"><i class="fa fa-file"></i> 其他</span>');
-        };
-    });
+);

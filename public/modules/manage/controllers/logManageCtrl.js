@@ -1,5 +1,5 @@
-angular.module('schoolManage')
-    .controller('tabletsController',
+angular.module('manage')
+    .controller('logManageController',
     ['tablets', 'TabletDataProvider', '$scope', '$location',
         function (tablets, TabletDataProvider, $scope, $location) {
             $scope.tablets = tablets;
@@ -13,6 +13,7 @@ angular.module('schoolManage')
                         tabletItem.userId = records[0].userId._id;
                         tabletItem.userName = records[0].userId.name;
                         tabletItem.update_at = records[0].update_at;
+
                     }
                 }).error(function(err) {
                     console.error(err);

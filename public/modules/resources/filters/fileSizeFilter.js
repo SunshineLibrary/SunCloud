@@ -3,8 +3,10 @@ angular.module('resources')
     return function(size) {
         if( (size/1024/1024) > 1) {
             return Math.round(size/1024/1024) + ' MB';
-        }else {
+        }else if(size/1024 > 1) {
             return Math.round(size/1024) + ' KB'
+        }else {
+            return size + ' bytes'
         }
         //if()
         //return $sce.trustAsHtml('<span>{{size/1024}} MB</span>');

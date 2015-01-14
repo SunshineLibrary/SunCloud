@@ -23,7 +23,7 @@
         <form ng-show="isResettingPassword" class="form-inline" name="resetForm">
             <input type="text" class="form-control" style="color: black; font-size: large" ng-model="newPassword" placeholder="请输入新密码"/>
             <a role="button" ng-click="save()" class="btn btn-success glyphicon glyphicon-ok" ng-disabled="resetForm.$invalid" >保存</a>
-            <a role="button" ng-click="disableEditor()" class="btn btn-default glyphicon glyphicon-remove" >取消</a>
+            <a role="button" ng-click="disableEditor()" class="btn glyphicon glyphicon-remove" >取消</a>
         </form>
     <hr/>
 </section>

@@ -573,11 +573,11 @@ angular.module('resources')
 
         $('[data-toggle="checkbox"]').radiocheck();
         // Table: Toggle all checkboxes
-        $('.table .toggle-all :checkbox').on('click', function () {
-            var $this = $(this);
-            var ch = $this.prop('checked');
-            $this.closest('.table').find('tbody :checkbox').radiocheck(!ch ? 'uncheck' : 'check');
-        });
+        //$('.table .toggle-all :checkbox').on('click', function () {
+        //    var $this = $(this);
+        //    var ch = $this.prop('checked');
+        //    $this.closest('.table').find('tbody :checkbox').radiocheck(!ch ? 'uncheck' : 'check');
+        //});
         // Focus state for append/prepend inputs
         $('.input-group').on('focus', '.form-control', function () {
             $(this).closest('.input-group, .form-group').addClass('focus');
@@ -585,16 +585,16 @@ angular.module('resources')
             $(this).closest('.input-group, .form-group').removeClass('focus');
         });
 
-        // Table: Add class row selected
-        $('.table tbody :checkbox').on('change.radiocheck', function () {
-            var $this = $(this);
-            var check = $this.prop('checked');
-            var checkboxes = $this.closest('.table').find('tbody :checkbox');
-            var checkAll = checkboxes.length === checkboxes.filter(':checked').length;
-
-            $this.closest('tr')[check ? 'addClass' : 'removeClass']('selected-row');
-            $this.closest('.table').find('.toggle-all :checkbox').radiocheck(checkAll ? 'check' : 'uncheck');
-        });
+        //// Table: Add class row selected
+        //$('.table tbody :checkbox').on('change.radiocheck', function () {
+        //    var $this = $(this);
+        //    var check = $this.prop('checked');
+        //    var checkboxes = $this.closest('.table').find('tbody :checkbox');
+        //    var checkAll = checkboxes.length === checkboxes.filter(':checked').length;
+        //
+        //    $this.closest('tr')[check ? 'addClass' : 'removeClass']('selected-row');
+        //    $this.closest('.table').find('.toggle-all :checkbox').radiocheck(checkAll ? 'check' : 'uncheck');
+        //});
 
     }
 ]);

@@ -36,7 +36,7 @@ angular.module('schoolManage')
                 'class="ngCell {{col.cellClass}}" ng-cell></div>',
                 columnDefs: [
                     {field: '_id', visible: false},
-                    {field: 'name', displayName: '姓名'},
+                    {field: 'name', displayName: '姓名', cellTemplate: '<a href="">{{row.entity.name}}</a>'},
                     {field: 'username', displayName: '用户名'},
                     {field: 'birthday', displayName: '生日'},
                     {field: 'gender', displayName: '性别', width: 60},
@@ -183,7 +183,7 @@ angular.module('schoolManage')
             };
 
             // Focus state for append/prepend inputs
-            $('.edit').on('focus', '.form-control', function () {
+            $('.input-group.edit').on('focus', '.form-control', function () {
                 $(this).closest('.input-group, .form-group').addClass('focus');
             }).on('blur', '.form-control', function () {
                 $(this).closest('.input-group, .form-group').removeClass('focus');

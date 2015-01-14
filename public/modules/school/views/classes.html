@@ -1,7 +1,11 @@
 <div class="container-fluid">
 
-    <h4 class="tableTitle pull-left">所有班级 &nbsp;&nbsp;</h4>
+    <h4 class="tableTitle pull-left">所有班级
+        <span class="label label-info small" style="font-size: small;color:white">{{rooms.length}} 个</span> &nbsp;&nbsp;
+        <!--<br/>-->
+        <!--<p  class="small" style="font-size:medium;margin-top:15px">总数：{{rooms.length}}</p>-->
 
+    </h4>
     <div class=" pull-right" style="margin-top:10px">
         <a role="button" class="btn btn-primary btn-primary" href="#createRoomDialog" data-toggle="modal"><i class="glyphicon glyphicon-plus"></i>创建班级</a>
     </div>
@@ -11,10 +15,22 @@
         <input type="search" class="form-control" style="width: 250px"  placeholder="搜索" ng-model="filterOptions.filterText"/>
     </div>
     <br>
-    <br>
+    <!--<br/>-->
+    <br/>
 
-    <div class="table">
+    <div class="table" ng-if="rooms.length">
         <div class="gridStyle" ng-grid="gridOptions" ng-click="selectRoom()"></div>
+    </div>
+
+    <div ng-if="!rooms.length">
+        <br/>
+        <br/>
+        <h4 align="center">还没有任何班级
+            <br/>
+            <br/>
+            <a role="button" class="btn btn-primary btn-primary" href="#createRoomDialog" data-toggle="modal"><i class="glyphicon glyphicon-plus"></i>创建班级</a>
+        </h4>
+
     </div>
 </div>
 

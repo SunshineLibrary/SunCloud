@@ -3,6 +3,11 @@
         <div ncy-breadcrumb class="breadcrumb-text ptl"></div>
     </div>
     <div ng-show="folders.length">
+        <div class="inner-addon left-addon pull-left" style="">
+            <i class="glyphicon glyphicon-search"></i>
+            <input type="search" class="form-control" style="width: 250px"  placeholder="搜索" ng-model="filterOptions.filterText"/>
+        </div>
+
         <a  role="button" class="btn btn-primary pull-right" data-toggle="modal" href="#createFolderDialog"><span class="fui-folder"></span> 创建书包文件夹</a>
         <br/>
         <div class="table">

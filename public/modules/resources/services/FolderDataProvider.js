@@ -168,6 +168,22 @@ angular.module('resources')
             });
             return thePromise;
         };
+
+        var getSharedFoldersBySubjectCount = function(subjectId) {
+            var defered = $q.defer();
+            var thePromise = defered.promise;
+            $http({
+                method: "GET",
+                url: "/folders/count?subject=" + subjectId
+            }).success(function (count) {
+                defered.resolve(count.count);
+            }).error(function (err) {
+                defered.reject(err);
+                console.log(err);
+            });
+            return thePromise;
+        };
+
         var getSharedFoldersBySubjectAndSemester = function(subjectId, semesterId) {
             var defered = $q.defer();
             var thePromise = defered.promise;
@@ -176,6 +192,21 @@ angular.module('resources')
                 url: "/folders?subject=" + subjectId + "&semester=" + semesterId
             }).success(function (folders) {
                 defered.resolve(folders);
+            }).error(function (err) {
+                defered.reject(err);
+                console.log(err);
+            });
+            return thePromise;
+        };
+
+        var getSharedFoldersBySubjectAndSemesterCount = function(subjectId, semesterId) {
+            var defered = $q.defer();
+            var thePromise = defered.promise;
+            $http({
+                method: "GET",
+                url: "/folders/count?subject=" + subjectId + "&semester=" + semesterId
+            }).success(function (count) {
+                defered.resolve(count.count);
             }).error(function (err) {
                 defered.reject(err);
                 console.log(err);
@@ -196,6 +227,8 @@ angular.module('resources')
             editFolderNameAndSemester: editFolderNameAndSemester,
             deleteFolder: deleteFolder,
             getSharedFoldersBySubject: getSharedFoldersBySubject,
-            getSharedFoldersBySubjectAndSemester: getSharedFoldersBySubjectAndSemester
+            getSharedFoldersBySubjectCount: getSharedFoldersBySubjectCount,
+            getSharedFoldersBySubjectAndSemester: getSharedFoldersBySubjectAndSemester,
+            getSharedFoldersBySubjectAndSemesterCount: getSharedFoldersBySubjectAndSemesterCount
         };
     }]);

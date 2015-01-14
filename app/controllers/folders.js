@@ -14,6 +14,7 @@ var Q = require('q');
 var fs = require('fs');
 var util = require('util');
 var file_path = __dirname + '/../../upload/sunpack/';
+var Room = mongoose.model('Room');
 
 
 exports.getFolderById = function (req, res, next, folderId) {
@@ -50,27 +51,105 @@ exports.getFoldersByRoom = function(req, res) {
     })
 };
 
+exports.getFoldersByRoomAndTeacher = function(req, res) {
+    var folderIds = req.room.sunpack;
+    var folders = [];
+    var teacherId = req.user._id;
+    async.each(folderIds, function(folderId, callback) {
+        Folder.findById(folderId).populate('subject').populate('semester').exec(function(err, folder) {
+            if(err) {
+                callback(err);
+            }else {
+                if(folder){
+                    //console.log(folder);
+                    if((folder.owner.toString() === teacherId.toString())) {
+                        folders.push(folder);
+                    }
+                }
+                callback();
+            }
+        })
+    }, function(err) {
+        if(err) {
+            res.status(500).send({message: '数据库错误，未能找到该班级的文件夹'});
+        }else {
+            res.status(200).send(folders);
+        }
+    })
+};
+
+exports.getFoldersCountByRoomAndTeacher = function(req, res) {
+    var folderIds = req.room.sunpack;
+    var count = 0;
+    var teacherId = req.user._id;
+    async.each(folderIds, function(folderId, callback) {
+        Folder.findById(folderId).exec(function(err, folder) {
+            if(err) {
+                callback(err);
+            }else {
+                if(folder){
+                    //console.log(folder);
+                    if((folder.owner.toString() === teacherId.toString())) {
+                        count += 1;
+                    }
+                }
+                callback();
+            }
+        })
+    }, function(err) {
+        if(err) {
+            res.status(500).send({message: '数据库错误，未能找到该班级的文件夹'});
+        }else {
+            res.status(200).send({count: count});
+        }
+    })
+};
+
 
 /**
- * When deleting a folder, also delete files in it.
+ * When deleting a folder, also delete files in it, and the ref in Room.sunpack
  * @param res
  * @param result
  * @param done
  */
 exports.deleteFolder = function(res, result, done) {
-    console.log(result);
     var folder = result[0];
-    async.each(folder.files, function(file, callback) {
-        File.findOneAndRemove(file, function(err) {
-            callback(err);
-        })
-    }, function(err) {
+    console.log('>>>>>>>>>>> deleting folder' );
+    console.log(folder);
+    Room.find({sunpack: folder._id}, function(err, rooms) {
+        if(err) {
+            console.error(err);
+        }else {
+            console.log(rooms);
+        }
+    });
+    Room.update({sunpack: folder._id}, {$pull: {sunpack: folder._id}}, function(err) {
         if(err) {
             done(err);
         }else {
-            done();
+            async.each(folder.files, function(file, callback) {
+                File.findByIdAndRemove(file._id, function(err) {
+                    console.log('>>>>>>>>>>> 1' );
+                    if(err) {
+                        callback(err)
+                    }else {
+                        console.log('>>>>>>>>>>> 2' );
+
+                    }
+                });
+            }, function(err) {
+                console.log('>>>>>>>>>>> 4' );
+
+                if(err) {
+                    done(err);
+                }else {
+                    done();
+                }
+            })
         }
-    })
+    });
+
+
 };
 
 /**

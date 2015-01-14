@@ -1,30 +1,66 @@
 angular.module('sunpack')
     .controller('allSubjectsController',
-    ['subjects','semesters', 'myRooms', 'Authentication', '$scope', 'TeacherDataProvider', 'FolderDataProvider', '$state',
-        function (subjects, semesters, myRooms,Authentication, $scope, TeacherDataProvider, FolderDataProvider, $state) {
+    ['subjects','semesters', 'myRooms', 'Authentication', '$scope', 'TeacherDataProvider', 'FolderDataProvider', 'RoomDataProvider','$state', '$rootScope',
+        function (subjects, semesters, myRooms,Authentication, $scope, TeacherDataProvider, FolderDataProvider, RoomDataProvider,$state, $rootScope) {
             $scope.subjects = subjects;
             $scope.semesters = semesters;
             $scope.myRooms = myRooms;
             $scope.mySubjects = [];
             $scope.subjectsNotIn = [];
-            var me = Authentication.user;
+            $scope.me = Authentication.user;
             _.each($scope.subjects, function(subject) {
-                if(me.subjects.indexOf(subject._id) === -1) {
+                if($scope.me.subjects.indexOf(subject._id) === -1) {
                     $scope.subjectsNotIn.push(subject);
                 }else {
-                    FolderDataProvider.getFoldersCountByTeacherAndSubject(me._id, subject._id).then(function(count) {
+                    FolderDataProvider.getFoldersCountByTeacherAndSubject($scope.me._id, subject._id).then(function(count) {
                         subject.count = count;
                         $scope.mySubjects.push(subject);
                     });
                 }
             });
 
+            _.each($scope.myRooms, function(room) {
+                RoomDataProvider.getFoldersCountByRoomAndTeacher(room._id, $scope.me._id).success(function(count) {
+                    room.foldersByMeCount = count.count;
+                    console.log(count);
+                })
+            });
 
-            $scope.selectedSubject = $scope.mySubjects[0];
+
+            $rootScope.$on('createFolder', function(event, data) {
+                var theSubject = _.find($scope.subjects, function(subject) {
+                    return subject._id === data.subjectId;
+                });
+                theSubject.count += 1;
+            });
+
+            $rootScope.$on('deleteFolder', function(event, data) {
+                var theSubject = _.find($scope.subjects, function(subject) {
+                    return subject._id === data.subjectId;
+                });
+                theSubject.count -= 1;
+            });
+
+
+            $rootScope.$on('addFoldersToRoom', function(event, data) {
+                var theRoom = _.find($scope.myRooms, function(room) {
+                    return room._id === data.roomId;
+                });
+                theRoom.foldersByMeCount += data.num;
+            });
+
+            $rootScope.$on('removeFolderFromRoom', function(event, data) {
+                var theRoom = _.find($scope.myRooms, function(room) {
+                    return room._id === data.roomId;
+                });
+                theRoom.foldersByMeCount  -= 1;
+            });
+
+            //$scope.selectedSubject = $scope.mySubjects[0];
 
 
             $scope.addSubject = function(subject) {
-            TeacherDataProvider.addSubject(me._id, subject._id)
+            TeacherDataProvider.addSubject($scope.me._id, subject._id)
                 .success(function() {
                     $scope.mySubjects.push(subject);
                     $scope.subjectsNotIn.splice($scope.subjectsNotIn.indexOf(subject), 1);
@@ -52,7 +88,7 @@ angular.module('sunpack')
                         confirmButtonText: "移除",
                         closeOnConfirm: false },
                     function(){
-                        TeacherDataProvider.removeSubject(me._id, subject._id)
+                        TeacherDataProvider.removeSubject($scope.me._id, subject._id)
                             .success(function() {
                                 $scope.mySubjects.splice($scope.mySubjects.indexOf(subject), 1);
                                 $scope.subjectsNotIn.push(subject);
@@ -71,16 +107,24 @@ angular.module('sunpack')
 
 
             $scope.selectSubject = function(subjectId) {
-                $scope.label = '阳光书包';
+                //$scope.label = '阳光书包';
                 $state.go('sunpack.subject', {subjectId: subjectId});
             };
             $scope.selectRoom = function (roomId) {
-                $scope.label = '我的班级';
+                //$scope.label = '我的班级';
                 $state.go('sunpack.myroom', {roomId: roomId});
             };
-            $scope.gotoRepo = function() {
-              $scope.label = '资源库';
+            $scope.gotoRepo2 = function() {
                 $state.go('sunpack.repo')
+            };
+            $scope.gotoRepo = function(selectedSubject, selectedSemester) {
+                if(selectedSubject && selectedSemester) {
+                    $state.go('sunpack.repo.subject.semester', {subjectId: selectedSubject, semesterId: selectedSemester})
+                }else if(selectedSubject) {
+                    $state.go('sunpack.repo.subject', {subjectId: selectedSubject});
+                }else {
+                    $state.go('sunpack.repo');
+                }
             };
 
             $(document).ready(function(){

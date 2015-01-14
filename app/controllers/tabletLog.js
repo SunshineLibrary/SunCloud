@@ -266,10 +266,10 @@ exports.checkToken = function(req, res){
                         error = '数据库错误，未能找到该用户信息， 请重试.';
                         errorCode = 500;
                     }
-                    callback(error, user);
+                    callback(error, user, record);
                 })
             },
-            function(user, callback) {
+            function(user, record, callback) {
                 var user_type = user.roles.indexOf('student') > -1 ? 'student': 'teacher';
                 findRoom(user._id, user_type, function(err, room) {
                     if(err) {
@@ -277,10 +277,10 @@ exports.checkToken = function(req, res){
                         error = '数据库错误，未能找到该新湖所在班级，请重试.';
                         errorCode = 500;
                     }
-                    callback(error, user, user_type, room);
+                    callback(error, user, record, user_type, room);
                 })
             },
-            function(user, user_type, room, callback) {
+            function(user, record, user_type, room, callback) {
                 getAllowedApps(function(err, allowedApps) {
                     if(err) {
                         error = '获取应用白名单失败，请重试.';
@@ -297,7 +297,10 @@ exports.checkToken = function(req, res){
                         user_class: room? room.name: '暂无班级',
                         user_password: user.school.launcherPassword
                     };
-                    console.log(userInfo);
+                    record.update_at = Date.now();
+                    record.save(function(err) {
+                        console.error(err);
+                    });
                     res.status(200).send({
                         status: 200,
                         user_info: userInfo

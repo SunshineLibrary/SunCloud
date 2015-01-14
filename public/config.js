@@ -4,7 +4,7 @@
 var ApplicationConfiguration = (function() {
 	// Init module configuration options
 	var applicationModuleName = 'suncloud';
-	var applicationModuleVendorDependencies = ['ngResource', 'ngAnimate', 'ui.router', 'ui.bootstrap', 'ui.utils','ngRoute','ngGrid', 'angularFileUpload', 'ui.grid', 'ui.checkbox', 'ncy-angular-breadcrumb'];
+	var applicationModuleVendorDependencies = ['ngResource', 'ngAnimate', 'ui.router', 'ui.bootstrap', 'ui.utils','ngRoute','ngGrid', 'angularFileUpload', 'ui.grid', 'ui.checkbox', 'ncy-angular-breadcrumb', 'angularMoment'];
 
 	// Add a new vertical module
 	var registerModule = function(moduleName, dependencies) {

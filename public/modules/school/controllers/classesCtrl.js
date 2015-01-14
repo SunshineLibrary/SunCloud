@@ -19,7 +19,7 @@ angular.module('schoolManage')
                 'class="ngCell {{col.cellClass}}" ng-cell></div>',
                 columnDefs: [
                     {field: '_id', visible: false},
-                    {field: 'name', displayName: '班级名'},
+                    {field: 'name', displayName: '班级名', cellTemplate: '<a href="">{{row.entity.name}}</a>'},
                     {field: 'code', displayName: '班级编号', cellTemplate: '<div ng-show="row.entity.code">{{row.entity.code}}</div><div ng-hide="row.entity.code"><span class="label label-default">暂无</span></div>'},
                     {field:'students.length', displayName: '学生数'},
                     {field: 'teachers.length', displayName: '老师数'},

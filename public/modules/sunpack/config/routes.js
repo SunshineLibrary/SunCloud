@@ -101,9 +101,9 @@ angular.module('sunpack')
                         function(RoomDataProvider, $stateParams) {
                             return RoomDataProvider.getRoom($stateParams.roomId);
                         }],
-                    folders: ['RoomDataProvider', '$stateParams',
-                        function(RoomDataProvider, $stateParams) {
-                            return RoomDataProvider.getFoldersByRoom($stateParams.roomId);
+                    folders: ['RoomDataProvider', '$stateParams', 'AuthService',
+                        function(RoomDataProvider, $stateParams, AuthService) {
+                            return RoomDataProvider.getFoldersByRoomAndTeacher($stateParams.roomId, AuthService.me._id);
                         }],
                     myFolders: ['FolderDataProvider', 'AuthService',
                         function(FolderDataProvider, AuthService) {
@@ -161,15 +161,15 @@ angular.module('sunpack')
                         function(SubjectDataProvider, $stateParams) {
                             return SubjectDataProvider.getSubject($stateParams.subjectId);
                         }
-                    ],
-                    sharedFolders: ['FolderDataProvider', '$stateParams',
-                    function(FolderDataProvider, $stateParams) {
-                        return FolderDataProvider.getSharedFoldersBySubject($stateParams.subjectId)
-                    }],
-                    sharedFiles: ['FileDataProvider', '$stateParams',
-                        function(FileDataProvider, $stateParams) {
-                            return FileDataProvider.getSharedFilesBySubject($stateParams.subjectId)
-                        }]
+                    ]
+                    //sharedFoldersCount: ['FolderDataProvider', '$stateParams',
+                    //function(FolderDataProvider, $stateParams) {
+                    //    return FolderDataProvider.getSharedFoldersBySubjectCount($stateParams.subjectId)
+                    //}],
+                    //sharedFilesCount: ['FileDataProvider', '$stateParams',
+                    //    function(FileDataProvider, $stateParams) {
+                    //        return FileDataProvider.getSharedFilesBySubjectCount($stateParams.subjectId)
+                    //    }]
                 },
                 ncyBreadcrumb: {
                     label: "{{subject.name}}"

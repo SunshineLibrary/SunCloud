@@ -41,6 +41,19 @@ angular.module('manage').config(['$stateProvider', '$urlRouterProvider',
                     ]
                 }
             }).
+            state('logManage', {
+                url: '/log',
+                parent: 'deviceManage',
+                controller: 'logManageController',
+                templateUrl: __templates + 'logManage.html',
+                resolve: {
+                    tablets: ['TabletDataProvider','AuthService',
+                        function(TabletDataProvider, AuthService) {
+                            return TabletDataProvider.getTabletsBySchool(AuthService.me.school);
+                        }
+                    ]
+                }
+            }).
             state('lockView', {
                 url: '/lockview',
                 parent: 'deviceManage',

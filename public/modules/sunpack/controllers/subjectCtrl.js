@@ -1,11 +1,14 @@
 angular.module('sunpack')
     .controller('subjectController',
-    ['AuthService', '$scope', 'SubjectDataProvider', 'FolderDataProvider', 'SemesterDataProvider','$stateParams', 'subject', '$state',
-        function (AuthService, $scope, SubjectDataProvider, FolderDataProvider, SemesterDataProvider, $stateParams, subject, $state) {
+    ['AuthService', '$scope', 'SubjectDataProvider', 'FolderDataProvider', 'SemesterDataProvider','$stateParams', 'subject', '$state', '$rootScope',
+        function (AuthService, $scope, SubjectDataProvider, FolderDataProvider, SemesterDataProvider, $stateParams, subject, $state, $rootScope) {
             $scope.subject = subject;
             $scope.newFolder = {};
             $scope.temp = {};
             var me = AuthService.me;
+            $scope.filterOptions = {filterText: ''};
+
+            $scope.theDate = new Date();
 
             FolderDataProvider.getFoldersByTeacherAndSubject(me._id, subject._id).then(function(folders) {
                $scope.folders = folders;
@@ -14,7 +17,21 @@ angular.module('sunpack')
             SemesterDataProvider.getAllSemesters().then(function(semesters) {
                 $scope.semesters = semesters;
             });
+            $rootScope.$on('addFile', function(event, data) {
+                var theFolder = _.find($scope.folders, function(folder) {
+                    return folder._id === data.folderId;
+                });
+                theFolder.files.length += 1;
+                theFolder.updated_at = Date.now();
+            });
 
+            $rootScope.$on('deleteFile', function(event, data) {
+                var theFolder = _.find($scope.folders, function(folder) {
+                    return folder._id === data.folderId;
+                });
+                theFolder.files.length -= 1;
+                theFolder.updated_at = Date.now();
+            });
 
 
             $scope.createFolder = function() {
@@ -32,6 +49,8 @@ angular.module('sunpack')
                         $scope.newFolder = undefined;
                         swal({title: '创建文件夹成功', type: 'success', timer: 1500});
                         $('#createFolderDialog').modal('hide');
+                        $rootScope.$broadcast('createFolder', {subjectId: subject._id});
+
                     })
                     .error(function(err) {
                         console.error(err);
@@ -103,6 +122,7 @@ angular.module('sunpack')
                             .success(function(folder){
                                 swal({title: "删除成功", type: "success", timer: 1000 });
                                 $scope.folders.splice($scope.folders.indexOf(row.entity),1);
+                                $rootScope.$broadcast('deleteFolder', {subjectId: subject._id});
                             })
                             .error(function(err){
                                 console.error(err);
@@ -128,16 +148,25 @@ angular.module('sunpack')
                     {field: 'name', displayName: '文件夹名', cellTemplate: '<div><a>{{row.entity.name}}</a></div>'},
                     {field: 'files.length', displayName: '文件个数', width: '10%'},
                     {field: 'semester.name', displayName: '年级'},
-                    {field: 'created_at', displayName: '创建时间'},
-                    {field: 'updated_at', displayName: '更新时间'},
+                    {field: 'created_at', displayName: '创建时间', cellTemplate: '<span class="label label-success" am-time-ago="row.entity.created_at"></span>'},
+                    {field: 'updated_at', displayName: '更新时间', cellTemplate: '<span class="label label-success" am-time-ago="row.entity.updated_at"></span>'},
                     {field: 'rooms', displayName: '分配班级'},
                     {field: '', displayName: '编辑', width: '10%',cellTemplate:
                     '<div class="ngCellText" ng-class="col.colIndex()" ng-show="showedit">' +
                     '<a class="fui-new text-success" ng-click="showEditFolderDialog($event, row)"></a> &nbsp;&nbsp;' +
                     '<a class="fui-cross text-danger" ng-click="deleteFolder($event,row)"></a></div>'}
                 ],
-                selectedItems: []
+                selectedItems: [],
+                filterOptions: $scope.filterOptions
             };
+
+            //$.fn.timeago(new Date());
+            //$.fn.timeago.defaults = {
+            //    selector: 'time.timeago',
+            //    attr: 'datetime',
+            //    dir: 'up',
+            //    suffix: 'ago'
+            //};
 
 
             $scope.selectFolder = function () {

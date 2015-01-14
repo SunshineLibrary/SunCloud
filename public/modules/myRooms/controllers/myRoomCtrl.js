@@ -55,7 +55,8 @@ angular.module('myRooms').controller('myRoomController',
                 if(record.length){
                     student.tabletId = record[0].tabletId._id;
                     student.tablet = record[0].tabletId.machine_id;
-                    student.loginTime = record[0].loginTime;
+                    student.login_at = record[0].login_at;
+                    student.update_at = record[0].update_at;
                 }else{
                     $scope.noTabletNum++;
                 }
@@ -499,13 +500,13 @@ angular.module('myRooms').controller('myRoomController',
                 {field: 'name', displayName: '姓名'},
                 {field: 'birthday', displayName: '生日'},
                 {field: 'tablet', displayName: '正在使用的晓书', width: '25%',cellTemplate:'<div class="ngCellText" ng-class="col.colIndex()"><a ng-show="row.entity.tablet" href="/#/tablets/{{row.entity.tabletId}}">{{row.getProperty(col.field)}}</a><span ng-hide="row.entity.tablet" class="label label-default">暂无</span></div>'},
-                {field: 'loginTime', displayName: '上次登录'},
+                {field: 'lastUpdate', displayName: '上次更新', cellTemplate: '<span class="label label-success" am-time-ago="row.entity.update_at"></span>'},
                 {field: '', displayName: '操作', cellTemplate:
                 '<div class="ngCellText" ng-class="col.colIndex()"  ng-show="showedit">' +
                 '<a class="fui-new text-success" ng-click="showEditStudentDialog(row)"></a> &nbsp;&nbsp;' +
                 '<a class="fui-cross-circle text-danger" ng-click="removeStudentFromRoom(row)"></a></div>'},
                 {field: 'tablet', displayName: '',
-                    cellTemplate:'<button type="button" style="align-items: center" class="btn btn-inverse btn-sm" ng-click="logout(row)" ng-show="row.entity.tablet"><span class="glyphicon glyphicon-log-out"></span> 登出晓书</button>'}
+                    cellTemplate:'<button type="button" style="align-items: center" class="btn btn-danger btn-xs" ng-click="logout(row)" ng-show="row.entity.tablet"><span class="glyphicon glyphicon-log-out"></span> 登出晓书</button>'}
             ]
         };
         $scope.gridOptions2 =
@@ -526,7 +527,7 @@ angular.module('myRooms').controller('myRoomController',
             filterOptions: $scope.filterOptions2
         };
         // Focus state for append/prepend inputs
-        $('.input-group').on('focus', '.form-control', function () {
+        $('.input-group.edit').on('focus', '.form-control', function () {
             $(this).closest('.input-group, .form-group').addClass('focus');
         }).on('blur', '.form-control', function () {
             $(this).closest('.input-group, .form-group').removeClass('focus');

@@ -98,12 +98,16 @@ module.exports = function(app) {
 	 */
 	app.route('/upload/files/:folderId').post(users.restifyFolder,sunpackMiddleware, files.uploadFiles);
 	app.route('/edit/file').post(sunpackMiddleware, files.editFile);
+	app.route('/files/:fileId').delete(files.deleteFile);
+	//app.route
 	//app.route('/upload/file/:fileId').post(sunpackMiddleware, files.uploadFile);
 	app.route('/download/files/:fileId').get(files.downloadFile);
 	app.route('/repository').post(sunpackMiddleware, files.uploadRepo);
 	app.route('/folders/semester/:folderId').put(folders.editFolder);
 	app.route('/view/files/:fileId').get(files.viewFile);
 	app.route('/folders/room/:roomId').get(folders.getFoldersByRoom);
+	app.route('/folders/room/:roomId/teacher/:userId').get(folders.getFoldersByRoomAndTeacher);
+	app.route('/count/folders/room/:roomId/teacher/:userId').get(folders.getFoldersCountByRoomAndTeacher);
 
 	/**
 	 * 	xiaoshu login
@@ -207,7 +211,7 @@ module.exports = function(app) {
 		version: '',
 		lowercase: true,
 		//middleware: [users.restifySubject],
-		findOneAndUpdate: false,
+		//findOneAndUpdate: false,
 		findOneAndRemove: false,
 		postDelete: folders.deleteFolder,
 		fullErrors: true
@@ -219,8 +223,9 @@ module.exports = function(app) {
 		version: '',
 		lowercase: true,
 		//middleware: [users.restifySubject],
-		findOneAndUpdate: false,
+		//findOneAndUpdate: false,
 		findOneAndRemove: false,
+		//postDelete: files.deleteFile,
 		fullErrors: true
 	};
 
