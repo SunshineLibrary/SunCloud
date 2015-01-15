@@ -1,5 +1,5 @@
 angular.module('sunpack')
-    .controller('allSubjectsController',
+    .controller('homeController',
     ['subjects','semesters', 'myRooms', 'Authentication', '$scope', 'TeacherDataProvider', 'FolderDataProvider', 'RoomDataProvider','$state', '$rootScope',
         function (subjects, semesters, myRooms,Authentication, $scope, TeacherDataProvider, FolderDataProvider, RoomDataProvider,$state, $rootScope) {
             $scope.subjects = subjects;
@@ -22,7 +22,6 @@ angular.module('sunpack')
             _.each($scope.myRooms, function(room) {
                 RoomDataProvider.getFoldersCountByRoomAndTeacher(room._id, $scope.me._id).success(function(count) {
                     room.foldersByMeCount = count.count;
-                    console.log(count);
                 })
             });
 
@@ -139,9 +138,6 @@ angular.module('sunpack')
             }
             $('[data-toggle="tooltip"]').tooltip();
             $('[data-toggle="popover"]').popover();
-
-
-            //console.log($scope.subjects);
 
         }
     ]

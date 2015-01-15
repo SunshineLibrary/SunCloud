@@ -20,64 +20,41 @@ var fileType = {
             image: ['tif', 'tiff', 'gif', 'jpeg', 'jpg', 'jif', 'jfif', 'jp2', 'jpx', 'j2k', 'j2c', 'fpx', 'pcd', 'png', 'svg'],
             audio : ['mp3', 'wav', 'wma', 'wv', '3gp', 'act', 'aiff', 'aac', 'amr', 'au', 'awb', 'dct', 'dss', 'dvf', 'flac', 'gsm', 'm4a', 'm4p', 'mmf', 'mpc', 'ogg', 'oga', 'opus', 'ra', 'rm', 'raw', 'sln', 'tta', 'vox'],
             video : ['mkv', 'avi', 'rm', 'rmvb', 'mp4', 'm4p', 'mpg', 'mp2', 'mpeg','mpe', 'mpv' ,'flv', 'ogv', 'drc', 'mng', 'mov', 'webm'],
-            doc : ['doc', 'docx', 'ppt', 'pptx', 'txt', 'html', 'xls', 'xlsx', 'csv', 'tab'],
-            ebook : ['epub', 'pdf', 'caj', 'jar'],
+            doc : ['doc', 'docx', 'ppt', 'pptx', 'ppsx','xls' , 'xlsx', 'txt' ],
+            ebook : ['epub', 'pdf', 'caj', 'jar', 'mobi', 'chm'],
             application: ['apk', 'exe', 'dmg']
 };
-//var fileType = {
-//    image :{
-//        extension: ['tif', 'tiff', 'gif', 'jpeg', 'jpg', 'jif', 'jfif', 'jp2', 'jpx', 'j2k', 'j2c', 'fpx', 'pcd', 'png', 'svg'],
-//        name: '图片'
-//    },
-//    audio: {
-//        extension : ['mp3', 'wav', 'wma', 'wv', '3gp', 'act', 'aiff', 'aac', 'amr', 'au', 'awb', 'dct', 'dss', 'dvf', 'flac', 'gsm', 'm4a', 'm4p', 'mmf', 'mpc', 'ogg', 'oga', 'opus', 'ra', 'rm', 'raw', 'sln', 'tta', 'vox'],
-//        name: '音频'
-//    },
-//    video: {
-//        extension : ['mkv', 'avi', 'rm', 'rmvb', 'mp4', 'm4p', 'mpg', 'mp2', 'mpeg','mpe', 'mpv' ,'flv', 'ogv', 'drc', 'mng', 'mov', 'webm'],
-//        name: '视频'
-//    },
-//    doc: {
-//        extension : ['doc', 'docx', 'ppt', 'pptx', 'txt', 'html', 'xls', 'xlsx', 'csv', 'tab'],
-//        name: '文档'
-//    },
-//    ebook: {
-//        extension : ['epub', 'pdf', 'caj', 'jar'],
-//        name: '电子书'
-//    },
-//    application: {
-//        extension: ['apk', 'exe', 'dmg'],
-//        name: '应用程序'
-//    }
-//};
-
-
 
 var getFileType = function(mimetype, extension) {
-    var found = false;
     var type;
-
-    for (var key in fileType) {
-        var arr = fileType[key];
-        if (arr.indexOf(extension) > -1) {
-            type = key;
-            found = true;
-            break;
-        }
-    }
-    if(!found) {
+    //
+    //var found = false;
+    //for (var key in fileType) {
+    //    var arr = fileType[key];
+    //    if (arr.indexOf(extension) > -1) {
+    //        type = key;
+    //        found = true;
+    //        break;
+    //    }
+    //}
+    //if(!found) {
+    //    type = 'other';
+    //}
+    if (mimetype.indexOf('pdf') > -1) {
+        type = 'pdf';
+    }else if (mimetype.indexOf('text') > -1 || mimetype.indexOf('officedocument') > -1 || fileType.doc.indexOf(extension) > -1) {
+        type = 'doc';
+    }else if (mimetype.indexOf('epub') > -1 || mimetype.indexOf('mobi') || fileType.ebook.indexOf(extension)) {
+        type = 'ebook';
+    }else if (mimetype.indexOf('video') > -1) {
+        type = 'video';
+    }else if (mimetype.indexOf('audio') > -1) {
+        type = 'audio';
+    }else if (mimetype.indexOf('image') > -1) {
+        type = 'image';
+    }else {
         type = 'other';
     }
-    if (mimetype.indexOf('image') > -1) {
-        type = 'image'
-    }else if(mimetype.indexOf('audio') > -1) {
-        type = 'audio'
-    }else if(mimetype.indexOf('video') > -1) {
-        type = 'video'
-    }else if (mimetype.indexOf('text') > -1) {
-        type = 'doc'
-    }
-
     return type;
 };
 
@@ -89,8 +66,7 @@ var saveFile = function(file, folderId, res) {
         if(err) {
             console.error(err);
             res.status(500).send({message: "数据库错误，未能找到文件夹"});
-        }
-        if(folder) {
+        }else if(folder) {
             console.log(folder);
             file.subject = folder.subject;
             file.semester = folder.semester;

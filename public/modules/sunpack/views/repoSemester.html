@@ -1,32 +1,58 @@
 <ui-view>
     <div class="" style="margin-top:10px">
-        <div ncy-breadcrumb class="breadcrumb-text ptl"></div>
+        <div ncy-breadcrumb class="breadcrumb-text ptl">
+        </div>
+         <div class="pull-right" style="margin-top:-90px">
+            <button class="btn btn-inverse" ng-click="back()"> <i class="glyphicon glyphicon-chevron-left"></i>返回 &nbsp;&nbsp;</button>
+        </div>
+
     </div>
     <div class="inline">
         <ul class="nav nav-pills nav-success pull-left">
-            <li ng-class="{true: 'active', false: 'inactive'}[showingFiles]"><a href="" ng-click="showFiles()"><i class="fa fa-files-o"></i> 所有文件</a></li>
-            <li ng-class="{true: 'inactive', false: 'active'}[showingFiles]"><a href="" ng-click="showFolders()"><i class="fa fa-folder-o"></i> 所有文件夹</a></li>
+            <li ng-class="{true: 'active', false: 'inactive'}[showingFiles]"><a href="" ng-click="showFiles()"><i class="fa fa-files-o"></i> 所有文件 ({{sharedFilesOfSemester.length}})</a></li>
+            <li ng-class="{true: 'inactive', false: 'active'}[showingFiles]"><a href="" ng-click="showFolders()"><i class="fa fa-folder-o"></i> 所有文件夹 ({{sharedFoldersOfSemester.length}})</a></li>
         </ul>
         &nbsp;&nbsp;
-            <span class="pull-left" ng-show="showingFiles && sharedFilesOfSemester.length">
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <button class="btn btn-success">全部</button>
-                <button class="btn btn-primary">文档</button>
-                <button class="btn btn-primary">电子书</button>
-                <button class="btn btn-primary">视频</button>
-                <button class="btn btn-primary">音频</button>
-                <button class="btn btn-primary">图片</button>
-                <button class="btn btn-primary">其他</button>
+            <!--<span class="pull-left" ng-show="showingFiles && sharedFilesOfSemester.length">-->
+                <!--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-->
+                <!--<button class="btn btn-success">全部</button>-->
+                <!--<button class="btn btn-primary">文档</button>-->
+                <!--<button class="btn btn-primary">电子书</button>-->
+                <!--<button class="btn btn-primary">视频</button>-->
+                <!--<button class="btn btn-primary">音频</button>-->
+                <!--<button class="btn btn-primary">图片</button>-->
+                <!--<button class="btn btn-primary">其他</button>-->
+            <!--</span>-->
+         <span class="pull-left" style="margin-left: 20px" ng-show="showingFiles">
+                <!--<span  ng-repeat="name in typeNames">-->
+                    <!--<a href="" ng-class="{true: 'selected', false: ''}[$index === selectedIndex]" class="file-type-item">{{name}}</a>-->
+                <!--</span>-->
+
+
+                <a href="" ng-class="{true: 'selected', false: ''}[selectedIndex===0]" class="file-type-item" ng-click="selectFileType(0)">全部</a>
+                <a href="" ng-class="{true: 'selected', false: ''}[selectedIndex===1]" class="file-type-item" ng-click="selectFileType(1)">PDF</a>
+                <a href="" ng-class="{true: 'selected', false: ''}[selectedIndex===2]" class="file-type-item" ng-click="selectFileType(2)">文档</a>
+                <a href="" ng-class="{true: 'selected', false: ''}[selectedIndex===3]" class="file-type-item" ng-click="selectFileType(3)">电子书</a>
+                <a href="" ng-class="{true: 'selected', false: ''}[selectedIndex===4]" class="file-type-item" ng-click="selectFileType(4)">视频</a>
+                <a href="" ng-class="{true: 'selected', false: ''}[selectedIndex===5]" class="file-type-item" ng-click="selectFileType(5)">音频</a>
+                <a href="" ng-class="{true: 'selected', false: ''}[selectedIndex===6]" class="file-type-item" ng-click="selectFileType(6)" >图片</a>
+                <a href="" ng-class="{true: 'selected', false: ''}[selectedIndex===7]" class="file-type-item" ng-click="selectFileType(7)">其他</a>
+
             </span>
+        <div class="inner-addon left-addon pull-right" style="" ng-show="showingFiles">
+            <i class="glyphicon glyphicon-search"></i>
+            <input type="search" class="form-control" style="width: 250px"  placeholder="搜索" ng-model="data.searchingText"/>
+        </div>
+        <div class="inner-addon left-addon pull-right" style="" ng-hide="showingFiles">
+            <i class="glyphicon glyphicon-search"></i>
+            <input type="search" class="form-control" style="width: 250px"  placeholder="搜索" ng-model="filterOptions2.filterText"/>
+        </div>
     </div>
     <div ng-if="showingFiles">
+
         <div ng-show="sharedFilesOfSemester.length">
             <!--<a  role="button" class="btn btn-primary pull-right" data-toggle="modal" href="#createFolderDialog"><span class="fui-folder"></span> 创建书包文件夹</a>-->
-            <br/>
-            <div class="inner-addon left-addon pull-right" style="">
-                <i class="glyphicon glyphicon-search"></i>
-                <input type="search" class="form-control" style="width: 250px"  placeholder="搜索" ng-model="filterOptions1.filterText"/>
-            </div>
+
             <br/>
 
             <div class="table">
@@ -40,13 +66,11 @@
         </div>
     </div>
     <div ng-if="!showingFiles">
+
         <div ng-show="sharedFoldersOfSemester.length">
             <!--<a  role="button" class="btn btn-primary pull-right" data-toggle="modal" href="#createFolderDialog"><span class="fui-folder"></span> 创建书包文件夹</a>-->
-            <br/>
-            <div class="inner-addon left-addon pull-right" style="">
-                <i class="glyphicon glyphicon-search"></i>
-                <input type="search" class="form-control" style="width: 250px"  placeholder="搜索" ng-model="filterOptions2.filterText"/>
-            </div>
+            <!--<br/>-->
+
             <br/>
             <div class="table">
                 <div class="gridStyle" ng-grid="gridOptions2"></div>
@@ -69,28 +93,43 @@
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span></button>
                 <h4 class="modal-title">{{file.originalname}}
-                    <span class="pull-right">
-                        <!--&lt;!&ndash; LikeBtn.com BEGIN &ndash;&gt;-->
-                        <!--<span class="likebtn-wrapper" data-theme="ugreen" data-lang="zh_CN"></span>-->
-                        <!--<script type="text/javascript" src="//w.likebtn.com/js/w/widget.js" async="async"></script>-->
-<!--&lt;!&ndash; LikeBtn.com END &ndash;&gt;-->
-                        <a  ng-href="/download/files/{{file._id}}" role="button" class="btn btn-primary" ><i class="fa fa-cloud-download"></i> 下载</a> &nbsp;&nbsp;&nbsp;
-                    </span>
                 </h4>
-                &nbsp;&nbsp;<span >{{file.description}}描述</span>
+                <span>{{file.description}}&nbsp;</span>
+
+                    <span class="like-button pull-right">
+                                        <!--<span title="请联系学校管理员，让其在老师页面重置密码" data-placement="right" data-toggle="tooltip" ng-mouseover="tooltip()">-->
+
+                            <input type="checkbox" style="display:none" value="" id="myradiobutton" data-ng-model="liked" data-ng-change="clickLike(file._id)">
+                            <label id="likeButton" for="myradiobutton" class="fa fa-heart-o"></label>
+                            <!--<label id="likeButton" for="myradiobutton" class="fa fa-heart-o"></label>-->
+                <!--</span>-->
+
+                        <span class="lb-count">{{file.like.length}}</span>
+                    </span>
+
+                    <span class="pull-right" style="position:relative;right:60px">
+                        <a  ng-href="/download/files/{{file._id}}" role="button" class="btn btn-primary" ><i class="fa fa-cloud-download"></i> 下载</a>
+                    </span>
+
+                    <span class="pull-right" style="position:relative;right:63px;">
+                        <a  href="#addToMyFolderDialog" data-toggle="modal" role="button" class="btn btn-primary" ><i class="fa fa-plus-circle"></i> 添加到我的文件夹</a>
+                    </span>
+
+
                 <!--<br/>-->
-                <div class="like-button">
-                    <input type="checkbox" style="display:none" value="" id="myradiobutton" data-ng-model="liked" data-ng-change="clickLike(file._id)">
-                    <label id="likeButton" for="myradiobutton" class="fa fa-thumbs-o-up thumps-up-{{liked}} "></label>
-                    <span ng-show="file.like && file.like.length" class="small">{{file.like.length}}人喜欢这个文件&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <span class="small" ng-hide="file.like && file.like.length">你喜欢这个文件吗？</span>
-                </div>
+                <!--<div class="like-button">-->
+                    <!--<input type="checkbox" style="display:none" value="" id="myradiobutton" data-ng-model="liked" data-ng-change="clickLike(file._id)">-->
+                    <!--<label id="likeButton" for="myradiobutton" class="fa fa-heart-o thumps-up-{{liked}} "></label>-->
+                    <!--<span class="lb-count">{{file.like.length}}</span>-->
+                    <!--&lt;!&ndash;<span ng-show="file.like && file.like.length" class="small">{{file.like.length}}人喜欢这个文件&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <span class="small" ng-hide="file.like && file.like.length">你喜欢这个文件吗？</span>&ndash;&gt;-->
+                <!--</div>-->
 
 
             </div>
             <div class='modal-body'>
                 <div ng-if="type.isPDF || type.isText">
                     <!--<a href="" class="anchor" id="previewAnchor"></a>-->
-                    <iframe ng-src="{{fileUrl}}" width='100%' height="800" autoplay=0 webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+                    <iframe ng-src="{{fileUrl}}" width='100%' height="800" frameborder="1" autoplay=0 webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
                 </div>
                 <div ng-if="type.isImage" align="center">
                     <img ng-src="{{fileUrl}}" alt="阳光书包文件预览"  style="width:100%">
@@ -130,5 +169,47 @@
     </div>
 </div>
 
+
+<div class="modal fade" id="addToMyFolderDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class='modal-dialog'>
+        <div class='modal-content'>
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span></button>
+                <h4 class="modal-title">添加到我的文件夹</h4>
+            </div>
+            <div class="modal-body">
+                <!--{{//myFoldersBySubjectAndSemester}}-->
+                <form name="addFileForm"  class="form-group inline input-group input-group-lg" ng-show="myFoldersBySubjectAndSemester.length" >
+                    <select class="form-control select-primary" id="selectRoom" data-ng-options="folder._id as folder.name for folder in myFoldersBySubjectAndSemester" data-ng-model="selectedFolder" required>
+                        <option style="display:none" ng-if="!myFoldersBySubjectAndSemester.length" value="">没有可选文件夹</option>
+                    </select>
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-success" ng-click="addToFolder()" ng-disabled="addFileForm.$invalid"><span>添加</span></button>
+                    </span>
+                    <!--<span class="input-group-btn">-->
+                        <!--<button type="button" class="btn btn-success" ng-click="addToFolder()" ng-disabled="addFileForm.$invalid"><span>添加</span></button>-->
+                        <!--&lt;!&ndash;<button type="button" class="btn btn-success" ng-click="addToFolder()" ng-disabled="addFileForm.$invalid"><span>添加</span></button>&ndash;&gt;-->
+
+                    <!--</span>-->
+                </form>
+                <div align="center" ng-hide="creatingFolder">
+                    <button type="button" class="btn btn-success" ng-click="creatingFolder = true"><span class="fa fa-plus-circle"> 新建文件夹</span></button>
+                </div>
+                <!--{{//myFoldersBySubjectAndSemester.length}}-->
+                <div  align="center" ng-show="!myFoldersBySubjectAndSemester.length && !creatingFolder">
+                    没有可选文件夹
+                    <button class="btn btn-primary" ng-click="creatingFolder = true"><span class="fa fa-plus-circle"> 新建文件夹</span></button>
+                    <br/>
+                </div>
+                <form action="" ng-show="creatingFolder" class="form-group inline input-group input-group-lg" >
+                    <input  type="text" placeholder="请输入文件夹名" class="form-control" ng-model="newFolderName"/>
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-success" ng-click="createFolder()"><span>新建文件夹</span></button>
+                    </span>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
 

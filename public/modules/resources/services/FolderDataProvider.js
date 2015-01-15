@@ -90,6 +90,21 @@ angular.module('resources')
             return thePromise;
         };
 
+        var getFoldersByTeacherAndSubjectAndSemester = function(teacherId, subjectId,semesterId) {
+            var defered = $q.defer();
+            var thePromise = defered.promise;
+            $http({
+                method: "GET",
+                url: "/folders?owner=" + teacherId + "&subject=" + subjectId + "&semester=" + semesterId
+            }).success(function (folders) {
+                defered.resolve(folders);
+            }).error(function (err) {
+                defered.reject(err);
+                console.log(err);
+            });
+            return thePromise;
+        };
+
         var createFolder = function(info) {
             return $http({
                 method: "POST",
@@ -214,6 +229,16 @@ angular.module('resources')
             return thePromise;
         };
 
+
+        var addFileToFolder = function(folderId, fileId) {
+            return $http({
+                method: "PUT",
+                url: "/folders/" + folderId,
+                data: {
+                    $push: {files: fileId}
+                }
+            })
+        };
         return {
             getFolder: getFolder,
             getFolderMin: getFolderMin,
@@ -229,6 +254,8 @@ angular.module('resources')
             getSharedFoldersBySubject: getSharedFoldersBySubject,
             getSharedFoldersBySubjectCount: getSharedFoldersBySubjectCount,
             getSharedFoldersBySubjectAndSemester: getSharedFoldersBySubjectAndSemester,
-            getSharedFoldersBySubjectAndSemesterCount: getSharedFoldersBySubjectAndSemesterCount
+            getSharedFoldersBySubjectAndSemesterCount: getSharedFoldersBySubjectAndSemesterCount,
+            getFoldersByTeacherAndSubjectAndSemester: getFoldersByTeacherAndSubjectAndSemester,
+            addFileToFolder: addFileToFolder
         };
     }]);

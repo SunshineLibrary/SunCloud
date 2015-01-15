@@ -85,7 +85,8 @@ module.exports = {
 				'public/lib/pdfjs/build/generic/build/pdf.js',
 				'public/lib/pdfjs/build/generic/web/compatibility.js',
 				'public/lib/jquery-timeago/jquery.timeago.js',
-				'public/lib/jquery-timeago/locales/jquery.timeago.zh-CN.js'
+				'public/lib/jquery-timeago/locales/jquery.timeago.zh-CN.js',
+				'public/lib/videojs/dist/video-js/video.js'
 
 				//'public/lib/smart-time-ago/lib/timeago.js',
 				//'public/lib/smart-time-ago/lib/locales/timeago.zh-cn.js'
