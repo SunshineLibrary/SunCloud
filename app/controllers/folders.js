@@ -114,38 +114,23 @@ exports.getFoldersCountByRoomAndTeacher = function(req, res) {
  */
 exports.deleteFolder = function(res, result, done) {
     var folder = result[0];
-    console.log('>>>>>>>>>>> deleting folder' );
-    console.log(folder);
-    Room.find({sunpack: folder._id}, function(err, rooms) {
-        if(err) {
-            console.error(err);
-        }else {
-            console.log(rooms);
-        }
-    });
+    //Room.find({sunpack: folder._id}, function(err, rooms) {
+    //    if(err) {
+    //        console.error(err);
+    //    }else {
+    //        console.log(rooms);
+    //    }
+    //});
     Room.update({sunpack: folder._id}, {$pull: {sunpack: folder._id}}, function(err) {
         if(err) {
             done(err);
         }else {
-            async.each(folder.files, function(file, callback) {
-                File.findByIdAndRemove(file._id, function(err) {
-                    console.log('>>>>>>>>>>> 1' );
-                    if(err) {
-                        callback(err)
-                    }else {
-                        console.log('>>>>>>>>>>> 2' );
-
-                    }
-                });
-            }, function(err) {
-                console.log('>>>>>>>>>>> 4' );
-
-                if(err) {
-                    done(err);
-                }else {
-                    done();
-                }
-            })
+            done();
+            //async.each(folder.files, function(fileId, callback) {
+            //    File.findByIdAndRemove(fileId, callback);
+            //}, function(err) {
+            //    done(err);
+            //})
         }
     });
 

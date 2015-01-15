@@ -1,6 +1,6 @@
 angular.module('repository')
 .controller('repositoryController',
-    ['$scope', 'subjects', 'semesters', 'schools', 'teachers', 'folders', 'files','FolderDataProvider', 'FileDataProvider', 'Authentication', 'FileUploader',function($scope, subjects, semesters, schools, teachers, folders, files, FolderDataProvider, FileDataProvider , Authentication, FileUploader) {
+    ['$scope', 'subjects', 'semesters', 'schools', 'teachers', 'folders', 'files','FolderDataProvider', 'FileDataProvider', 'Authentication', 'FileUploader', '$sce', '$timeout',function($scope, subjects, semesters, schools, teachers, folders, files, FolderDataProvider, FileDataProvider , Authentication, FileUploader, $sce, $timeout) {
         $scope.subjects = subjects;
         $scope.semesters = semesters;
         $scope.schools = schools;
@@ -10,20 +10,25 @@ angular.module('repository')
         $scope.files = files;
         $scope.displayFiles = $scope.files;
         $scope.filterOptions = {filterText: ''};
-        $scope.showingFolders = true;
+        $scope.filterOptions2 = {filterText: ''};
+        $scope.searchText = '';
+        $scope.showingFolders = false;
         $scope.isCreatingFolder = false;
         $scope.newFolderName = null;
         $scope.newResource = {};
         $scope.editFile = {};
         $scope.error = {};
+        //$scope.typeNames = ['全部', 'PDF', '文档', '电子书', '视频', '音频', '图片', '其他'];
+        $scope.selectedIndex = 0;
         $scope.rootFolders = _.filter($scope.folders, function(folder) {
             return folder.owner.roles.indexOf('root') > -1
         });
+        $scope.newResource.folder = $scope.rootFolders[0] ? $scope.rootFolders[0] : null;
         var me = Authentication.user;
         var subjectIds = _.map($scope.subjects, function(subject) {return subject._id});
         var semesterIds =  _.map($scope.semesters, function(semester) {return semester._id});
         var schoolsIds = _.map($scope.schools, function(school) {return school._id});
-        var types =   ['image', 'video', 'audio', 'doc', 'ebook', 'application'];
+        var types =   ['pdf', 'doc', 'ebook', 'video', 'audio', 'image', 'other'];
         $scope.allSubjects = [{_id: subjectIds, name: '所有科目'}].concat($scope.subjects);
         $scope.allSemesters = [{_id: semesterIds, name: '所有年级'}].concat($scope.semesters);
         $scope.allSchools =     [{_id: schoolsIds, name: '所有学校'}].concat($scope.schools);
@@ -59,6 +64,16 @@ angular.module('repository')
            }
         });
 
+        $scope.$watchGroup(['selectedIndex', 'searchText'], function(newValue) {
+            if(newValue) {
+                if (newValue[0] === 0) {
+                    $scope.filterOptions.filterText = newValue[1];
+                }else {
+                    $scope.filterOptions.filterText = 'type:' + types[newValue[0]-1] + ';' + newValue[1];
+                }
+            }
+        });
+
 
         $scope.filter = function(selectedSchool, selectedTeacher) {
             console.log($scope.selectedTeacher);
@@ -81,6 +96,12 @@ angular.module('repository')
                    return ($scope.selectedSubject.indexOf(file.subject._id) > -1) && ($scope.selectedSemester.indexOf(file.semester._id) > -1) && ($scope.selectedSchool.indexOf(file.school._id) > -1) && ($scope.selectedTeacher.indexOf(file.owner._id) > -1)
                });
            }
+        };
+
+
+        //$scope.$watch()
+        $scope.selectFileType = function(index) {
+            $scope.selectedIndex = index;
         };
 
         $scope.showFolders = function() {
@@ -122,7 +143,7 @@ angular.module('repository')
                 $scope.folders.push(newFolder);
                 $scope.rootFolders.push(newFolder);
                 $scope.theRootFolders.push(newFolder);
-                $scope.newResource.folderId = newFolder._id;
+                $scope.newResource.folder = newFolder;
                 newFolder.subject = $scope.newResource.subject;
                 newFolder.semester = $scope.newResource.semester;
                 newFolder.owner = me;
@@ -177,7 +198,7 @@ angular.module('repository')
         });
 
         $scope.uploader.onBeforeUploadItem = function(item) {
-            item.formData = [{folderId: $scope.newResource.folderId, description: item.file.description}];
+            item.formData = [{folderId: $scope.newResource.folder._id, description: item.file.description}];
         };
 
         $scope.uploader.onErrorItem = function(item, response, status) {
@@ -186,10 +207,21 @@ angular.module('repository')
                 $scope.uploader.clearQueue();
             }
         };
+        $scope.uploader.onSuccessItem = function(item, response) {
+            response.subject = $scope.newResource.folder.subject;
+            response.semester = $scope.newResource.folder.semester;
+            response.owner = me;
+            $scope.displayFiles.push(response);
+            //$rootScope.$broadcast('addFile', {folderId: folder._id, updated_at: Date.now()});
+        };
         $scope.uploader.onCompleteAll = function() {
             console.info('onCompleteAll');
+            $timeout(function() {
+                swal({title: "上传成功", type: 'success', timer: 2000});
+                $('#addResourceDialog').modal('hide');
+                $scope.uploader.clearQueue();
+            }, 1500);
         };
-
         $scope.gridOptions =
             {
                     data: 'displayFolders',
@@ -221,9 +253,10 @@ angular.module('repository')
                             //{field: 'loginDateLocal', displayName: '上次登录时间', width: 170}
                     ],
                     selectedItems: [],
-                    filterOptions: $scope.filterOptions
+                    filterOptions: $scope.filterOptions2
             };
 
+        console.log($scope.displayFiles[0].like);
         $scope.gridOptions2 =
         {
             data: 'displayFiles',
@@ -235,7 +268,10 @@ angular.module('repository')
             columnDefs: [
                 {field: '_id', visible: false},
                 {field: 'type', displayName: '文件类型',cellTemplate: '<div><span ng-bind-html="row.entity.type | typeFilter"></span></div>'},
-                {field: 'originalname', displayName: '文件名称'},
+                {field: 'originalname', displayName: '文件名称', width: '35%', cellTemplate: '<div><a ng-click="selectFile(row.entity)">{{row.entity.originalname}}</a></div>'},
+                {field: 'size', displayName: '大小', cellTemplate: '<div>{{row.entity.size | fileSizeFilter}}</div>'},
+                {filed: 'like', displayName: '点赞', cellTemplate: '<div>{{row.entity.like.length}}</div>'},
+                {field: '', displayName: '分享'},
                 {field: 'subject.name', displayName: '科目'},
                 {field: 'semester.name', displayName: '年级'},
                 {field: 'owner.name', displayName: '创建人'},
@@ -282,6 +318,66 @@ angular.module('repository')
                         })
                 });
         };
+
+        $scope.clickLike = function(fileId) {
+            if($scope.liked) {
+                $('#likeButton').removeClass('fa-heart-o').addClass('text-danger fa-heart');
+            }else {
+                $('#likeButton').removeClass('text-danger fa-heart').addClass('fa-heart-o');
+            }
+            FileDataProvider.changeFileLike(fileId, me._id, $scope.liked)
+                .success(function(editedFile) {
+                    $scope.file.like = editedFile.like;
+                    _.findWhere($scope.displayFiles, {_id: fileId}).like = editedFile.like;
+                })
+                .error(function(err) {
+                    console.error(err);
+                });
+        };
+
+
+        $scope.selectFile = function (file) {
+            //event.stopPropagation();
+            $scope.file = null;
+            $scope.file = file;
+            $scope.liked = $scope.file.like.indexOf(me._id) > -1;
+            console.log($scope.liked);
+            if($scope.liked) {
+                $('#likeButton').addClass('text-danger fa-heart').removeClass('fa-heart-o');
+            }else {
+                $('#likeButton').removeClass('text-danger fa-heart').addClass('fa-heart-o');
+            }
+            $scope.type = {};
+            console.log($scope.file.like);
+            var mimetype = $scope.file.mimetype;
+            if(mimetype.indexOf('pdf') > -1) {
+                $scope.type.isPDF = true;
+            }else if(mimetype.indexOf('video') > -1) {
+                $scope.type.isVideo = true;
+            }else if(mimetype.indexOf('audio') > -1) {
+                $scope.type.isAudio = true;
+            }else if(mimetype.indexOf('image') > -1) {
+                $scope.type.isImage = true;
+            }else if(mimetype.indexOf('text') > -1) {
+                $scope.type.isText = true;
+            }else {
+                $scope.type.isOther = true;
+            }
+            $scope.fileUrl = $sce.trustAsResourceUrl('/sunpack/' + $scope.file._id);
+            $scope.videoUrl = $sce.trustAsResourceUrl('/sunpack/' + $scope.file._id);
+            console.log($scope.file.mimetype);
+
+            $('#previewFileDialog').modal('show');
+            //$state.go('sunpack.repo.subject', {folderId: $scope.gridOptions.selectedItems[0]._id});
+            //$location.path('/rooms/' + $scope.gridOptions.selectedItems[0]._id);
+        };
+
+        $scope.closePreview = function() {
+            $scope.file = null;
+            $scope.type = {};
+            $('#previewFileDialog').modal('hide');
+        };
+
         $('[data-toggle="tooltip"]').tooltip();
 
         //// Focus state for append/prepend inputs

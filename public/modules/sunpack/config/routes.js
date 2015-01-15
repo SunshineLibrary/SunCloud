@@ -20,7 +20,7 @@ angular.module('sunpack')
         $stateProvider
             .state('sunpack', {
                 url: '/sunpack',
-                controller: 'allSubjectsController',
+                controller: 'homeController',
                 templateUrl:  __templates + 'home.html',
                 resolve: {
                     subjects: ['SubjectDataProvider',
@@ -40,7 +40,6 @@ angular.module('sunpack')
                     ]
                 },
                 ncyBreadcrumb: {
-                    //label: '{{label}}'
                     label: '阳光书包'
                 }
             })
@@ -53,11 +52,15 @@ angular.module('sunpack')
                         function(SubjectDataProvider, $stateParams) {
                             return SubjectDataProvider.getSubject($stateParams.subjectId);
                         }
+                    ],
+                    folders: ['FolderDataProvider', '$stateParams', 'AuthService',
+                        function(FolderDataProvider, $stateParams, AuthService) {
+                            return FolderDataProvider.getFoldersByTeacherAndSubject(AuthService.me._id, $stateParams.subjectId);
+                        }
                     ]
                 },
                 ncyBreadcrumb: {
                     label: "{{subject.name}}"
-                    //label: "语文"
                 }
             })
             .state('sunpack.subject.folder', {
@@ -73,7 +76,6 @@ angular.module('sunpack')
                 },
                 ncyBreadcrumb: {
                     label: '{{folder.name}}'
-                    //parent: 'sunpack.subject'
                 }
             })
             .state('sunpack.subject.folder.file', {
@@ -192,7 +194,11 @@ angular.module('sunpack')
                     sharedFilesOfSemester: ['FileDataProvider', '$stateParams',
                         function(FileDataProvider, $stateParams) {
                             return FileDataProvider.getSharedFilesBySubjectAndSemester($stateParams.subjectId, $stateParams.semesterId)
-                        }]
+                        }],
+                    myFoldersBySubjectAndSemester: ['FolderDataProvider', '$stateParams', 'AuthService',
+                    function(FolderDataProvider, $stateParams, AuthService) {
+                        return FolderDataProvider.getFoldersByTeacherAndSubjectAndSemester(AuthService.me._id, $stateParams.subjectId, $stateParams.semesterId)
+                    }]
                 },
                 ncyBreadcrumb: {
                     label: "{{semester.name}}"

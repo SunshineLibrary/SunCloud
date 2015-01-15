@@ -146,7 +146,7 @@ angular.module('sunpack')
                 $('#uploadFileDialog').modal('hide');
                 $scope.uploader.clearQueue();
                 console.log('update with timeout fired')
-            }, 2000);
+            }, 1500);
         };
 
         $scope.editFileUploader = new FileUploader({

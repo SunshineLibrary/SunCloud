@@ -1,18 +1,15 @@
 angular.module('sunpack')
     .controller('subjectController',
-    ['AuthService', '$scope', 'SubjectDataProvider', 'FolderDataProvider', 'SemesterDataProvider','$stateParams', 'subject', '$state', '$rootScope',
-        function (AuthService, $scope, SubjectDataProvider, FolderDataProvider, SemesterDataProvider, $stateParams, subject, $state, $rootScope) {
+    ['AuthService', '$scope', 'SubjectDataProvider', 'FolderDataProvider', 'SemesterDataProvider','$stateParams', 'subject', 'folders', '$state', '$rootScope',
+        function (AuthService, $scope, SubjectDataProvider, FolderDataProvider, SemesterDataProvider, $stateParams, subject, folders,$state, $rootScope) {
             $scope.subject = subject;
+            $scope.folders = folders;
             $scope.newFolder = {};
             $scope.temp = {};
             var me = AuthService.me;
             $scope.filterOptions = {filterText: ''};
 
             $scope.theDate = new Date();
-
-            FolderDataProvider.getFoldersByTeacherAndSubject(me._id, subject._id).then(function(folders) {
-               $scope.folders = folders;
-            });
 
             SemesterDataProvider.getAllSemesters().then(function(semesters) {
                 $scope.semesters = semesters;

@@ -25,35 +25,57 @@
             <!--</span>-->
         </div>
 
-        <div class="inner-addon left-addon pull-right" style="">
+        <div class="inner-addon left-addon pull-right" style="" ng-hide="showingFolders">
             <i class="glyphicon glyphicon-search"></i>
-            <input type="search" class="form-control" style="width: 250px"  placeholder="搜索" ng-model="filterOptions.filterText"/>
+            <input type="search" class="form-control" style="width: 200px"  placeholder="搜索" ng-model="searchText"/>
+        </div>
+        <div class="inner-addon left-addon pull-right" style="" ng-show="showingFolders">
+            <i class="glyphicon glyphicon-search"></i>
+            <input type="search" class="form-control" style="width: 200px"  placeholder="搜索" ng-model="filterOptions2.filterText"/>
         </div>
 
         <div class="inline">
              <ul class="nav nav-pills nav-success pull-left">
-                 <li ng-class="{true: 'active', false: 'inactive'}[showingFolders]"><a href="" ng-click="showFolders()"><i class="fa fa-folder-o"></i> 所有文件夹</a></li>
-                 <li ng-class="{true: 'inactive', false: 'active'}[showingFolders]"><a href="" ng-click="showFiles()"><i class="fa fa-files-o"></i> 所有文件</a></li>
+                 <li ng-class="{true: 'inactive', false: 'active'}[showingFolders]"><a href="" ng-click="showFiles()"><i class="fa fa-files-o"></i> 所有文件 ({{displayFiles.length}})</a></li>
+                 <li ng-class="{true: 'active', false: 'inactive'}[showingFolders]"><a href="" ng-click="showFolders()"><i class="fa fa-folder-o"></i> 所有文件夹 ({{displayFolders.length}})</a></li>
              </ul>
             &nbsp;&nbsp;
-            <span class="pull-left" ng-hide="showingFolders">
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <button class="btn btn-success">全部</button>
-                <button class="btn btn-primary">文档</button>
-                <button class="btn btn-primary">电子书</button>
-                <button class="btn btn-primary">视频</button>
-                <button class="btn btn-primary">音频</button>
-                <button class="btn btn-primary">图片</button>
-                <button class="btn btn-primary">其他</button>
+            <!--<span class="pull-left" ng-hide="showingFolders">-->
+                <!--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-->
+                <!--<button class="btn btn-success">全部</button>-->
+                <!--<button class="btn btn-default">文档</button>-->
+                <!--<button class="btn btn-primary">PDF</button>-->
+                <!--<button class="btn btn-primary">电子书</button>-->
+                <!--<button class="btn btn-primary">视频</button>-->
+                <!--<button class="btn btn-primary">音频</button>-->
+                <!--<button class="btn btn-primary">图片</button>-->
+                <!--<button class="btn btn-primary">其他</button>-->
+            <!--</span>-->
+            <span class="pull-left" style="margin-left: 20px" ng-hide="showingFolders">
+                <!--<span  ng-repeat="name in typeNames">-->
+                    <!--<a href="" ng-class="{true: 'selected', false: ''}[$index === selectedIndex]" class="file-type-item">{{name}}</a>-->
+                <!--</span>-->
+
+
+                <a href="" ng-class="{true: 'selected', false: ''}[selectedIndex===0]" class="file-type-item" ng-click="selectFileType(0)">全部</a>
+                <a href="" ng-class="{true: 'selected', false: ''}[selectedIndex===1]" class="file-type-item" ng-click="selectFileType(1)">PDF</a>
+                <a href="" ng-class="{true: 'selected', false: ''}[selectedIndex===2]" class="file-type-item" ng-click="selectFileType(2)">文档</a>
+                <a href="" ng-class="{true: 'selected', false: ''}[selectedIndex===3]" class="file-type-item" ng-click="selectFileType(3)">电子书</a>
+                <a href="" ng-class="{true: 'selected', false: ''}[selectedIndex===4]" class="file-type-item" ng-click="selectFileType(4)">视频</a>
+                <a href="" ng-class="{true: 'selected', false: ''}[selectedIndex===5]" class="file-type-item" ng-click="selectFileType(5)">音频</a>
+                <a href="" ng-class="{true: 'selected', false: ''}[selectedIndex===6]" class="file-type-item" ng-click="selectFileType(6)" >图片</a>
+                <a href="" ng-class="{true: 'selected', false: ''}[selectedIndex===7]" class="file-type-item" ng-click="selectFileType(7)">其他</a>
+
             </span>
         </div>
+        <br/>
 
         <div class="table" ng-if="showingFolders">
-            <div class="gridStyle style1" ng-grid="gridOptions" ng-click="selectFolder()"></div>
+            <div class="gridStyle style1" ng-grid="gridOptions"></div>
         </div>
 
         <div class="table" ng-if="!showingFolders">
-            <div class="gridStyle style1" ng-grid="gridOptions2" ng-click="selectFile()"></div>
+            <div class="gridStyle style1" ng-grid="gridOptions2" ></div>
         </div>
     </div>
 </div>
@@ -75,14 +97,14 @@
                 <form name="addResourceForm" novalidate>
                     <div class="input-group focus">
                         <span class="input-group-addon">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-th-large"></i> 科目</span>
-                        <select class="form-control select-primary"  style="width:300px" data-ng-options="subject.name for subject in subjects" data-ng-model="newResource.subject"  required>
+                        <select class="form-control select-primary"  style="width:300px" data-ng-options="subject.name for subject in subjects" data-ng-model="newResource.subject">
                             <option style="display:none" value="">请选择科目</option>
                         </select>
                     </div>
                     <!--<br/>-->
                     <div class="input-group focus" style="margin-top:10px">
                         <span class="input-group-addon">&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-graduation-cap"></i> 年级</span>
-                        <select class="form-control select-primary" style="width:300px" data-ng-options="semester.name for semester in semesters" data-ng-model="newResource.semester" required>
+                        <select class="form-control select-primary" style="width:300px" data-ng-options="semester.name for semester in semesters" data-ng-model="newResource.semester">
                             <option style="display:none" value="">请选择年级</option>
                         </select>
                     </div>
@@ -92,8 +114,8 @@
                         <span class="input-group-addon"><i class="fa fa-folder-o"></i> 文件夹</span>
                         &nbsp;
                         &nbsp;
-                        <select class="form-control select-primary" style="width:300px" data-ng-options="folder._id as folder.name for folder in theRootFolders" data-ng-model="newResource.folderId" required>
-                            <option style="display:none" value="" ng-if="theRootFolders.length">请选择文件夹</option>
+                        <select class="form-control select-primary" style="width:300px" data-ng-options="folder.name for folder in theRootFolders" data-ng-model="newResource.folder" required>
+                            <!--<option style="display:none" value="" ng-if="theRootFolders.length">请选择文件夹</option>-->
                             <option style="display:none" value="" ng-if="!theRootFolders.length">没有可选文件夹</option>
                         </select>
                         &nbsp;&nbsp;&nbsp;&nbsp;
@@ -155,7 +177,7 @@
                                         <span ng-show="item.file.description">{{item.file.description}}</span>
                                         <span ng-hide="item.file.description"><button class="btn btn-success btn-xs" ng-click="toAddDescription($index)" ng-disabled="item.isSuccess">{{item.file.description}} <i class="fa fa-newspaper-o"></i> 添加</button></span>
                                     </td>
-                                    <td ng-show="uploader.isHTML5" nowrap>{{ item.file.size/1024/1024|number:2 }} MB</td>
+                                    <td ng-show="uploader.isHTML5" nowrap>{{ item.file.size | fileSizeFilter }} </td>
                                     <td ng-show="uploader.isHTML5">
                                         <div class="progress" style="margin-bottom: 0;">
                                             <div class="progress-bar" role="progressbar" ng-style="{ 'width': item.progress + '%' }"></div>
@@ -255,3 +277,71 @@
         </div>
     </div>
 </div>
+
+
+
+<!--------------------------------Modal--------------------->
+<div class="modal fade" id="previewFileDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true" style="overflow-y:scroll">
+    <div class='modal-dialog modal-lg' style="left: auto">
+        <div class='modal-content'>
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span></button>
+                <h4 class="modal-title">{{file.originalname}}
+                </h4>
+                <span>{{file.description}}&nbsp;</span>
+                    <span class="like-button">
+                            <input type="checkbox" style="display:none" value="" id="myradiobutton" data-ng-model="liked" data-ng-change="clickLike(file._id)">
+                            <label id="likeButton" for="myradiobutton" class="fa fa-heart-o"></label>
+                        <span class="lb-count">{{file.like.length}}</span>
+                    </span>
+                 <span class="pull-right" style="position:relative;right:60px">
+                        <a  ng-href="/download/files/{{file._id}}" role="button" class="btn btn-primary" ><i class="fa fa-cloud-download"></i> 下载</a>
+                    </span>
+
+
+            </div>
+            <div class='modal-body'>
+                <div ng-if="type.isPDF || type.isText">
+                    <!--<a href="" class="anchor" id="previewAnchor"></a>-->
+                    <iframe ng-src="{{fileUrl}}" width='100%' height="800" frameborder="1" autoplay=0 webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+                </div>
+                <div ng-if="type.isImage" align="center">
+                    <img ng-src="{{fileUrl}}" alt="阳光书包文件预览"  style="width:100%">
+
+                </div>
+                <div ng-if="type.isVideo" >
+                    <div  style="width:100%;height:500px;" align="center">
+                        <video   id="sunvideo" class="video-js" preload="auto" data-setup="{}" controls>
+                            <source ng-src="{{videoUrl}}" type="{{file.mimetype}}">
+                            <!--<source src="http://iurevych.github.com/Flat-UI-videos/big_buck_bunny.mp4" type="video/mp4">-->
+                            <!--<source src="http://iurevych.github.com/Flat-UI-videos/big_buck_bunny.webm" type="video/webm">-->
+                        </video>
+                    </div>
+
+                </div>
+
+                <div ng-if="type.isAudio" align="center">
+                    <audio controls>
+                        <source ng-src="{{fileUrl}}" type="{{file.mimetype}}">
+                    </audio>
+                </div>
+
+                <div ng-if="type.isOther" align="center">
+                    <h5 >该文件格式无法预览</h5>
+                    <p>您可以下载后在本地查看</p>
+                    <a ng-href="/download/files/{{file._id}}" role="button" class="btn btn-success" ><i class="fa fa-cloud-download"></i> 下载</a>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <div class="pull-right">
+                    <button class="btn btn-inverse" ng-click="closePreview()">关闭</button>&nbsp;&nbsp;
+                    <!--<button class="btn btn-success " ng-click="assignToRooms()"> 分配</button>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

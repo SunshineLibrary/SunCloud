@@ -16,6 +16,9 @@ angular.module('resources')
         if(type === 'ebook') {
             return $sce.trustAsHtml('<span class="label label-info"><i class="fa fa-book"></i> 电子书</span>');
         }
+        if(type === 'pdf') {
+            return $sce.trustAsHtml('<span class="label label-info"><i class="fa fa-file-pdf-o"></i> PDF</span>');
+        }
         if(type === 'application') {
             return $sce.trustAsHtml('<span class="label label-info"><i class="fa fa-cogs"></i> 应用</span>');
         }
