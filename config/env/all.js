@@ -40,73 +40,36 @@ module.exports = {
 	assets: {
 		lib: {
 			css: [
-				'public/lib/bootstrap/dist/css/bootstrap.css',
-				//'public/lib/bootstrap/dist/css/bootstrap-theme.css',
+				'public/lib/bower/bootstrap/dist/css/bootstrap.css',
 				'public/lib/flat-ui-pro/dist/css/flat-ui-pro.css',
-				'public/lib/flat-ui-pro/docs/assets/css/docs.css',
-                'public/lib/angular-ui-grid/ui-grid.css',
-				'public/lib/ng-grid/ng-grid.css',
-				'public/lib/sweetalert/lib/sweet-alert.css',
-				'public/lib/font-awesome/css/font-awesome.css',
-				//'public/lib/css-toggle-switch/dist/toggle-switch.css',
-				'public/lib/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
-				//'public/lib/bootstrap-switch/dist/css/bootstrap3/bootstrap-switch.css'
+				'public/lib/bower/flat-ui-pro/docs/assets/css/docs.css',
+				'public/lib/bower/ng-grid/ng-grid.css',
+				'public/lib/bower/sweetalert/lib/sweet-alert.css',
+				'public/lib/bower/font-awesome/css/font-awesome.css'
 			],
 			js: [
-				//'public/lib/ng-file-upload/angular-file-upload-shim.js',
-				'public/lib/angular/angular.js',
-				//'bower_components/angular/angular.js',
-				'public/lib/angular-route/angular-route.js',
-				'public/lib/angular-resource/angular-resource.js',
-				'public/lib/angular-animate/angular-animate.js',
-				'public/lib/angular-ui-router/release/angular-ui-router.js',
-				'public/lib/angular-ui-utils/ui-utils.js',
-				'public/lib/angular-bootstrap/ui-bootstrap-tpls.js',
-				'public/lib/jquery/dist/jquery.min.js',
-				'public/lib/js/datepickerzh.js',
-				'public/lib/underscore/underscore-min.js',
-				//'cdnjs.cloudflare.com/ajax/libs/underscore.js/1.7.0/underscore.js',
-				'public/lib/angular-ui-grid/ui-grid.js',
-				'public/lib/ng-grid/ng-grid-2.0.13.min.js',
-				'public/lib/moment/moment.js',
-				'public/lib/angular-moment/angular-moment.js',
-				'public/lib/moment/locale/zh-cn.js',
-				//'public/lib/bootstrap/dist/js/bootstrap.min.js',
-				'public/lib/sweetalert/lib/sweet-alert.min.js',
-				'public/lib/angular-file-upload/angular-file-upload.js',
-				'public/lib/checklist-model/checklist-model.js',
-				'public/lib/angular-bootstrap-checkbox/angular-bootstrap-checkbox.js',
-				'public/lib/async/lib/async.js',
+				//'public/lib/bower/ng-file-upload/angular-file-upload-shim.js',
+				'public/lib/bower/angular/angular.js',
+				'public/lib/bower/angular-resource/angular-resource.js',
+				'public/lib/bower/angular-animate/angular-animate.js',
+				'public/lib/bower/angular-ui-router/release/angular-ui-router.js',
+				'public/lib/bower/angular-ui-utils/ui-utils.js',
+				'public/lib/bower/angular-bootstrap/ui-bootstrap-tpls.js',
+				'public/lib/bower/jquery/dist/jquery.min.js',
+				'public/lib/bower/underscore/underscore-min.js',
+				'public/lib/bower/ng-grid/ng-grid-2.0.14.min.js',
+				'public/lib/bower/moment/moment.js',
+				'public/lib/bower/angular-moment/angular-moment.js',
+				'public/lib/bower/moment/locale/zh-cn.js',
+				//'public/lib/bower/bootstrap/dist/js/bootstrap.min.js',
+				'public/lib/bower/sweetalert/lib/sweet-alert.min.js',
+				'public/lib/bower/angular-file-upload/angular-file-upload.js',
+				'public/lib/bower/angular-bootstrap-checkbox/angular-bootstrap-checkbox.js',
+				'public/lib/bower/async/lib/async.js',
 				'public/lib/flat-ui-pro/dist/js/flat-ui-pro.js',
-				'public/lib/flat-ui-pro/docs/assets/js/application.js',
-				'public/lib/bootstrap-switch/dist/js/bootstrap-switch.js',
-				'public/lib/angular-breadcrumb/dist/angular-breadcrumb.js',
-				'public/lib/d3.js',
-				'public/lib/pdfjs/build/generic/build/pdf.js',
-				'public/lib/pdfjs/build/generic/web/compatibility.js',
-				'public/lib/jquery-timeago/jquery.timeago.js',
-				'public/lib/jquery-timeago/locales/jquery.timeago.zh-CN.js',
-				'public/lib/videojs/dist/video-js/video.js'
-
-				//'public/lib/smart-time-ago/lib/timeago.js',
-				//'public/lib/smart-time-ago/lib/locales/timeago.zh-cn.js'
-
-
-
-				//'public/lib/angular-bootstrap-switch/dist/angular-bootstrap-switch.js',
-				//'public/lib/angular-bootstrap-switch/src/directives/bsSwitch.js'
-                //
-
-
-
-				//'http://d3js.org/d3.v3.min.js" charset="utf-8"'
-
-
-//'public/lib/ng-file-upload/angular-file-upload.js'
-
-
-
-
+				'public/lib/bower/angular-breadcrumb/dist/angular-breadcrumb.js',
+				'public/lib/bower/d3/d3.js',
+				'public/lib/bower/videojs/dist/video-js/video.js'
 			]
 		},
 		css: [
@@ -119,7 +82,7 @@ module.exports = {
 			'public/modules/*/*[!tests]*/*.js'
 		],
 		tests: [
-			'public/lib/angular-mocks/angular-mocks.js',
+			'public/lib/bower/angular-mocks/angular-mocks.js',
 			'public/modules/*/tests/*.js'
 		]
 	}

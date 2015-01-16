@@ -2,11 +2,8 @@ angular.module('manage')
     .controller('myDeviceController', [
         'myDevice',
         '$scope',
-        '$location',
-        '$routeParams',
-        '$state',
         'AuthService',
-        function(myDevice,$scope, $location, $routeParams, $state, AuthService) {
+        function(myDevice,$scope, AuthService) {
             $scope.me = AuthService.me;
             console.log(myDevice);
             if(myDevice.length) {

@@ -1,5 +1,5 @@
 angular.module('schoolManage')
-    .factory('TeacherDataProvider', ['$http', '$q', '$route',function ($http, $q, $route) {
+    .factory('TeacherDataProvider', ['$http', '$q',function ($http, $q) {
         var getTeachersBySchool = function(schoolId, callBack) {
             var defered = $q.defer();
             var teachersBySchoolPromise = defered.promise;

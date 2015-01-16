@@ -1,11 +1,8 @@
 angular.module('schoolManage')
     .controller('schoolNavController', [
         '$scope',
-        '$route',
-        '$location',
-        '$routeParams',
         '$state',
-        function($scope, $route, $location, $routeParams, $state) {
+        function($scope, $state) {
             $scope.items = [
                 {name: '学校', state: 'schoolInfo'},
                 {name:'班级', state: 'classes'},

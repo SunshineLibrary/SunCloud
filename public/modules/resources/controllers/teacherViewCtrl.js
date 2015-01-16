@@ -1,7 +1,7 @@
 angular.module('resources')
     .controller('teacherViewController',
-    ['TeacherDataProvider', '$scope', 'AuthService', 'RoomDataProvider', '$location', '$stateParams', 'teacher',
-        function (TeacherDataProvider, $scope, AuthService, RoomDataProvider, $location, $stateParams, teacher) {
+    ['TeacherDataProvider', '$scope', 'AuthService', 'RoomDataProvider', 'teacher',
+        function (TeacherDataProvider, $scope, AuthService, RoomDataProvider, teacher) {
             $scope.teacher = teacher;
             $scope.isAdmin = $scope.teacher.roles.indexOf('admin') > -1;
             $scope.temp = {};

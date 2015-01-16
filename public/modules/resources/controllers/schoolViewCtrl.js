@@ -5,16 +5,13 @@ angular.module('resources')
         'schoolRooms',
         'admins',
         'RoomDataProvider',
-        'StudentDataProvider',
-        'UserDataProvider',
         'TeacherDataProvider',
-        'SchoolDataProvider',
         '$scope',
         '$state',
         '$stateParams',
         '$location',
         'AuthService', function (
-        school, schoolRooms, admins, RoomDataProvider, StudentDataProvider, UserDataProvider, TeacherDataProvider, SchoolDataProvider,$scope, $state, $stateParams, $location, AuthService) {
+        school, schoolRooms, admins, RoomDataProvider, TeacherDataProvider,$scope, $state, $stateParams, $location, AuthService) {
         $scope.school = school;
         $scope.rooms = schoolRooms;
         $scope.admins = admins;

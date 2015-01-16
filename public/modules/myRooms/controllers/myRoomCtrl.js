@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('myRooms').controller('myRoomController',
-    ['theRoom', '$scope', '$rootScope','$stateParams', '$location', 'Authentication','RoomDataProvider', 'StudentDataProvider', 'UserDataProvider', 'TabletDataProvider','AuthService', '$state',
-    function(theRoom, $scope, $rootScope, $stateParams, $location, Authentication, RoomDataProvider, StudentDataProvider,UserDataProvider, TabletDataProvider,AuthService, $state) {
+    ['theRoom', '$scope', '$rootScope', 'Authentication','RoomDataProvider', 'StudentDataProvider', 'UserDataProvider', 'TabletDataProvider','AuthService',
+    function(theRoom, $scope, $rootScope, Authentication, RoomDataProvider, StudentDataProvider,UserDataProvider, TabletDataProvider,AuthService) {
         $scope.authentication = Authentication;
         $scope.theRoom = theRoom;
         $scope.editorEnabled = false;

@@ -3,20 +3,12 @@ angular.module('myRooms')
         'myRooms',
         '$scope',
         'RoomDataProvider',
-        'DataAgent',
-        'UserDataProvider',
         '$location',
         'AuthService',
-        '$state',
-        '$stateParams',
-        function(myRooms, $scope, RoomDataProvider, DataAgent, UserDataProvider, $location, AuthService, $state, $stateParams) {
+        function(myRooms, $scope, RoomDataProvider, $location, AuthService) {
             $scope.rooms = myRooms;
             var me = AuthService.me;
             $scope.temp = {};
-            console.log($state.current);
-            console.log($state.params.roomId);
-            console.log($stateParams.roomId);
-
 
             $scope.$watch('rooms', function(newRooms) {
                 RoomDataProvider.getAdminRoomsBySchool(me.school).then(function(rooms){

@@ -1,11 +1,8 @@
 angular.module('schools')
     .controller('schoolsNavController', [
         '$scope',
-        '$route',
-        '$location',
-        '$routeParams',
         '$state',
-        function($scope, $route, $location, $routeParams, $state) {
+        function($scope, $state) {
             $scope.items = [
                 {name: '学校', state: 'schools'},
                 {name:'学生', state: 'studentsAll'},

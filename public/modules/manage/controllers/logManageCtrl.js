@@ -1,7 +1,7 @@
 angular.module('manage')
     .controller('logManageController',
-    ['tablets', 'TabletDataProvider', '$scope', '$location',
-        function (tablets, TabletDataProvider, $scope, $location) {
+    ['tablets', 'TabletDataProvider', '$scope',
+        function (tablets, TabletDataProvider, $scope) {
             $scope.tablets = tablets;
             $scope.selectedTablet = [];
             $scope.filterOptions = {filterText: ''};
