@@ -46,7 +46,7 @@ var FileSchema = new Schema({
     },
     shared: {
         type: Boolean,
-        default: true
+        default: false
     },
     users: [{
         type: Schema.Types.ObjectId,

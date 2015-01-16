@@ -1,11 +1,8 @@
 angular.module('manage')
     .controller('manageNavController', [
         '$scope',
-        '$route',
-        '$location',
-        '$routeParams',
         '$state',
-        function($scope, $route, $location, $routeParams, $state) {
+        function($scope, $state) {
             $scope.items = [
                 {name: '我的设备', state: 'myDevice'},
                 {name: '应用程序', state: 'appsManage'},

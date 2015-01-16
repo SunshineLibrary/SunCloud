@@ -2,12 +2,10 @@ angular.module('schoolManage')
     .controller('settingController', [
         'school',
         '$scope',
-        '$location',
-        '$state',
         'SchoolDataProvider',
         'TeacherDataProvider',
         'AuthService',
-        function(school, $scope, $location, $state, SchoolDataProvider, TeacherDataProvider, AuthService) {
+        function(school, $scope, SchoolDataProvider, TeacherDataProvider, AuthService) {
             $scope.school = school;
             $scope.isResettingPassword = false;
             $scope.selectedTeachers = [];

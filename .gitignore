@@ -30,7 +30,7 @@ bower_components
 db
 
 # Bower components
-public/lib
+public/lib/bower
 
 # Sunpack files and Application files
 upload

@@ -6,13 +6,10 @@ angular.module('resources')
         'StudentDataProvider',
         'UserDataProvider',
         'TeacherDataProvider',
-        'SchoolDataProvider',
         '$scope',
-        '$state',
-        '$stateParams',
         'AuthService',
         '$location', function (
-        room,RoomDataProvider, StudentDataProvider, UserDataProvider, TeacherDataProvider, SchoolDataProvider,$scope, $state, $stateParams,AuthService, $location) {
+        room,RoomDataProvider, StudentDataProvider, UserDataProvider, TeacherDataProvider,$scope,AuthService, $location) {
         var me = AuthService.me;
         $scope.room = room;
         $scope.selectedStudent = [];

@@ -1,7 +1,7 @@
 angular.module('manage')
     .controller('appsManageController',
-    ['apps', 'myRooms', 'AppDataProvider', 'RoomDataProvider','$scope', 'AuthService', '$location', '$q',
-        function (apps, myRooms, AppDataProvider, RoomDataProvider,$scope, AuthService, $location, $q) {
+    ['apps', 'myRooms', 'AppDataProvider','$scope', 'AuthService', '$location',
+        function (apps, myRooms, AppDataProvider,$scope, AuthService, $location) {
             $scope.apps = apps;
             $scope.myRooms = myRooms;
             $scope.temp = {};

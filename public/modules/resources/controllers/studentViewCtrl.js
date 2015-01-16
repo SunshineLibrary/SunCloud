@@ -1,7 +1,7 @@
 angular.module('resources')
     .controller('studentViewController',
-    ['student','StudentDataProvider', '$scope', 'AuthService', 'UserDataProvider','RoomDataProvider', '$location', '$stateParams',
-        function (student,StudentDataProvider, $scope, AuthService, UserDataProvider, RoomDataProvider,$location, $stateParams) {
+    ['student','StudentDataProvider', '$scope', 'AuthService', 'UserDataProvider','RoomDataProvider', '$stateParams',
+        function (student,StudentDataProvider, $scope, AuthService, UserDataProvider, RoomDataProvider, $stateParams) {
             $scope.student = student;
             $scope.temp = {};
             var me = AuthService.me;

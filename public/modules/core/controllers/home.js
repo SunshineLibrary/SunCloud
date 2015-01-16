@@ -1,8 +1,8 @@
 'use strict';
 
 
-angular.module('core').controller('HomeController', ['$scope', 'Authentication', '$rootScope', '$http', '$location', 'RootDataProvider', 'SchoolDataProvider', 'TeacherDataProvider',
-	function($scope, Authentication, $rootScope, $http, $location, RootDataProvider, SchoolDataProvider, TeacherDataProvider) {
+angular.module('core').controller('HomeController', ['$scope', 'Authentication', '$http', '$location', 'RootDataProvider', 'SchoolDataProvider', 'TeacherDataProvider',
+	function($scope, Authentication, $http, $location, RootDataProvider, SchoolDataProvider, TeacherDataProvider) {
 		// This provides Authentication context.
 		$scope.authentication = Authentication;
 		$scope.user = Authentication.user;

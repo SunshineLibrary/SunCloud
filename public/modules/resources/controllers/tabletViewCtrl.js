@@ -1,7 +1,7 @@
 angular.module('resources')
     .controller('tabletViewController',
-    ['theTablet','TabletDataProvider', '$scope', 'AuthService', 'RoomDataProvider', '$location', '$stateParams',
-        function (theTablet,TabletDataProvider, $scope, AuthService, RoomDataProvider, $location, $stateParams) {
+    ['theTablet','TabletDataProvider', '$scope', 'AuthService',
+        function (theTablet,TabletDataProvider, $scope, AuthService) {
             $scope.tablet = theTablet;
             console.log(theTablet);
             var me = AuthService.me;
