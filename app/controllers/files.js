@@ -44,7 +44,7 @@ var getFileType = function(mimetype, extension) {
         type = 'pdf';
     }else if (mimetype.indexOf('text') > -1 || mimetype.indexOf('officedocument') > -1 || fileType.doc.indexOf(extension) > -1) {
         type = 'doc';
-    }else if (mimetype.indexOf('epub') > -1 || mimetype.indexOf('mobi') || fileType.ebook.indexOf(extension)) {
+    }else if (mimetype.indexOf('epub') > -1 || mimetype.indexOf('mobi') > -1 || fileType.ebook.indexOf(extension) > -1) {
         type = 'ebook';
     }else if (mimetype.indexOf('video') > -1) {
         type = 'video';
@@ -121,6 +121,7 @@ exports.uploadRepo = function(req, res) {
     file.description = req.body.description;
     file.owner = req.user._id;
     file.created_at = Date.now();
+    file.createByRoot = req.body.createByRoot;
     saveFile(file, folderId, res);
 };
 

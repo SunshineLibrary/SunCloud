@@ -187,13 +187,9 @@ angular.module('sunpack')
                             return SemesterDataProvider.getSemester($stateParams.semesterId);
                         }
                     ],
-                    sharedFoldersOfSemester: ['FolderDataProvider', '$stateParams',
-                        function(FolderDataProvider, $stateParams) {
-                            return FolderDataProvider.getSharedFoldersBySubjectAndSemester($stateParams.subjectId, $stateParams.semesterId)
-                        }],
-                    sharedFilesOfSemester: ['FileDataProvider', '$stateParams',
-                        function(FileDataProvider, $stateParams) {
-                            return FileDataProvider.getSharedFilesBySubjectAndSemester($stateParams.subjectId, $stateParams.semesterId)
+                    sharedFilesOfSemester: ['FileDataProvider', '$stateParams', 'AuthService',
+                        function(FileDataProvider, $stateParams, AuthService) {
+                            return FileDataProvider.getSharedFilesBySubjectAndSemesterAndSchool($stateParams.subjectId, $stateParams.semesterId, AuthService.me.school)
                         }],
                     myFoldersBySubjectAndSemester: ['FolderDataProvider', '$stateParams', 'AuthService',
                     function(FolderDataProvider, $stateParams, AuthService) {

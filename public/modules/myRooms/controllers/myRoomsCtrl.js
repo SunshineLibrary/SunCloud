@@ -5,8 +5,29 @@ angular.module('myRooms')
         'RoomDataProvider',
         '$location',
         'AuthService',
-        function(myRooms, $scope, RoomDataProvider, $location, AuthService) {
+        '$state',
+        '$rootScope',
+        function(myRooms, $scope, RoomDataProvider, $location, AuthService, $state, $rootScope) {
+            //$state.go('myRoomView', {roomId: myRooms[0]._id});
             $scope.rooms = myRooms;
+            $rootScope.$on('$stateChangeStart',
+                function(event, toState, toParams, fromState, fromParams){
+                    //console.log('toState:',toState.name);
+                    //console.log('fromState', fromState.name);
+                    if(toState.name === 'myRoomsView') {
+                        if($scope.rooms.length) {
+                            $location.path('/myrooms/' + $scope.rooms[0]._id);
+                        }
+                    }
+                    //if(toState.name === 'schoolNav') {
+                    //    //$location.path('/school/info');
+                    //}
+                    //if(toState.name === 'deviceManage') {
+                    //    $location.path('/manage/mydevice');
+                    //}
+                });
+
+
             var me = AuthService.me;
             $scope.temp = {};
 

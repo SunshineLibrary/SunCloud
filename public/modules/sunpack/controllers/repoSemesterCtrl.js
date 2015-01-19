@@ -1,29 +1,18 @@
 angular.module('sunpack')
     .controller('repoSemesterController',
-    ['sharedFilesOfSemester', 'sharedFoldersOfSemester', 'myFoldersBySubjectAndSemester','$scope', 'SubjectDataProvider', 'FolderDataProvider', 'FileDataProvider','$stateParams', 'semester', '$state', '$sce', 'AuthService',
-        function (sharedFilesOfSemester, sharedFoldersOfSemester, myFoldersBySubjectAndSemester, $scope, SubjectDataProvider, FolderDataProvider, FileDataProvider, $stateParams, semester, $state, $sce, AuthService) {
+    ['sharedFilesOfSemester', 'myFoldersBySubjectAndSemester','$scope', 'SubjectDataProvider', 'FolderDataProvider', 'FileDataProvider','$stateParams', 'semester', '$state', '$sce', 'AuthService',
+        function (sharedFilesOfSemester, myFoldersBySubjectAndSemester, $scope, SubjectDataProvider, FolderDataProvider, FileDataProvider, $stateParams, semester, $state, $sce, AuthService) {
             $scope.semester = semester;
             $scope.newFolder = {};
             $scope.sharedFilesOfSemester = sharedFilesOfSemester;
-            $scope.sharedFoldersOfSemester = sharedFoldersOfSemester;
             $scope.myFoldersBySubjectAndSemester = myFoldersBySubjectAndSemester;
             $scope.selectedFolder = $scope.myFoldersBySubjectAndSemester[0] ? $scope.myFoldersBySubjectAndSemester[0]._id : null;
             $scope.filterOptions = {filterText: ''};
-            $scope.filterOptions2 = {filterText: ''};
             $scope.data = {searchingText: ''};
             $scope.selectedIndex = 0;
             var types =   ['pdf', 'doc', 'ebook', 'video', 'audio', 'image', 'other'];
             $scope.creatingFolder = false;
             var me = AuthService.me;
-
-            $scope.showingFiles = true;
-
-            $scope.showFiles = function() {
-                $scope.showingFiles = true;
-            };
-            $scope.showFolders = function() {
-                $scope.showingFiles = false;
-            };
 
             $scope.clickLike = function(fileId) {
                 if($scope.liked) {
@@ -71,6 +60,7 @@ angular.module('sunpack')
                     {field: 'description', displayName: '描述', cellTemplate: '<div ng-show="row.entity.description">' +
                     '<a title="文件描述:{{row.entity.description}}" id="info-tooltip" data-placement="right" data-toggle="tooltip"  type="button"><i class="glyphicon glyphicon-info-sign text-success" ng-mouseover="tooltip()"></i></a>'+
                     ' {{row.entity.description}}</div><div ng-hide="row.entity.description"><span class="label label-default">无</span></div>'},
+                    {field: 'created_at', displayName: '创建时间', cellTemplate: '<div class="label label-primary">{{row.entity.created_at | amDateFormat:\'L a h:mm\'}}</div>'},
                     {field: 'users.length', displayName: '使用人数', width: '10%'},
                     {field: 'size', displayName: '文件大小',width: '10%', cellTemplate: '<div>{{row.entity[col.field] | fileSizeFilter }} </div>'},
                 //    {field: '', displayName: '编辑', width: '10%',cellTemplate:
@@ -84,31 +74,31 @@ angular.module('sunpack')
 
             };
 
-            $scope.gridOptions2 =
-            {
-                data: 'sharedFoldersOfSemester',
-                multiSelect: false,
-                enableColumnResize: true,
-                rowTemplate: '<div  ng-mouseover="$parent.showedit=true" ng-mouseleave="$parent.showedit=false" ng-style="{\'cursor\': row.cursor, \'z-index\': col.zIndex() }" ' +
-                'ng-repeat="col in renderedColumns" ng-class="col.colIndex()" ' +
-                'class="ngCell {{col.cellClass}}" ng-cell></div>',
-                columnDefs: [
-                    {field: '_id', visible: false},
-                    {field: 'name', displayName: '文件夹名', cellTemplate: '<div><a>{{row.entity.name}}</a></div>'},
-                    {field: 'files.length', displayName: '文件个数', width: '10%'},
-                    //{field: 'semester.name', displayName: '年级'},
-                    {field: 'created_at', displayName: '创建时间'},
-                    {field: 'updated_at', displayName: '更新时间'},
-                    //{field: 'rooms', displayName: '分配班级'},
-                    {field: '', displayName: '编辑', width: '10%',cellTemplate:
-                    '<div class="ngCellText" ng-class="col.colIndex()" ng-show="showedit">' +
-                    '<a class="fui-new text-success" ng-click="showEditFolderDialog($event, row)"></a> &nbsp;&nbsp;' +
-                    '<a class="fui-cross text-danger" ng-click="deleteFolder($event,row)"></a></div>'}
-                ],
-                selectedItems: [],
-                filterOptions: $scope.filterOptions2
-
-            };
+            //$scope.gridOptions2 =
+            //{
+            //    data: 'sharedFoldersOfSemester',
+            //    multiSelect: false,
+            //    enableColumnResize: true,
+            //    rowTemplate: '<div  ng-mouseover="$parent.showedit=true" ng-mouseleave="$parent.showedit=false" ng-style="{\'cursor\': row.cursor, \'z-index\': col.zIndex() }" ' +
+            //    'ng-repeat="col in renderedColumns" ng-class="col.colIndex()" ' +
+            //    'class="ngCell {{col.cellClass}}" ng-cell></div>',
+            //    columnDefs: [
+            //        {field: '_id', visible: false},
+            //        {field: 'name', displayName: '文件夹名', cellTemplate: '<div><a>{{row.entity.name}}</a></div>'},
+            //        {field: 'files.length', displayName: '文件个数', width: '10%'},
+            //        //{field: 'semester.name', displayName: '年级'},
+            //        {field: 'created_at', displayName: '创建时间'},
+            //        {field: 'updated_at', displayName: '更新时间'},
+            //        //{field: 'rooms', displayName: '分配班级'},
+            //        {field: '', displayName: '编辑', width: '10%',cellTemplate:
+            //        '<div class="ngCellText" ng-class="col.colIndex()" ng-show="showedit">' +
+            //        '<a class="fui-new text-success" ng-click="showEditFolderDialog($event, row)"></a> &nbsp;&nbsp;' +
+            //        '<a class="fui-cross text-danger" ng-click="deleteFolder($event,row)"></a></div>'}
+            //    ],
+            //    selectedItems: [],
+            //    filterOptions: $scope.filterOptions2
+            //
+            //};
 
             $scope.addToFolder = function() {
                 FolderDataProvider.addFileToFolder($scope.selectedFolder, $scope.file._id)
@@ -182,7 +172,7 @@ angular.module('sunpack')
                 $('#previewFileDialog').modal('hide');
             };
             $('[data-toggle="tooltip"]').tooltip();
-// Add style class name to a tooltips
+            // Add style class name to a tooltips
             $('.tooltip').addClass(function () {
                 if ($(this).prev().attr('data-tooltip-style')) {
                     return 'tooltip-' + $(this).prev().attr('data-tooltip-style');

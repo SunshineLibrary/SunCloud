@@ -1,62 +1,38 @@
+
 <div class="container-fluid">
     <div class="col-md-12 col-sm-12 col-lg-12">
         <div class="row page-header">
-            <div class="col-md-2">
+
+            <div class="col-md-3 col-lg-3">
                 <select name="" id="selectSubject" class="form-control" data-ng-options="subject._id as subject.name for subject in allSubjects" data-ng-model="selectedSubject" data-ng-change="filter()" >
                 </select>
             </div>
             &nbsp;
-            <div class="col-md-2">
+            <div class="col-md-3 col-lg-3">
                 <select name="" id="selectSemester" class="form-control" data-ng-options="subject._id as subject.name for subject in allSemesters" data-ng-model="selectedSemester" data-ng-change="filter()" >
                 </select>
             </div>
 
-            <div class="col-md-2">
-                <select name="" id="selectSchool" class="form-control" data-ng-options="subject._id as subject.name for subject in allSchools" data-ng-model="selectedSchool" data-ng-change="filter(selectedSchool, null)" >
-                </select>
-            </div>
-
-            <div class="col-md-2">
-                <select name="" id="selectTeacher" class="form-control" data-ng-options="teacher._id as teacher.name for teacher in allTeachers" data-ng-model="selectedTeacher" data-ng-change="filter(null, selectedTeacher)" >
-                </select>
-            </div>
+            <!--<div class="col-md-3 col-lg-3 ">-->
+                <!--<select name="" id="selectTeacher" class="form-control" data-ng-options="teacher._id as teacher.name for teacher in allTeachers" data-ng-model="selectedTeacher" data-ng-change="filter()" >-->
+                <!--</select>-->
+            <!--</div>-->
 
                 <button class="btn btn-inverse btn-lg pull-right" href="#addResourceDialog" data-toggle="modal"><i class="fa fa-upload"></i> 发布教学资源</button>
             <!--</span>-->
         </div>
 
-        <div class="inner-addon left-addon pull-right" style="" ng-hide="showingFolders">
+        <div class="inner-addon left-addon pull-right" style="">
             <i class="glyphicon glyphicon-search"></i>
             <input type="search" class="form-control" style="width: 200px"  placeholder="搜索" ng-model="searchText"/>
         </div>
-        <div class="inner-addon left-addon pull-right" style="" ng-show="showingFolders">
-            <i class="glyphicon glyphicon-search"></i>
-            <input type="search" class="form-control" style="width: 200px"  placeholder="搜索" ng-model="filterOptions2.filterText"/>
-        </div>
-
         <div class="inline">
-             <ul class="nav nav-pills nav-success pull-left">
-                 <li ng-class="{true: 'inactive', false: 'active'}[showingFolders]"><a href="" ng-click="showFiles()"><i class="fa fa-files-o"></i> 所有文件 ({{displayFiles.length}})</a></li>
-                 <li ng-class="{true: 'active', false: 'inactive'}[showingFolders]"><a href="" ng-click="showFolders()"><i class="fa fa-folder-o"></i> 所有文件夹 ({{displayFolders.length}})</a></li>
-             </ul>
+
             &nbsp;&nbsp;
-            <!--<span class="pull-left" ng-hide="showingFolders">-->
-                <!--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-->
-                <!--<button class="btn btn-success">全部</button>-->
-                <!--<button class="btn btn-default">文档</button>-->
-                <!--<button class="btn btn-primary">PDF</button>-->
-                <!--<button class="btn btn-primary">电子书</button>-->
-                <!--<button class="btn btn-primary">视频</button>-->
-                <!--<button class="btn btn-primary">音频</button>-->
-                <!--<button class="btn btn-primary">图片</button>-->
-                <!--<button class="btn btn-primary">其他</button>-->
-            <!--</span>-->
-            <span class="pull-left" style="margin-left: 20px" ng-hide="showingFolders">
+            <span class="pull-right" style="margin-right: 20px">
                 <!--<span  ng-repeat="name in typeNames">-->
                     <!--<a href="" ng-class="{true: 'selected', false: ''}[$index === selectedIndex]" class="file-type-item">{{name}}</a>-->
                 <!--</span>-->
-
-
                 <a href="" ng-class="{true: 'selected', false: ''}[selectedIndex===0]" class="file-type-item" ng-click="selectFileType(0)">全部</a>
                 <a href="" ng-class="{true: 'selected', false: ''}[selectedIndex===1]" class="file-type-item" ng-click="selectFileType(1)">PDF</a>
                 <a href="" ng-class="{true: 'selected', false: ''}[selectedIndex===2]" class="file-type-item" ng-click="selectFileType(2)">文档</a>
@@ -70,12 +46,8 @@
         </div>
         <br/>
 
-        <div class="table" ng-if="showingFolders">
+        <div class="table">
             <div class="gridStyle style1" ng-grid="gridOptions"></div>
-        </div>
-
-        <div class="table" ng-if="!showingFolders">
-            <div class="gridStyle style1" ng-grid="gridOptions2" ></div>
         </div>
     </div>
 </div>

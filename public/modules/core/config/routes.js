@@ -17,11 +17,3 @@ angular.module('core').config(['$stateProvider', '$urlRouterProvider',
 		});
 	}
 ]);
-//	.run(['$rootScope','$location','Authentication','$state',function($rootScope, $location, $state,Anthentication){
-//
-//	//if(!Anthentication.user){
-//	//	$location.path('signin');
-//	//	//$state.transitionTo('signin');
-//	//}
-//}]);
-

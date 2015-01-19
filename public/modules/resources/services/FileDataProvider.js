@@ -84,6 +84,24 @@ angular.module('resources')
             })
         };
 
+        var getSharedFilesBySchool = function(schoolId) {
+            var defered = $q.defer();
+            var thePromise = defered.promise;
+            var query = {$or:[{createByRoot: true}, {$and:[{school: schoolId}, {shared: true}]}]};
+            query = encodeURIComponent(JSON.stringify(query));
+            $http({
+                method: "GET",
+                url: "/files?query=" + query +"&populate=semester,subject,owner,school"
+            }).success(function (files) {
+                defered.resolve(files);
+            }).error(function (err) {
+                defered.reject(err);
+                console.log(err);
+            });
+            return thePromise;
+
+        };
+
         var getSharedFilesBySubject = function(subjectId) {
             var defered = $q.defer();
             var thePromise = defered.promise;
@@ -132,6 +150,24 @@ angular.module('resources')
             return thePromise;
         };
 
+        var getSharedFilesBySubjectAndSemesterAndSchool = function(subjectId, semesterId, schoolId) {
+            var defered = $q.defer();
+            var thePromise = defered.promise;
+            var query = {$or:[{createByRoot: true}, {$and:[{school: schoolId}, {shared: true}]}], subject: subjectId, semester: semesterId};
+            query = encodeURIComponent(JSON.stringify(query));
+            $http({
+                method: "GET",
+                url: "/files?query=" + query
+            }).success(function (folders) {
+                defered.resolve(folders);
+            }).error(function (err) {
+                defered.reject(err);
+                console.log(err);
+            });
+            return thePromise;
+        };
+
+
 
         var getSharedFilesBySubjectAndSemesterCount = function(subjectId, semesterId) {
             var defered = $q.defer();
@@ -179,9 +215,11 @@ angular.module('resources')
             downloadFile: downloadFile,
             addDescription: addDescription,
             changeShareOption: changeShareOption,
+            getSharedFilesBySchool: getSharedFilesBySchool,
             getSharedFilesBySubject: getSharedFilesBySubject,
             getSharedFilesBySubjectCount: getSharedFilesBySubjectCount,
             getSharedFilesBySubjectAndSemester: getSharedFilesBySubjectAndSemester,
+            getSharedFilesBySubjectAndSemesterAndSchool: getSharedFilesBySubjectAndSemesterAndSchool,
             getSharedFilesBySubjectAndSemesterCount: getSharedFilesBySubjectAndSemesterCount,
             changeFileLike: changeFileLike
 

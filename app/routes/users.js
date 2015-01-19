@@ -23,13 +23,15 @@ module.exports = function(app) {
 	var folders = require('../../app/controllers/folders');
 	var files = require('../../app/controllers/files');
 	var tabletLog = require('../../app/controllers/tabletLog');
+	var FeedbackModel = mongoose.model('Feedback');
+	var feedbacks = require('../../app/controllers/feedbacks');
+
+
 
 	var multerMiddleware = multer({dest: __dirname+ '/../../upload/tmp'});
 	var sunpackMiddleware = multer({dest: __dirname+ '/../../upload/tmp'});
 
-	//app.set('X-Frame-Options', 'SAMEORIGIN');
 
-	app.route('/lib/ViewerJS/').get(users.setHeader);
 	// Setting up the users profile api
 	app.route('/me').get(users.me);
 	app.route('/users').put(users.update);
@@ -115,6 +117,8 @@ module.exports = function(app) {
 	app.route('/schools/get_all.json').get(tabletLog.getSchool);
 	app.route('/machines/sign_in.json').post(tabletLog.tabletLogin);
 	app.route('/machines/check_token').get(tabletLog.checkToken);
+
+	app.route('/feedbacks').post();
 
 	//app.post('/users', user.requiresLogin, users.create);
 
@@ -239,6 +243,14 @@ module.exports = function(app) {
 		findOneAndRemove: false,
 		fullErrors: true
 	};
+
+	restify.serve(app, FeedbackModel, {
+		postCreate: feedbacks.sendFeedbackMail,
+		strict: true,
+		prefix: '',
+		version: ''
+		//middleware: [auth.user.restify]
+	});
 
 	var UserModel = mongoose.model('User');
 	var SchoolModel = mongoose.model('School');
