@@ -52,8 +52,8 @@ exports.sendFeedbackMail = function (res, result, done) {
             if(err) {
                 console.error(err);
             }
+            mail.subject = subjectSchema + result.user.username + ' school: ' + result.user.school;
             result.user.school = school? school.name: result.user.school;
-            mail.subject = subjectSchema + result.user.username + ' 学校: ' + result.user.school;
             mail.type = 'text/html';
             mail.content = htmlifyFeedbackContent(result);
             smtp(mail, function (mailRes) {
