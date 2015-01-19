@@ -47,7 +47,8 @@
 	  	"connect-busboy": "~0.0.2",
 	  	"multer": "~0.1.6",
 	  	"q": "~1.1.2",
-	  	"chalk": "~0.5.1"
+	  	"chalk": "~0.5.1",
+	   "sendmail": ""
 	},
 	"devDependencies": {
 		"supertest": "~0.14.0",

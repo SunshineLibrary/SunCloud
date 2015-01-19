@@ -19,21 +19,9 @@ angular.module('repository').config(['$stateProvider', '$urlRouterProvider',
                             return SemesterDataProvider.getAllSemesters();
                         }
                     ],
-                    schools: ['RootDataProvider',
-                        function(RootDataProvider) {
-                            return RootDataProvider.getAllSchools();
-                        }
-                    ],
-                    teachers: ['RootDataProvider',
-                        function(RootDataProvider) {
-                            return RootDataProvider.getAllTeachersMin();
-                        }
-                    ],
-                    folders: ['FolderDataProvider', function(FolderDataProvider) {
-                        return FolderDataProvider.getAllFolders();
-                    }],
-                    files: ['FileDataProvider', function(FileDataProvider) {
-                        return FileDataProvider.getAllFiles();
+                    files: ['FileDataProvider', 'AuthService',
+                        function(FileDataProvider, AuthService) {
+                          return FileDataProvider.getSharedFilesBySchool(AuthService.me.school);
                     }]
                 }
             })

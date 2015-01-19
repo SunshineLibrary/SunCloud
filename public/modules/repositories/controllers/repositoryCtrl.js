@@ -198,7 +198,7 @@ angular.module('repositories')
         });
 
         $scope.uploader.onBeforeUploadItem = function(item) {
-            item.formData = [{folderId: $scope.newResource.folder._id, description: item.file.description}];
+            item.formData = [{folderId: $scope.newResource.folder._id, description: item.file.description, createByRoot: true}];
         };
 
         $scope.uploader.onErrorItem = function(item, response, status) {

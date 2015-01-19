@@ -7,11 +7,11 @@
         </div>
 
     </div>
-    <div class="inline">
-        <ul class="nav nav-pills nav-success pull-left">
-            <li ng-class="{true: 'active', false: 'inactive'}[showingFiles]"><a href="" ng-click="showFiles()"><i class="fa fa-files-o"></i> 所有文件 ({{sharedFilesOfSemester.length}})</a></li>
-            <li ng-class="{true: 'inactive', false: 'active'}[showingFiles]"><a href="" ng-click="showFolders()"><i class="fa fa-folder-o"></i> 所有文件夹 ({{sharedFoldersOfSemester.length}})</a></li>
-        </ul>
+    <div class=" inline">
+        <!--<ul class="nav nav-pills nav-success pull-left">-->
+            <!--<li ng-class="{true: 'active', false: 'inactive'}[showingFiles]"><a href="" ng-click="showFiles()"><i class="fa fa-files-o"></i> 所有文件 ({{sharedFilesOfSemester.length}})</a></li>-->
+            <!--<li ng-class="{true: 'inactive', false: 'active'}[showingFiles]"><a href="" ng-click="showFolders()"><i class="fa fa-folder-o"></i> 所有文件夹 ({{sharedFoldersOfSemester.length}})</a></li>-->
+        <!--</ul>-->
         &nbsp;&nbsp;
             <!--<span class="pull-left" ng-show="showingFiles && sharedFilesOfSemester.length">-->
                 <!--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-->
@@ -23,12 +23,19 @@
                 <!--<button class="btn btn-primary">图片</button>-->
                 <!--<button class="btn btn-primary">其他</button>-->
             <!--</span>-->
-         <span class="pull-left" style="margin-left: 20px" ng-show="showingFiles">
+
+        <div class="inner-addon left-addon pull-right " style="">
+            <i class="glyphicon glyphicon-search"></i>
+            <input type="search" class="form-control" style="width: 250px"  placeholder="搜索" ng-model="data.searchingText"/>
+        </div>
+        <!--<div class="inner-addon left-addon pull-right" style="" ng-hide="showingFiles">-->
+            <!--<i class="glyphicon glyphicon-search"></i>-->
+            <!--<input type="search" class="form-control" style="width: 250px"  placeholder="搜索" ng-model="filterOptions2.filterText"/>-->
+        <!--</div>-->
+         <span class="pull-right" style="margin-right:50px" >
                 <!--<span  ng-repeat="name in typeNames">-->
                     <!--<a href="" ng-class="{true: 'selected', false: ''}[$index === selectedIndex]" class="file-type-item">{{name}}</a>-->
                 <!--</span>-->
-
-
                 <a href="" ng-class="{true: 'selected', false: ''}[selectedIndex===0]" class="file-type-item" ng-click="selectFileType(0)">全部</a>
                 <a href="" ng-class="{true: 'selected', false: ''}[selectedIndex===1]" class="file-type-item" ng-click="selectFileType(1)">PDF</a>
                 <a href="" ng-class="{true: 'selected', false: ''}[selectedIndex===2]" class="file-type-item" ng-click="selectFileType(2)">文档</a>
@@ -37,18 +44,10 @@
                 <a href="" ng-class="{true: 'selected', false: ''}[selectedIndex===5]" class="file-type-item" ng-click="selectFileType(5)">音频</a>
                 <a href="" ng-class="{true: 'selected', false: ''}[selectedIndex===6]" class="file-type-item" ng-click="selectFileType(6)" >图片</a>
                 <a href="" ng-class="{true: 'selected', false: ''}[selectedIndex===7]" class="file-type-item" ng-click="selectFileType(7)">其他</a>
-
             </span>
-        <div class="inner-addon left-addon pull-right" style="" ng-show="showingFiles">
-            <i class="glyphicon glyphicon-search"></i>
-            <input type="search" class="form-control" style="width: 250px"  placeholder="搜索" ng-model="data.searchingText"/>
-        </div>
-        <div class="inner-addon left-addon pull-right" style="" ng-hide="showingFiles">
-            <i class="glyphicon glyphicon-search"></i>
-            <input type="search" class="form-control" style="width: 250px"  placeholder="搜索" ng-model="filterOptions2.filterText"/>
-        </div>
+
     </div>
-    <div ng-if="showingFiles">
+    <div>
 
         <div ng-show="sharedFilesOfSemester.length">
             <!--<a  role="button" class="btn btn-primary pull-right" data-toggle="modal" href="#createFolderDialog"><span class="fui-folder"></span> 创建书包文件夹</a>-->
@@ -65,23 +64,23 @@
             <!--<a role="button" class="btn btn-success" data-toggle="modal" href="#createFolderDialog"><span class="fui-folder"></span> 创建书包文件夹</a>-->
         </div>
     </div>
-    <div ng-if="!showingFiles">
+    <!--<div ng-if="!showingFiles">-->
 
-        <div ng-show="sharedFoldersOfSemester.length">
-            <!--<a  role="button" class="btn btn-primary pull-right" data-toggle="modal" href="#createFolderDialog"><span class="fui-folder"></span> 创建书包文件夹</a>-->
+        <!--<div ng-show="sharedFoldersOfSemester.length">-->
+            <!--&lt;!&ndash;<a  role="button" class="btn btn-primary pull-right" data-toggle="modal" href="#createFolderDialog"><span class="fui-folder"></span> 创建书包文件夹</a>&ndash;&gt;-->
+            <!--&lt;!&ndash;<br/>&ndash;&gt;-->
+
             <!--<br/>-->
-
-            <br/>
-            <div class="table">
-                <div class="gridStyle" ng-grid="gridOptions2"></div>
-            </div>
-        </div>
-        <br/>
-        <div ng-hide="sharedFoldersOfSemester.length" align="center">
-            <h4>没有任何文件夹</h4>
-            <!--<a role="button" class="btn btn-success" data-toggle="modal" href="#createFolderDialog"><span class="fui-folder"></span> 创建书包文件夹</a>-->
-        </div>
-    </div>
+            <!--<div class="table">-->
+                <!--<div class="gridStyle" ng-grid="gridOptions2"></div>-->
+            <!--</div>-->
+        <!--</div>-->
+        <!--<br/>-->
+        <!--<div ng-hide="sharedFoldersOfSemester.length" align="center">-->
+            <!--<h4>没有任何文件夹</h4>-->
+            <!--&lt;!&ndash;<a role="button" class="btn btn-success" data-toggle="modal" href="#createFolderDialog"><span class="fui-folder"></span> 创建书包文件夹</a>&ndash;&gt;-->
+        <!--</div>-->
+    <!--</div>-->
 </ui-view>
 
 

@@ -1,3 +1,21 @@
+feedback-button {
+    position: fixed;
+    right: -6px;
+    top: 50%;
+}
+feedback-button button.feedback-btn {
+    line-height: 1.25;
+    padding-right: 16px;
+    -webkit-transition: 0.1s;
+    transition: 0.1s;
+    margin-top: -39px;
+}
+feedback-button button.feedback-btn:hover {
+    -webkit-transform: translate(-3px, 0);
+    -ms-transform: translate(-3px, 0);
+    transform: translate(-3px, 0);
+}
+
 .content {
 	margin-top: 50px;
 }

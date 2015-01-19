@@ -44,6 +44,14 @@ var FileSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'Semester'
     },
+    createByRoot: {
+        type: Boolean,
+        default: false
+    },
+    createByAdmin: {
+        type: Boolean,
+        default: false
+    },
     shared: {
         type: Boolean,
         default: false
