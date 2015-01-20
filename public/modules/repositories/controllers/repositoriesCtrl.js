@@ -13,22 +13,25 @@ angular.module('repositories')
         $scope.filterOptions2 = {filterText: ''};
         $scope.searchText = '';
         $scope.showingFolders = false;
-        $scope.isCreatingFolder = false;
+        $scope.data = {fileSource: 0};
+        //$scope.isCreatingFolder = false;
         $scope.newFolderName = null;
         $scope.newResource = {};
         $scope.editFile = {};
         $scope.error = {};
         //$scope.typeNames = ['全部', 'PDF', '文档', '电子书', '视频', '音频', '图片', '其他'];
         $scope.selectedIndex = 0;
-        $scope.rootFolders = _.filter($scope.folders, function(folder) {
-            return folder.owner.roles.indexOf('root') > -1
-        });
-        $scope.newResource.folder = $scope.rootFolders[0] ? $scope.rootFolders[0] : null;
+        $scope.selectedSource = 0;
+        //$scope.rootFolders = _.filter($scope.folders, function(folder) {
+        //    return folder.owner.roles.indexOf('root') > -1
+        //});
+        //$scope.newResource.folder = $scope.rootFolders[0] ? $scope.rootFolders[0] : null;
         var me = Authentication.user;
         var subjectIds = _.map($scope.subjects, function(subject) {return subject._id});
         var semesterIds =  _.map($scope.semesters, function(semester) {return semester._id});
         var schoolsIds = _.map($scope.schools, function(school) {return school._id});
         var types =   ['pdf', 'doc', 'ebook', 'video', 'audio', 'image', 'other'];
+        var shared = [true, false];
         $scope.allSubjects = [{_id: subjectIds, name: '所有科目'}].concat($scope.subjects);
         $scope.allSemesters = [{_id: semesterIds, name: '所有年级'}].concat($scope.semesters);
         $scope.allSchools =     [{_id: schoolsIds, name: '所有学校'}].concat($scope.schools);
@@ -54,29 +57,33 @@ angular.module('repositories')
         //        $scope.selectedTeacher = $scope.allTeachers[0]._id;
         //    }
         //});
+        //
+        //$scope.$watchGroup(['newResource.subject', 'newResource.semester'], function(newValue) {
+        //   if(newValue) {
+        //       $scope.theRootFolders = _.filter($scope.rootFolders, function(folder) {
+        //           return ( newValue[0] ? folder.subject._id.toString() === newValue[0]._id.toString() : true ) && (newValue[1] ? folder.semester._id.toString() === newValue[1]._id.toString() : true);
+        //           //return folder.subject._id.toString() === newValue[0]._id.toString() && folder.semester._id.toString() === newValue[1]._id.toString()
+        //       })
+        //   }
+        //});
 
-        $scope.$watchGroup(['newResource.subject', 'newResource.semester'], function(newValue) {
-           if(newValue) {
-               $scope.theRootFolders = _.filter($scope.rootFolders, function(folder) {
-                   return ( newValue[0] ? folder.subject._id.toString() === newValue[0]._id.toString() : true ) && (newValue[1] ? folder.semester._id.toString() === newValue[1]._id.toString() : true);
-                   //return folder.subject._id.toString() === newValue[0]._id.toString() && folder.semester._id.toString() === newValue[1]._id.toString()
-               })
-           }
-        });
-
-        $scope.$watchGroup(['selectedIndex', 'searchText'], function(newValue) {
+        $scope.$watchGroup(['selectedIndex', 'selectedSource','searchText'], function(newValue) {
             if(newValue) {
-                if (newValue[0] === 0) {
-                    $scope.filterOptions.filterText = newValue[1];
+                console.log(newValue[1]);
+                if (newValue[0] === 0 && newValue[1] === 0) {
+                    $scope.filterOptions.filterText = newValue[2];
+                }else if(newValue[0] === 0){
+                    $scope.filterOptions.filterText = 'shared:' + shared[newValue[1]-1] + ';' + newValue[2];
+                }else if(newValue[1] === 0){
+                    $scope.filterOptions.filterText = 'type:' + types[newValue[0]-1] + ';' + newValue[2];
                 }else {
-                    $scope.filterOptions.filterText = 'type:' + types[newValue[0]-1] + ';' + newValue[1];
+                    $scope.filterOptions.filterText = 'shared:' + shared[newValue[1]-1] + ';type:' + types[newValue[0]-1] + ';' + newValue[2];
                 }
             }
         });
 
 
         $scope.filter = function(selectedSchool, selectedTeacher) {
-            console.log($scope.selectedTeacher);
             if(selectedSchool) {
                 $scope.theTeachers = _.filter($scope.teachers, function(teacher) {
                     return selectedSchool.indexOf(teacher.school) > -1
@@ -90,8 +97,6 @@ angular.module('repositories')
                    return ($scope.selectedSubject.indexOf(folder.subject._id) > -1) && ($scope.selectedSemester.indexOf(folder.semester._id) > -1) && ($scope.selectedSchool.indexOf(folder.school._id) > -1) && ($scope.selectedTeacher.indexOf(folder.owner._id) > -1)
                })
            }else {
-               console.log('selectedSchool',$scope.selectedSchool);
-               console.log('selectedTeacher',$scope.selectedTeacher);
                $scope.displayFiles = _.filter($scope.files, function(file) {
                    return ($scope.selectedSubject.indexOf(file.subject._id) > -1) && ($scope.selectedSemester.indexOf(file.semester._id) > -1) && ($scope.selectedSchool.indexOf(file.school._id) > -1) && ($scope.selectedTeacher.indexOf(file.owner._id) > -1)
                });
@@ -102,6 +107,9 @@ angular.module('repositories')
         //$scope.$watch()
         $scope.selectFileType = function(index) {
             $scope.selectedIndex = index;
+        };
+        $scope.selectFileSource = function(index) {
+            $scope.selectedSource = index;
         };
 
         $scope.showFolders = function() {
@@ -114,49 +122,49 @@ angular.module('repositories')
             $scope.filter();
         };
 
-        $scope.toCreateFolder = function() {
-            $scope.isCreatingFolder = true;
-        };
-        $scope.createFolder = function() {
-            $scope.error = {};
-            if($scope.newResource.subject === '' || $scope.newResource.subject === null || $scope.newResource.subject === undefined) {
-                $scope.error.subject = true;
-                return;
-            }
-            if($scope.newResource.semester === '' || $scope.newResource.semester === null || $scope.newResource.semester === undefined) {
-                $scope.error.semester = true;
-                return;
-            }
-            if($scope.newFolderName === '' || $scope.newFolderName === null || $scope.newFolderName === undefined) {
-                $scope.error.folder = true;
-                return;
-            }
-            $scope.isCreatingFolder = false;
-            var info = {};
-            info.name = $scope.newFolderName;
-            info.subject = $scope.newResource.subject._id;
-            info.semester = $scope.newResource.semester._id;
-            info.owner = me._id;
-            info.school = me.school;
-            FolderDataProvider.createFolder(info).success(function(newFolder) {
-                console.log(newFolder);
-                $scope.folders.push(newFolder);
-                $scope.rootFolders.push(newFolder);
-                $scope.theRootFolders.push(newFolder);
-                $scope.newResource.folder = newFolder;
-                newFolder.subject = $scope.newResource.subject;
-                newFolder.semester = $scope.newResource.semester;
-                newFolder.owner = me;
-                $scope.newFolderName = null;
-            })
-
-
-
-        };
-        $scope.cancelCreate = function() {
-            $scope.isCreatingFolder = false;
-            $scope.error = {};
-        };
+        //$scope.toCreateFolder = function() {
+        //    $scope.isCreatingFolder = true;
+        //};
+        //$scope.createFolder = function() {
+        //    $scope.error = {};
+        //    if($scope.newResource.subject === '' || $scope.newResource.subject === null || $scope.newResource.subject === undefined) {
+        //        $scope.error.subject = true;
+        //        return;
+        //    }
+        //    if($scope.newResource.semester === '' || $scope.newResource.semester === null || $scope.newResource.semester === undefined) {
+        //        $scope.error.semester = true;
+        //        return;
+        //    }
+        //    if($scope.newFolderName === '' || $scope.newFolderName === null || $scope.newFolderName === undefined) {
+        //        $scope.error.folder = true;
+        //        return;
+        //    }
+        //    $scope.isCreatingFolder = false;
+        //    var info = {};
+        //    info.name = $scope.newFolderName;
+        //    info.subject = $scope.newResource.subject._id;
+        //    info.semester = $scope.newResource.semester._id;
+        //    info.owner = me._id;
+        //    info.school = me.school;
+        //    FolderDataProvider.createFolder(info).success(function(newFolder) {
+        //        console.log(newFolder);
+        //        $scope.folders.push(newFolder);
+        //        $scope.rootFolders.push(newFolder);
+        //        $scope.theRootFolders.push(newFolder);
+        //        $scope.newResource.folder = newFolder;
+        //        newFolder.subject = $scope.newResource.subject;
+        //        newFolder.semester = $scope.newResource.semester;
+        //        newFolder.owner = me;
+        //        $scope.newFolderName = null;
+        //    })
+        //
+        //
+        //
+        //};
+        //$scope.cancelCreate = function() {
+        //    $scope.isCreatingFolder = false;
+        //    $scope.error = {};
+        //};
 
         $scope.toEditFile = function(index) {
             $scope.index = index;
@@ -198,7 +206,7 @@ angular.module('repositories')
         });
 
         $scope.uploader.onBeforeUploadItem = function(item) {
-            item.formData = [{folderId: $scope.newResource.folder._id, description: item.file.description, createByRoot: true}];
+            item.formData = [{description: item.file.description, createBy: 'root', semester: $scope.newResource.semester._id, subject: $scope.newResource.subject._id}];
         };
 
         $scope.uploader.onErrorItem = function(item, response, status) {
@@ -208,19 +216,18 @@ angular.module('repositories')
             }
         };
         $scope.uploader.onSuccessItem = function(item, response) {
-            response.subject = $scope.newResource.folder.subject;
-            response.semester = $scope.newResource.folder.semester;
+            response.subject = $scope.newResource.subject;
+            response.semester = $scope.newResource.semester;
             response.owner = me;
             $scope.displayFiles.push(response);
             //$rootScope.$broadcast('addFile', {folderId: folder._id, updated_at: Date.now()});
         };
         $scope.uploader.onCompleteAll = function() {
-            console.info('onCompleteAll');
             $timeout(function() {
                 swal({title: "上传成功", type: 'success', timer: 2000});
                 $('#addResourceDialog').modal('hide');
                 $scope.uploader.clearQueue();
-            }, 1500);
+            }, 1200);
         };
         $scope.gridOptions =
             {
@@ -255,8 +262,6 @@ angular.module('repositories')
                     selectedItems: [],
                     filterOptions: $scope.filterOptions2
             };
-
-        console.log($scope.displayFiles[0].like);
         $scope.gridOptions2 =
         {
             data: 'displayFiles',
@@ -271,7 +276,7 @@ angular.module('repositories')
                 {field: 'originalname', displayName: '文件名称', width: '35%', cellTemplate: '<div><a ng-click="selectFile(row.entity)">{{row.entity.originalname}}</a></div>'},
                 {field: 'size', displayName: '大小', cellTemplate: '<div>{{row.entity.size | fileSizeFilter}}</div>'},
                 {filed: 'like', displayName: '点赞', cellTemplate: '<div>{{row.entity.like.length}}</div>'},
-                {field: '', displayName: '分享'},
+                {field: 'shared', displayName: '共享', cellTemaplate: '<div>{{row.entity.shared | trueFalseFilter}}</div>'},
                 {field: 'subject.name', displayName: '科目'},
                 {field: 'semester.name', displayName: '年级'},
                 {field: 'owner.name', displayName: '创建人'},
@@ -365,7 +370,6 @@ angular.module('repositories')
             }
             $scope.fileUrl = $sce.trustAsResourceUrl('/sunpack/' + $scope.file._id);
             $scope.videoUrl = $sce.trustAsResourceUrl('/sunpack/' + $scope.file._id);
-            console.log($scope.file.mimetype);
 
             $('#previewFileDialog').modal('show');
             //$state.go('sunpack.repo.subject', {folderId: $scope.gridOptions.selectedItems[0]._id});
@@ -379,6 +383,11 @@ angular.module('repositories')
         };
 
         $('[data-toggle="tooltip"]').tooltip();
+        // Custom Selects
+        if ($('[data-toggle="select"]').length) {
+            $('[data-toggle="select"]').select2();
+        }
+
 
         //// Focus state for append/prepend inputs
         //$('.input-group').on('focus', '.form-control', function () {

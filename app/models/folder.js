@@ -34,12 +34,9 @@ var FolderSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'File'
     }],
-    created_at: {
-        type: Date
-    },
-    updated_at: {
-        type: Date
-    }
+    created_at: Date,
+    updated_at: Date,
+    deleted_at: Date
 });
 
 mongoose.model('Folder', FolderSchema);

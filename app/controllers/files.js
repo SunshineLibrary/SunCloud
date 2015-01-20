@@ -58,7 +58,7 @@ var getFileType = function(mimetype, extension) {
     return type;
 };
 
-var saveFile = function(file, folderId, res) {
+var saveFileToFolder = function(file, folderId, res) {
     file.type = getFileType(file.mimetype, file.extension);
     file.name = file._id.toString();
     fs.renameSync(file.path, file_path + file.name);
@@ -92,6 +92,19 @@ var saveFile = function(file, folderId, res) {
     });
 };
 
+var saveFile = function(file, res) {
+    file.name = file._id.toString();
+    console.log(file._id, file.name, '~~~~');
+    file.path = file_path + file.name;
+    file.save(function(err) {
+        if(err) {
+            res.status(500).send({message: "数据库错误，未能保存此文件"});
+        }else {
+            res.status(200).send(file);
+        }
+    });
+};
+
 
 exports.getFileById = function (req, res, next, fileId) {
     File.findById(fileId, function(err, file) {
@@ -112,17 +125,22 @@ exports.uploadFiles = function(req, res) {
     file.description = req.body.description;
     file.owner = req.user._id;
     file.created_at = Date.now();
-    saveFile(file, folderId, res);
+    saveFileToFolder(file, folderId, res);
 };
 
 exports.uploadRepo = function(req, res) {
-    var folderId = req.body.folderId;
     var file = new File(req.files.file);
     file.description = req.body.description;
     file.owner = req.user._id;
     file.created_at = Date.now();
-    file.createByRoot = req.body.createByRoot;
-    saveFile(file, folderId, res);
+    file.createBy = req.body.createBy;
+    file.shared = true;
+    file.type = getFileType(file.mimetype, file.extension);
+    file.subject = req.body.subject;
+    file.semester = req.body.semester;
+    file.school = req.user.school;
+    fs.renameSync(file.path, file_path + file._id.toString());
+    saveFile(file, res);
 };
 
 exports.editFile = function(req, res) {

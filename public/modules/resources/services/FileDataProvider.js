@@ -87,7 +87,7 @@ angular.module('resources')
         var getSharedFilesBySchool = function(schoolId) {
             var defered = $q.defer();
             var thePromise = defered.promise;
-            var query = {$or:[{createByRoot: true}, {$and:[{school: schoolId}, {shared: true}]}]};
+            var query = {$or:[{createBy: 'root'}, {$and:[{school: schoolId}, {shared: true}]}]};
             query = encodeURIComponent(JSON.stringify(query));
             $http({
                 method: "GET",
@@ -153,7 +153,7 @@ angular.module('resources')
         var getSharedFilesBySubjectAndSemesterAndSchool = function(subjectId, semesterId, schoolId) {
             var defered = $q.defer();
             var thePromise = defered.promise;
-            var query = {$or:[{createByRoot: true}, {$and:[{school: schoolId}, {shared: true}]}], subject: subjectId, semester: semesterId};
+            var query = {$or:[{createBy: 'root'}, {$and:[{school: schoolId}, {shared: true}]}], subject: subjectId, semester: semesterId};
             query = encodeURIComponent(JSON.stringify(query));
             $http({
                 method: "GET",

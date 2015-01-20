@@ -107,7 +107,7 @@ exports.getFoldersCountByRoomAndTeacher = function(req, res) {
 
 
 /**
- * When deleting a folder, also delete files in it, and the ref in Room.sunpack
+ * When deleting a folder, also delete the ref in Room.sunpack
  * @param res
  * @param result
  * @param done
