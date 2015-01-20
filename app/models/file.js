@@ -44,14 +44,19 @@ var FileSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'Semester'
     },
-    createByRoot: {
-        type: Boolean,
-        default: false
+    createBy: {
+        type: String,
+        enum:['root', 'admin', 'teacher'],
+        default: 'teacher'
     },
-    createByAdmin: {
-        type: Boolean,
-        default: false
-    },
+    //createByRoot: {
+    //    type: Boolean,
+    //    default: false
+    //},
+    //createByAdmin: {
+    //    type: Boolean,
+    //    default: false
+    //},
     shared: {
         type: Boolean,
         default: false
@@ -65,7 +70,8 @@ var FileSchema = new Schema({
         ref: 'User'
     }],
     created_at: Date,
-    updated_at: Date
+    updated_at: Date,
+    deleted_at: Date
 });
 
 mongoose.model('File', FileSchema);

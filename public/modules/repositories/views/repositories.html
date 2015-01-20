@@ -25,17 +25,9 @@
             <!--</span>-->
         </div>
 
-        <div class="inner-addon left-addon pull-right" style="" ng-hide="showingFolders">
-            <i class="glyphicon glyphicon-search"></i>
-            <input type="search" class="form-control" style="width: 200px"  placeholder="搜索" ng-model="searchText"/>
-        </div>
-        <div class="inner-addon left-addon pull-right" style="" ng-show="showingFolders">
-            <i class="glyphicon glyphicon-search"></i>
-            <input type="search" class="form-control" style="width: 200px"  placeholder="搜索" ng-model="filterOptions2.filterText"/>
-        </div>
 
-        <div class="inline">
-             <ul class="nav nav-pills nav-success pull-left">
+        <div class="">
+             <ul class="nav nav-pills nav-success">
                  <li ng-class="{true: 'inactive', false: 'active'}[showingFolders]"><a href="" ng-click="showFiles()"><i class="fa fa-files-o"></i> 所有文件 ({{displayFiles.length}})</a></li>
                  <li ng-class="{true: 'active', false: 'inactive'}[showingFolders]"><a href="" ng-click="showFolders()"><i class="fa fa-folder-o"></i> 所有文件夹 ({{displayFolders.length}})</a></li>
              </ul>
@@ -51,11 +43,21 @@
                 <!--<button class="btn btn-primary">图片</button>-->
                 <!--<button class="btn btn-primary">其他</button>-->
             <!--</span>-->
-            <span class="pull-left" style="margin-left: 20px" ng-hide="showingFolders">
+            <br/>
+             <span class="" style="margin-left: 20px" ng-if="!showingFolders">
                 <!--<span  ng-repeat="name in typeNames">-->
                     <!--<a href="" ng-class="{true: 'selected', false: ''}[$index === selectedIndex]" class="file-type-item">{{name}}</a>-->
                 <!--</span>-->
+                <span>
+                    <a href="" ng-class="{true: 'selected', false: ''}[selectedSource==0]" class="file-type-item" ng-click="selectFileSource(0)">全部文件</a>
+                    <a href="" ng-class="{true: 'selected', false: ''}[selectedSource===1]" class="file-type-item" ng-click="selectFileSource(1)">资源库</a>
+                    <a href="" ng-class="{true: 'selected', false: ''}[selectedSource===2]" class="file-type-item" ng-click="selectFileSource(2)">非资源库</a>
+                    <a href="" style="margin-right: 20px"  ng-class="{true: 'selected', false: ''}[selectedSource===3]" class="file-type-item" ng-click="selectFileSource(3)"><i class="fa fa-trash"></i>回收站</a>
 
+
+
+                </span>
+                 <span>
 
                 <a href="" ng-class="{true: 'selected', false: ''}[selectedIndex===0]" class="file-type-item" ng-click="selectFileType(0)">全部</a>
                 <a href="" ng-class="{true: 'selected', false: ''}[selectedIndex===1]" class="file-type-item" ng-click="selectFileType(1)">PDF</a>
@@ -66,10 +68,21 @@
                 <a href="" ng-class="{true: 'selected', false: ''}[selectedIndex===6]" class="file-type-item" ng-click="selectFileType(6)" >图片</a>
                 <a href="" ng-class="{true: 'selected', false: ''}[selectedIndex===7]" class="file-type-item" ng-click="selectFileType(7)">其他</a>
 
-            </span>
-        </div>
-        <br/>
+                </span>
 
+            </span>
+
+            <div class="inner-addon left-addon pull-right" style="" ng-hide="showingFolders">
+                <i class="glyphicon glyphicon-search"></i>
+                <input type="search" class="form-control" style="width: 180px"  placeholder="搜索" ng-model="searchText"/>
+            </div>
+            <div class="inner-addon left-addon pull-right" style="" ng-show="showingFolders">
+                <i class="glyphicon glyphicon-search"></i>
+                <input type="search" class="form-control" style="width: 250px"  placeholder="搜索" ng-model="filterOptions2.filterText"/>
+            </div>
+            <br/>
+
+        </div>
         <div class="table" ng-if="showingFolders">
             <div class="gridStyle style1" ng-grid="gridOptions"></div>
         </div>
@@ -97,45 +110,45 @@
                 <form name="addResourceForm" novalidate>
                     <div class="input-group focus">
                         <span class="input-group-addon">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-th-large"></i> 科目</span>
-                        <select class="form-control select-primary"  style="width:300px" data-ng-options="subject.name for subject in subjects" data-ng-model="newResource.subject">
+                        <select class="form-control select-primary"  style="width:300px" data-ng-options="subject.name for subject in subjects" data-ng-model="newResource.subject" required>
                             <option style="display:none" value="">请选择科目</option>
                         </select>
                     </div>
                     <!--<br/>-->
                     <div class="input-group focus" style="margin-top:10px">
                         <span class="input-group-addon">&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-graduation-cap"></i> 年级</span>
-                        <select class="form-control select-primary" style="width:300px" data-ng-options="semester.name for semester in semesters" data-ng-model="newResource.semester">
+                        <select class="form-control select-primary" style="width:300px" data-ng-options="semester.name for semester in semesters" data-ng-model="newResource.semester" required>
                             <option style="display:none" value="">请选择年级</option>
                         </select>
                     </div>
 
-                    <!--<br/>-->
-                    <div class="input-group focus" style="margin-top:10px">
-                        <span class="input-group-addon"><i class="fa fa-folder-o"></i> 文件夹</span>
-                        &nbsp;
-                        &nbsp;
-                        <select class="form-control select-primary" style="width:300px" data-ng-options="folder.name for folder in theRootFolders" data-ng-model="newResource.folder" required>
-                            <!--<option style="display:none" value="" ng-if="theRootFolders.length">请选择文件夹</option>-->
-                            <option style="display:none" value="" ng-if="!theRootFolders.length">没有可选文件夹</option>
-                        </select>
-                        &nbsp;&nbsp;&nbsp;&nbsp;
-                        <span class="pull-left" style="margin-left:10px">
-                            <div  ng-hide="isCreatingFolder">
-                                <button class="btn btn-success"  ng-click="toCreateFolder()"><i class="fa fa-folder-open"></i> 新建文件夹</button>
-                            </div>
-                            <div ng-show="isCreatingFolder">
-                                <form class="form-group form-inline" name="newFolderForm">
-                                    <input type="text" class="form-control" style="width: 150px" placeholder="请输入文件夹名" ng-model="newFolderName"/>
-                                    <button class="btn btn-default" ng-click="cancelCreate()">取消</button>
-                                    <button class="btn btn-success" ng-click="createFolder()" ng-disabled="newFolderForm.$invalid">新建</button>
-                                </form>
-                                &nbsp;&nbsp;&nbsp;&nbsp;
-                                <span class="pull-right" ng-show="error.subject" style="color:red">请选择科目</span>
-                                <span class="pull-right" ng-show="error.semester" style="color:red">请选择年级</span>
-                                <span class="pull-right" ng-show="error.folder" style="color:red">请输入文件夹名</span>
-                            </div>
-                        </span>
-                    </div>
+                    <!--&lt;!&ndash;<br/>&ndash;&gt;-->
+                    <!--<div class="input-group focus" style="margin-top:10px">-->
+                        <!--<span class="input-group-addon"><i class="fa fa-folder-o"></i> 文件夹</span>-->
+                        <!--&nbsp;-->
+                        <!--&nbsp;-->
+                        <!--<select class="form-control select-primary" style="width:300px" data-ng-options="folder.name for folder in theRootFolders" data-ng-model="newResource.folder" required>-->
+                            <!--&lt;!&ndash;<option style="display:none" value="" ng-if="theRootFolders.length">请选择文件夹</option>&ndash;&gt;-->
+                            <!--<option style="display:none" value="" ng-if="!theRootFolders.length">没有可选文件夹</option>-->
+                        <!--</select>-->
+                        <!--&nbsp;&nbsp;&nbsp;&nbsp;-->
+                        <!--<span class="pull-left" style="margin-left:10px">-->
+                            <!--<div  ng-hide="isCreatingFolder">-->
+                                <!--<button class="btn btn-success"  ng-click="toCreateFolder()"><i class="fa fa-folder-open"></i> 新建文件夹</button>-->
+                            <!--</div>-->
+                            <!--<div ng-show="isCreatingFolder">-->
+                                <!--<form class="form-group form-inline" name="newFolderForm">-->
+                                    <!--<input type="text" class="form-control" style="width: 150px" placeholder="请输入文件夹名" ng-model="newFolderName"/>-->
+                                    <!--<button class="btn btn-default" ng-click="cancelCreate()">取消</button>-->
+                                    <!--<button class="btn btn-success" ng-click="createFolder()" ng-disabled="newFolderForm.$invalid">新建</button>-->
+                                <!--</form>-->
+                                <!--&nbsp;&nbsp;&nbsp;&nbsp;-->
+                                <!--<span class="pull-right" ng-show="error.subject" style="color:red">请选择科目</span>-->
+                                <!--<span class="pull-right" ng-show="error.semester" style="color:red">请选择年级</span>-->
+                                <!--<span class="pull-right" ng-show="error.folder" style="color:red">请输入文件夹名</span>-->
+                            <!--</div>-->
+                        <!--</span>-->
+                    <!--</div>-->
 
                     <!--<br/>-->
                     <div class="input-group focus"  style="margin-top:10px" >

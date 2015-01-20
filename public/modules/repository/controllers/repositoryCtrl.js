@@ -7,16 +7,10 @@ angular.module('repository')
         $scope.displayFiles = $scope.files;
         $scope.filterOptions = {filterText: ''};
         $scope.searchText = '';
-        $scope.isCreatingFolder = false;
-        $scope.newFolderName = null;
         $scope.newResource = {};
         $scope.editFile = {};
         $scope.error = {};
         $scope.selectedIndex = 0;
-        $scope.rootFolders = _.filter($scope.folders, function(folder) {
-            return folder.owner.roles.indexOf('root') > -1
-        });
-        $scope.newResource.folder = $scope.rootFolders[0] ? $scope.rootFolders[0] : null;
         var me = Authentication.user;
         var subjectIds = _.map($scope.subjects, function(subject) {return subject._id});
         var semesterIds =  _.map($scope.semesters, function(semester) {return semester._id});
@@ -26,19 +20,6 @@ angular.module('repository')
 
         $scope.selectedSubject = $scope.allSubjects[0]._id;
         $scope.selectedSemester = $scope.allSemesters[0]._id;
-
-        //var teacherIds = _.map($scope.teachers, function(teacher) {return teacher._id});
-        //$scope.allTeachers = [{_id: teacherIds, name: '所有老师'}].concat($scope.teachers);
-        //$scope.selectedTeacher = $scope.allTeachers[0]._id;
-
-        $scope.$watchGroup(['newResource.subject', 'newResource.semester'], function(newValue) {
-           if(newValue) {
-               $scope.theRootFolders = _.filter($scope.rootFolders, function(folder) {
-                   return ( newValue[0] ? folder.subject._id.toString() === newValue[0]._id.toString() : true ) && (newValue[1] ? folder.semester._id.toString() === newValue[1]._id.toString() : true);
-                   //return folder.subject._id.toString() === newValue[0]._id.toString() && folder.semester._id.toString() === newValue[1]._id.toString()
-               })
-           }
-        });
 
         $scope.$watchGroup(['selectedIndex', 'searchText'], function(newValue) {
             if(newValue) {
@@ -57,54 +38,8 @@ angular.module('repository')
             });
         };
 
-
-        //$scope.$watch()
         $scope.selectFileType = function(index) {
             $scope.selectedIndex = index;
-        };
-
-        $scope.toCreateFolder = function() {
-            $scope.isCreatingFolder = true;
-        };
-        $scope.createFolder = function() {
-            $scope.error = {};
-            if($scope.newResource.subject === '' || $scope.newResource.subject === null || $scope.newResource.subject === undefined) {
-                $scope.error.subject = true;
-                return;
-            }
-            if($scope.newResource.semester === '' || $scope.newResource.semester === null || $scope.newResource.semester === undefined) {
-                $scope.error.semester = true;
-                return;
-            }
-            if($scope.newFolderName === '' || $scope.newFolderName === null || $scope.newFolderName === undefined) {
-                $scope.error.folder = true;
-                return;
-            }
-            $scope.isCreatingFolder = false;
-            var info = {};
-            info.name = $scope.newFolderName;
-            info.subject = $scope.newResource.subject._id;
-            info.semester = $scope.newResource.semester._id;
-            info.owner = me._id;
-            info.school = me.school;
-            FolderDataProvider.createFolder(info).success(function(newFolder) {
-                console.log(newFolder);
-                $scope.folders.push(newFolder);
-                $scope.rootFolders.push(newFolder);
-                $scope.theRootFolders.push(newFolder);
-                $scope.newResource.folder = newFolder;
-                newFolder.subject = $scope.newResource.subject;
-                newFolder.semester = $scope.newResource.semester;
-                newFolder.owner = me;
-                $scope.newFolderName = null;
-            })
-
-
-
-        };
-        $scope.cancelCreate = function() {
-            $scope.isCreatingFolder = false;
-            $scope.error = {};
         };
 
         $scope.toEditFile = function(index) {
@@ -125,7 +60,6 @@ angular.module('repository')
         $scope.toAddDescription = function(index) {
             $scope.index = index;
             $('#addDescriptionDialog').modal('show');
-            //$scope.theFile = $scope.uploader.queue[index].file;
         };
         $scope.addDescription = function() {
             $scope.uploader.queue[$scope.index].file.description = $scope.newResource.description;
@@ -147,7 +81,7 @@ angular.module('repository')
         });
 
         $scope.uploader.onBeforeUploadItem = function(item) {
-            item.formData = [{folderId: $scope.newResource.folder._id, description: item.file.description}];
+            item.formData = [{description: item.file.description, createBy: 'admin'}];
         };
 
         $scope.uploader.onErrorItem = function(item, response, status) {
@@ -157,19 +91,18 @@ angular.module('repository')
             }
         };
         $scope.uploader.onSuccessItem = function(item, response) {
-            response.subject = $scope.newResource.folder.subject;
-            response.semester = $scope.newResource.folder.semester;
+            response.subject = $scope.newResource.subject;
+            response.semester = $scope.newResource.semester;
             response.owner = me;
             $scope.displayFiles.push(response);
             //$rootScope.$broadcast('addFile', {folderId: folder._id, updated_at: Date.now()});
         };
         $scope.uploader.onCompleteAll = function() {
-            console.info('onCompleteAll');
             $timeout(function() {
                 swal({title: "上传成功", type: 'success', timer: 2000});
                 $('#addResourceDialog').modal('hide');
                 $scope.uploader.clearQueue();
-            }, 1500);
+            }, 1200);
         };
         $scope.gridOptions =
         {
