@@ -12,7 +12,6 @@ var mongoose = require('mongoose'),
 var Record = mongoose.model('UserTablet');
 var Room = mongoose.model('Room');
 var Q = require('q');
-
 var fs = require('fs');
 var util = require('util');
 var ApkReader = require('adbkit-apkreader');

@@ -1,4 +1,4 @@
-angular.module('schoolManage')
+angular.module('common')
     .factory('RoomDataProvider', ['$http', '$q', function ($http, $q) {
 
         var createAdminRoom = function (info) {

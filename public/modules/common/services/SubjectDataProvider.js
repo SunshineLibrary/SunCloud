@@ -1,4 +1,4 @@
-angular.module('resources')
+angular.module('common')
     .factory('SubjectDataProvider', ['$http', '$q', function ($http, $q) {
 
         var getSubject = function(subjectId) {

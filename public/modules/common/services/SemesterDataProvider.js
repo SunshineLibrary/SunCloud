@@ -1,4 +1,4 @@
-angular.module('resources')
+angular.module('common')
     .factory('SemesterDataProvider', ['$http', '$q', function ($http, $q) {
 
         var getSemester = function(semesterId) {

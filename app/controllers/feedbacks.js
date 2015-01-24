@@ -52,10 +52,11 @@ exports.sendFeedbackMail = function (res, result, done) {
             if(err) {
                 console.error(err);
             }
-            mail.subject = subjectSchema + result.user.username + ' school: ' + result.user.school;
+            mail.subject = subjectSchema + result.user.username + ' 学校school: ' + result.user.school;
             result.user.school = school? school.name: result.user.school;
             mail.type = 'text/html';
             mail.content = htmlifyFeedbackContent(result);
+            console.log(mail);
             smtp(mail, function (mailRes) {
 //            if ((mailRes.message) && (mailRes.message === 'error')) {
 //                console.error("Something is wrong while sending feedback e-mail ----->" + mailRes.errors);

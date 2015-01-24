@@ -1,4 +1,4 @@
-angular.module('resources')
+angular.module('common')
     .filter('trueFalseFilter', function() {
         return function(value) {
             console.log('ssss',value);

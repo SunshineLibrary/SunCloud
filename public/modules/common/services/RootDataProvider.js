@@ -1,4 +1,4 @@
-angular.module('schools')
+angular.module('common')
     .factory('RootDataProvider', ['$http', '$q', function ($http, $q) {
 
         var getAllSchools = function () {
