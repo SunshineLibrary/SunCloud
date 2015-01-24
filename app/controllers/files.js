@@ -67,7 +67,6 @@ var saveFileToFolder = function(file, folderId, res) {
             console.error(err);
             res.status(500).send({message: "数据库错误，未能找到文件夹"});
         }else if(folder) {
-            console.log(folder);
             file.subject = folder.subject;
             file.semester = folder.semester;
             file.school = folder.school;
@@ -169,7 +168,7 @@ exports.editFile = function(req, res) {
                 if(err) {
                     res.status(500).send({message: "数据库错误，未能保存此文件"});
                 }else {
-                    res.status(200).send({message: "修改成功", originalname: file.originalname, description: file.description, size: file.size});
+                    res.status(200).send({message: "修改成功", originalname: file.originalname, description: file.description, size: file.size, mimetype: file.mimetype});
                 }
             });
         }else {
@@ -217,25 +216,23 @@ exports.viewFile = function(req, res) {
 };
 
 /**
- *  * When delete the file, delete the file in database record, in sunpack folder and in the ref of Folder
  * @param req
  * @param res
  */
 exports.deleteFile = function(req, res) {
     var file = req.file;
     var folderId = req.query.folderId;
-    File.findByIdAndRemove(file._id, function(err) {
+    File.findByIdAndUpdate(file._id, {deleted_at: Date.now()},function(err) {
         if(err) {
             res.status(500).send({message: '数据库错误，未能删除文件'})
         }else {
-            fs.renameSync(file.path, trash_path + file.name); // move the old file to trash
+            //fs.renameSync(file.path, trash_path + file.name); // move the old file to trash
             Folder.findById(folderId, function(err, folder) {
                 if(err) {
                     res.status(500).send({message: '数据库错误，未能找到文件所在的文件夹'});
                 }else if(!folder) {
                     res.status(200).send({message: '删除成功'});
                 }else {
-                    console.log(folder);
                     folder.files.splice(folder.files.indexOf(file._id), 1);
                     folder.updated_at = Date.now();
                     folder.save(function(err) {

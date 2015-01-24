@@ -1,4 +1,4 @@
-angular.module('schoolManage')
+angular.module('common')
     .factory('SchoolDataProvider', ['$http', '$q', function ($http, $q) {
 
         var createSchool = function (info) {

@@ -1,4 +1,4 @@
-angular.module('resources')
+angular.module('common')
     .filter('typeFilter', function($sce) {
     return function(type) {
         if(type === 'image') {

@@ -1,4 +1,4 @@
-angular.module('schoolManage')
+angular.module('common')
     .factory('TabletDataProvider', ['$http', '$q', function ($http, $q) {
         var getXiaoshuLogCountBySchool = function (schoolId, callBack) {
             $http({

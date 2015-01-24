@@ -121,20 +121,17 @@ exports.deleteFolder = function(res, result, done) {
     //        console.log(rooms);
     //    }
     //});
-    Room.update({sunpack: folder._id}, {$pull: {sunpack: folder._id}}, function(err) {
+    async.each(folder.files, function(fileId, callback) {
+        File.findByIdAndUpdate(fileId, {deleted_at: Date.now()}, callback)
+    }, function(err) {
         if(err) {
             done(err);
         }else {
-            done();
-            //async.each(folder.files, function(fileId, callback) {
-            //    File.findByIdAndRemove(fileId, callback);
-            //}, function(err) {
-            //    done(err);
-            //})
+            Room.update({sunpack: folder._id}, {$pull: {sunpack: folder._id}}, function(err) {
+                done(err);
+            });
         }
     });
-
-
 };
 
 /**

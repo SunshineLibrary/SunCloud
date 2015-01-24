@@ -1,5 +1,5 @@
 (function() {
-    angular.module('core')
+    angular.module('common')
 
         .directive('feedbackButton',['$modal',function($modal){
             return {

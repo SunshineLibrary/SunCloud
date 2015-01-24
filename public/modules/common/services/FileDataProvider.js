@@ -1,4 +1,4 @@
-angular.module('resources')
+angular.module('common')
     .factory('FileDataProvider', ['$http', '$q', function ($http, $q) {
 
         var getFile = function(fileId) {

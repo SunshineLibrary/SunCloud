@@ -1,4 +1,4 @@
-angular.module('resources')
+angular.module('common')
     .factory('AppDataProvider', ['$http', '$q', function ($http, $q) {
 
         var getApp = function(appId) {

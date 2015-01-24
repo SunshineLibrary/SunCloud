@@ -1,4 +1,4 @@
-angular.module('resources')
+angular.module('common')
 .filter('fileSizeFilter', function() {
     return function(size) {
         if( (size/1024/1024) > 1) {

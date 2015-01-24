@@ -198,7 +198,6 @@ exports.tabletLogin = function(req, res) {
                 user_class: room? room.name: '暂无班级',
                 user_password: user.school.launcherPassword
             };
-            console.log(userInfo);
             UserTablet.addRecord(user._id, tablet._id,function(err, newRecord) {
                 if(err) {
                     error = '数据库错误，未能添加登录记录, 请重试.';

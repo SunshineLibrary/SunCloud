@@ -1,4 +1,4 @@
-angular.module('resources')
+angular.module('common')
     .factory('UserDataProvider',
     [
         '$http',

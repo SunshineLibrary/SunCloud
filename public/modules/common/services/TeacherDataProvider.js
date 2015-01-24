@@ -1,4 +1,4 @@
-angular.module('schoolManage')
+angular.module('common')
     .factory('TeacherDataProvider', ['$http', '$q',function ($http, $q) {
         var getTeachersBySchool = function(schoolId, callBack) {
             var defered = $q.defer();

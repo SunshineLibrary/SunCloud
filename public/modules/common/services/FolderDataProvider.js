@@ -1,4 +1,4 @@
-angular.module('resources')
+angular.module('common')
     .factory('FolderDataProvider', ['$http', '$q', function ($http, $q) {
 
         var getFolder = function(folderId) {
@@ -158,16 +158,9 @@ angular.module('resources')
         var deleteFolder = function(folderId) {
             return $http({
                 method: "DELETE",
-                url: "folders/" + folderId
+                url: "/folders/" + folderId
             })
         };
-        //
-        //var getFoldersByRoom = function(roomId) {
-        //    return $http({
-        //        method: "GET",
-        //        url: ""
-        //    })
-        //}
 
         var getSharedFoldersBySubject = function(subjectId) {
             var defered = $q.defer();

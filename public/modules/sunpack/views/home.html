@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container-fluid">
 
     <div ui-view>
         <div class="page-header">
@@ -76,7 +76,7 @@
             <div class="" align="center">
                 <!--<button class="btn btn-primary"><i class="fa fa-university"></i> 查看资源库</button>-->
                 <h5>查看资源库
-                    <button class="btn btn-success pull-right" ng-click="gotoRepo2()"><i class=""></i>查看所有</button>
+                    <!--<button class="btn btn-success pull-right" ng-click="gotoRepo2()"><i class=""></i>查看所有</button>-->
                 </h5>
                 <hr/>
                 <br/>
@@ -85,21 +85,18 @@
                 <!--<br/>-->
                 <form action="" class="form-horizontal" role="form">
                     <div class="form-group row">
-                        <div class="col-md-5">
+                        <div class="col-md-6">
                             <select name="" id="selectSubject" class="form-control" data-ng-options="subject._id as subject.name for subject in mySubjects" data-ng-model="selectedSubject">
                                 <option style="display:none" value="">请选择科目</option>
                             </select>
                         </div>
-                        <div class="col-md-5">
+                        <div class="col-md-6">
                             <select name="" id="selectSemester" class="form-control" data-ng-options="semester._id as semester.name for semester in semesters" data-ng-model="selectedSemester">
                                 <option style="display:none" value="">请选择年级</option>
                             </select>
                         </div>
-                        <button type="button" class="btn btn-primary col-md-2" ng-click="gotoRepo(selectedSubject, selectedSemester)"><i class=""></i>查看</button>
-
                     </div>
-
-
+                    <button type="button" class="btn btn-primary col-md-offset-4 col-md-4" ng-click="gotoRepo(selectedSubject, selectedSemester)"><i class=""></i>查看</button>
                 </form>
             </div>
         </div>

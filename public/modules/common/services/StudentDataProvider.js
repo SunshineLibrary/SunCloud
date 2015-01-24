@@ -1,4 +1,4 @@
-angular.module('schoolManage')
+angular.module('common')
     .factory('StudentDataProvider', ['$http', '$q', function ($http, $q) {
 
         var getStudentsBySchool = function(schoolId) {
