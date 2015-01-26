@@ -13,8 +13,8 @@ var SubjectSchema = new Schema({
     name: {
         type: String,
         //unique: true,
-        required: true,
-        enum:['语文', '数学', '英语', '历史', '地理', '物理', '阳光书屋', '其他']
+        required: true
+        //enum:['语文', '数学', '英语', '历史', '地理', '物理', '化学','阳光书屋', '其他']
     },
     EnglishName: {
         type: String

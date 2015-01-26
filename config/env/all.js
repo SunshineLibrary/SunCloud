@@ -6,7 +6,7 @@ module.exports = {
 		description: '阳光书屋',
 		keywords: '阳光书屋'
 	},
-	port: process.env.PORT || 3000,
+	port: process.env.PORT || 3333,
 	templateEngine: 'swig',
 	sessionSecret: 'MEAN',
 	sessionCollection: 'sessions',
