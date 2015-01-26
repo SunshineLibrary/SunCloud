@@ -10,12 +10,9 @@ angular.module('schools')
                 {name:'班级', state: 'classesAll'},
                 {name:'机器', state: 'tabletsAll'},
                 {name:'应用程序', state: 'appsAll'},
-                {name:'模板', state: 'templateAll'},
+                //{name:'模板', state: 'templateAll'},
                 {name:'设置', state: 'settingAll'}];
 
-            //$state.transitionTo('schools');
-
-            //$scope.selectedState = $scope.items[0].state;
             $scope.goto = function(state) {
                 $state.transitionTo(state);
             };

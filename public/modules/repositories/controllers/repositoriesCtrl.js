@@ -14,7 +14,6 @@ angular.module('repositories')
         $scope.searchText = '';
         $scope.showingFolders = false;
         $scope.data = {fileSource: 0};
-        //$scope.isCreatingFolder = false;
         $scope.newFolderName = null;
         $scope.newResource = {};
         $scope.editFile = {};
@@ -22,10 +21,6 @@ angular.module('repositories')
         $scope.selectedIndex = 0;
         $scope.selectedSource = 0;
         $scope.selectedTrash = false;
-        //$scope.rootFolders = _.filter($scope.folders, function(folder) {
-        //    return folder.owner.roles.indexOf('root') > -1
-        //});
-        //$scope.newResource.folder = $scope.rootFolders[0] ? $scope.rootFolders[0] : null;
         var me = Authentication.user;
         var subjectIds = _.map($scope.subjects, function(subject) {return subject._id});
         var semesterIds =  _.map($scope.semesters, function(semester) {return semester._id});
@@ -40,35 +35,12 @@ angular.module('repositories')
         $scope.selectedSemester = $scope.allSemesters[0]._id;
         $scope.selectedSchool = $scope.allSchools[0]._id;
 
-        //$scope.theTeachers = _.filter($scope.teachers, function(teacher) {
-        //    return newSchool.indexOf(teacher.school) > -1
-        //});
         var teacherIds = _.map($scope.teachers, function(teacher) {return teacher._id});
         $scope.allTeachers = [{_id: teacherIds, name: '所有老师'}].concat($scope.teachers);
         $scope.selectedTeacher = $scope.allTeachers[0]._id;
         _.each($scope.files, function(file) {
            file.deleted = file.deleted_at ? true: false;
         });
-        //
-        //$scope.$watch('selectedSchool', function(newSchool) {
-        //    if(newSchool) {
-        //        $scope.theTeachers = _.filter($scope.teachers, function(teacher) {
-        //            return newSchool.indexOf(teacher.school) > -1
-        //        });
-        //        var teacherIds = _.map($scope.theTeachers, function(teacher) {return teacher._id});
-        //        $scope.allTeachers = [{_id: teacherIds, name: '所有老师'}].concat($scope.theTeachers);
-        //        $scope.selectedTeacher = $scope.allTeachers[0]._id;
-        //    }
-        //});
-        //
-        //$scope.$watchGroup(['newResource.subject', 'newResource.semester'], function(newValue) {
-        //   if(newValue) {
-        //       $scope.theRootFolders = _.filter($scope.rootFolders, function(folder) {
-        //           return ( newValue[0] ? folder.subject._id.toString() === newValue[0]._id.toString() : true ) && (newValue[1] ? folder.semester._id.toString() === newValue[1]._id.toString() : true);
-        //           //return folder.subject._id.toString() === newValue[0]._id.toString() && folder.semester._id.toString() === newValue[1]._id.toString()
-        //       })
-        //   }
-        //});
 
         $scope.$watchGroup(['selectedIndex', 'selectedSource','searchText'], function(newValue) {
             if(newValue) {
@@ -126,7 +98,6 @@ angular.module('repositories')
         };
 
 
-        //$scope.$watch()
         $scope.selectFileType = function(index) {
             $scope.selectedIndex = index;
         };
@@ -143,50 +114,6 @@ angular.module('repositories')
             $scope.showingFolders = false;
             $scope.filter();
         };
-
-        //$scope.toCreateFolder = function() {
-        //    $scope.isCreatingFolder = true;
-        //};
-        //$scope.createFolder = function() {
-        //    $scope.error = {};
-        //    if($scope.newResource.subject === '' || $scope.newResource.subject === null || $scope.newResource.subject === undefined) {
-        //        $scope.error.subject = true;
-        //        return;
-        //    }
-        //    if($scope.newResource.semester === '' || $scope.newResource.semester === null || $scope.newResource.semester === undefined) {
-        //        $scope.error.semester = true;
-        //        return;
-        //    }
-        //    if($scope.newFolderName === '' || $scope.newFolderName === null || $scope.newFolderName === undefined) {
-        //        $scope.error.folder = true;
-        //        return;
-        //    }
-        //    $scope.isCreatingFolder = false;
-        //    var info = {};
-        //    info.name = $scope.newFolderName;
-        //    info.subject = $scope.newResource.subject._id;
-        //    info.semester = $scope.newResource.semester._id;
-        //    info.owner = me._id;
-        //    info.school = me.school;
-        //    FolderDataProvider.createFolder(info).success(function(newFolder) {
-        //        console.log(newFolder);
-        //        $scope.folders.push(newFolder);
-        //        $scope.rootFolders.push(newFolder);
-        //        $scope.theRootFolders.push(newFolder);
-        //        $scope.newResource.folder = newFolder;
-        //        newFolder.subject = $scope.newResource.subject;
-        //        newFolder.semester = $scope.newResource.semester;
-        //        newFolder.owner = me;
-        //        $scope.newFolderName = null;
-        //    })
-        //
-        //
-        //
-        //};
-        //$scope.cancelCreate = function() {
-        //    $scope.isCreatingFolder = false;
-        //    $scope.error = {};
-        //};
 
         $scope.toEditFile = function(index) {
             $scope.index = index;
@@ -206,7 +133,6 @@ angular.module('repositories')
         $scope.toAddDescription = function(index) {
             $scope.index = index;
             $('#addDescriptionDialog').modal('show');
-            //$scope.theFile = $scope.uploader.queue[index].file;
         };
         $scope.addDescription = function() {
             $scope.uploader.queue[$scope.index].file.description = $scope.newResource.description;
@@ -267,52 +193,36 @@ angular.module('repositories')
                             {field: 'owner.name', displayName: '创建人'},
                             {field: 'school.name', displayName: '学校'},
                             {field: 'created_at', displayName: '创建时间', cellTemplate: '<span class="label label-success" am-time-ago="row.entity.created_at"></span>'},
-                            //{field: 'name', displayName: '分享次数'},
-                            //{field: 'name', displayName: '使用人数'},
-                            //{field: 'tablet', displayName: '正在使用的晓书',cellTemplate:'<div class="ngCellText" ng-class="col.colIndex()"><a href="/#/tablets/{{row.entity.tablet}}">{{row.getProperty(col.field)}}</a></div>'},
                             {field: 'name', displayName: '编辑', cellTemplate:
                             '<div class="ngCellText" ng-class="col.colIndex()">' +
                             '<a class="fa fa-edit text-success fa-2x" ng-click="showEditStudentDialog($event, row)"></a> &nbsp;&nbsp;' +
-                            //'<a class="fui-cross text-danger" ng-click="removeStudent($event, row)"></a>' +
                             '<a class="fa fa-star-o text-success fa-2x" ng-click="removeStudent($event, row)"></a> &nbsp;&nbsp;' +
                             '<a class="fa fa-close text-danger fa-2x " ng-click="removeFolder($event, row)"></a>' +
-
                             '</div>'}
-
-                            //{field: 'loginDateLocal', displayName: '上次登录时间', width: 170}
                     ],
                     selectedItems: [],
                     filterOptions: $scope.filterOptions2
             };
-        //$scope.gridOptions.columnDefs[7].visible = $scope.isUserAdmin();
         $scope.columnDefs1 =  [
             {field: '_id', visible: false},
             {field: 'type', displayName: '文件类型',cellTemplate: '<div><span ng-bind-html="row.entity.type | typeFilter"></span></div>'},
             {field: 'originalname', displayName: '文件名称', cellTemplate: '<div><a ng-click="selectFile(row.entity)">{{row.entity.originalname}}</a></div>'},
             {field: 'size', displayName: '大小', cellTemplate: '<div>{{row.entity.size | fileSizeFilter}}</div>'},
             {filed: 'like', displayName: '点赞', cellTemplate: '<div>{{row.entity.like.length}}</div>'},
-            {field: 'shared', displayName: '共享', cellTemaplate: '<div>{{row.entity.shared | trueFalseFilter}}</div>'},
+            {field: 'shared', displayName: '状态', cellTemplate: '<div>{{row.entity | fileStatusFilter}}</div>'},
             {field: 'subject.name', displayName: '科目'},
             {field: 'semester.name', displayName: '年级'},
             {field: 'owner.name', displayName: '创建人'},
             {field: 'school.name', displayName: '学校'},
             {field: 'created_at', displayName: '创建时间', cellTemplate: '<span class="label label-success" am-time-ago="row.entity.created_at"></span>'},
-            //{field: 'updated_at', displayName: '更新', cellTemplate: '<span class="label label-warning" am-time-ago="row.entity.updated_at"></span>'},
+            {field: 'updated_at', displayName: '更新时间', cellTemplate: '<span class="label label-warning" am-time-ago="row.entity.updated_at"></span>'},
             {field: 'deleted', visible: false},
-
-            //{field: 'name', displayName: '分享次数'},
-            //{field: 'name', displayName: '使用人数'},
-            //{field: 'tablet', displayName: '正在使用的晓书',cellTemplate:'<div class="ngCellText" ng-class="col.colIndex()"><a href="/#/tablets/{{row.entity.tablet}}">{{row.getProperty(col.field)}}</a></div>'},
             {field: 'name', displayName: '编辑', cellTemplate:
             '<div class="ngCellText" ng-class="col.colIndex()" ng-show="showedit">' +
             '<a class="fa fa-edit text-success fa-2x" ng-click="showEditStudentDialog($event, row)"></a> &nbsp;&nbsp;' +
-                //'<a class="fui-cross text-danger" ng-click="removeStudent($event, row)"></a>' +
-            '<a class="fa fa-star-o text-success fa-2x" ng-click="removeStudent($event, row)"></a> &nbsp;&nbsp;' +
-            '<a class="fa fa-close text-danger fa-2x " ng-click="deleteFile($event, row)"></a>' +
-
+            //'<a class="fa fa-star-o text-success fa-2x" ng-click="removeStudent($event, row)"></a> &nbsp;&nbsp;' +
+            '<a class="fa fa-close text-danger fa-2x" ng-hide="row.entity.deleted" ng-click="deleteFile($event, row)"></a>' +
             '</div>'}
-
-            //{field: 'loginDateLocal', displayName: '上次登录时间', width: 170}
         ];
         $scope.columnDefs2 =  [
             {field: '_id', visible: false},
@@ -327,20 +237,11 @@ angular.module('repositories')
             //{field: 'updated_at', displayName: '更新', cellTemplate: '<span class="label label-warning" am-time-ago="row.entity.updated_at"></span>'},
             {field: 'deleted_at', displayName: '删除时间', cellTemplate: '<span class="label label-danger" am-time-ago="row.entity.deleted_at"></span>'},
             {field: 'deleted', visible: false},
-
-            //{field: 'name', displayName: '分享次数'},
-            //{field: 'name', displayName: '使用人数'},
-            //{field: 'tablet', displayName: '正在使用的晓书',cellTemplate:'<div class="ngCellText" ng-class="col.colIndex()"><a href="/#/tablets/{{row.entity.tablet}}">{{row.getProperty(col.field)}}</a></div>'},
             {field: 'name', displayName: '编辑', cellTemplate:
             '<div class="ngCellText" ng-class="col.colIndex()" ng-show="showedit">' +
-            '<a class="fa fa-edit text-success fa-2x" ng-click="showEditStudentDialog($event, row)"></a> &nbsp;&nbsp;' +
-                //'<a class="fui-cross text-danger" ng-click="removeStudent($event, row)"></a>' +
-            '<a class="fa fa-star-o text-success fa-2x" ng-click="removeStudent($event, row)"></a> &nbsp;&nbsp;' +
+            //'<a class="fa fa-edit text-success fa-2x" ng-click="showEditStudentDialog($event, row)"></a> &nbsp;&nbsp;' +
             '<a class="fa fa-undo text-warning fa-2x " ng-click="deleteFile($event, row)"></a>' +
-
             '</div>'}
-
-            //{field: 'loginDateLocal', displayName: '上次登录时间', width: 170}
         ];
         $scope.columnDefs = $scope.columnDefs1;
         $scope.gridOptions2 =
@@ -373,6 +274,9 @@ angular.module('repositories')
                     FileDataProvider.deleteFile(row.entity._id)
                         .success(function(file){
                             swal({title: "删除成功", type: "success", timer: 1000 });
+                            row.entity.deleted = true;
+                            row.entity.deleted_at = file.deleted_at;
+                            $scope.columnDefs = $scope.columnDefs1;
                             //$scope.files.splice($scope.files.indexOf(row.entity),1);
                         })
                         .error(function(err){
@@ -445,16 +349,4 @@ angular.module('repositories')
         if ($('[data-toggle="select"]').length) {
             $('[data-toggle="select"]').select2();
         }
-
-
-        //// Focus state for append/prepend inputs
-        //$('.input-group').on('focus', '.form-control', function () {
-        //    $(this).closest('.input-group, .form-group').addClass('focus');
-        //}).on('blur', '.form-control', function () {
-        //    $(this).closest('.input-group, .form-group').removeClass('focus');
-        //});
-
-
-        //$scope.gridOptions.enableHorizontalScrollbar = uiGridConstants.scrollbars.NEVER;
-
     }]);

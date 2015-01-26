@@ -18,8 +18,50 @@ var db = mongoose.connect(config.db, function(err) {
 	if (err) {
 		console.error('\x1b[31m', 'Could not connect to MongoDB!');
 		console.log(err);
-	}
+	}else {
+        /**
+         * create SunshineLibrary root account if not exists
+         * @type {*|Model}
+         */
+        var School = mongoose.model('School');
+        var User = mongoose.model('User');
+        School.findOne({}, function(err, school) {
+            if(err) {
+                console.error(err);
+            }else if(!school) {
+                var sunshine = new School();
+                sunshine.name = '阳光书屋';
+                sunshine.code = 'sun';
+                sunshine.address = '北京';
+                sunshine.save(function(err) {
+                    if(err) {
+                        console.error(err);
+                    }
+                    User.findOne({username: 'root'}, function(err, user) {
+                        if(err) {
+                            console.error(err);
+                        }else if(!user) {
+                            var root = new User();
+                            root.username = 'root';
+                            root.name = '阳光书屋';
+                            root.password = 'xiaoshu';
+                            root.roles = ['root', 'admin'];
+                            root.school = sunshine._id;
+                            root.save(function(err) {
+                                if(err) {
+                                    console.error(err);
+                                }
+                            });
+                        }
+                    });
+                });
+
+            }
+        });
+    }
 });
+
+
 
 // Init the express application
 var app = require('./config/express')(db);

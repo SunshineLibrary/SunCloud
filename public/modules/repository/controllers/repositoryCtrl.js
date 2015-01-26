@@ -149,8 +149,8 @@ angular.module('repository')
         $scope.deleteFile = function (event, row) {
             event.stopPropagation();
             swal({
-                    title: "您确定要删除"+row.entity.originalname+"吗?",
-                    text: "删除之后，文件信息将无法找回",
+                    title: "删除文件",
+                    text: "您确定要删除"+row.entity.originalname+"吗?\n删除之后，文件信息将无法找回",
                     type: "warning",
                     showCancelButton: true,
                     cancelButtonText: "取消",

@@ -3,13 +3,13 @@
 /**
  * Module dependencies.
  */
-var mongoose = require('mongoose'),
-    errorHandler = require('./errors'),
-    Folder = mongoose.model('Folder'),
-    File = mongoose.model('File'),
-    _ = require('underscore'),
-    async = require('async'),
-    path = require('path');
+var mongoose = require('mongoose');
+var errorHandler = require('./errors');
+var Folder = mongoose.model('Folder');
+var File = mongoose.model('File');
+var _ = require('underscore');
+var async = require('async');
+var path = require('path');
 var Q = require('q');
 var fs = require('fs');
 var util = require('util');
@@ -177,11 +177,6 @@ exports.editFile = function(req, res) {
     })
 };
 
-//exports.uploadFile = function(req, res) {
-//    var fileId = req.param('fileId');
-//    var file = new File(req.files.file);
-//    console.log(file);
-//};
 
 exports.viewFile = function(req, res) {
     var fileId = req.param('fileId');
@@ -195,8 +190,7 @@ exports.viewFile = function(req, res) {
             'x-timestamp': Date.now(),
             'x-sent': true,
             'X-Frame-Options': 'SAMEORIGIN'
-            //res.set('X-Frame-Options', 'SAMEORIGIN');
-}
+        }
     };
 
     res.sendFile(file.name, options, function (err) {
@@ -208,20 +202,9 @@ exports.viewFile = function(req, res) {
             console.log('Sent:', file.path);
         }
     });
-    //res.send(file.path);
-    //res.redirect(file.path);
-    //res.send(file.path)
-
-
 };
 
-/**
- * @param req
- * @param res
- */
-exports.deleteFile = function(req, res) {
-    var file = req.file;
-    var folderId = req.query.folderId;
+var deleteFile = function(file, folderId, res) {
     File.findByIdAndUpdate(file._id, {deleted_at: Date.now()},function(err) {
         if(err) {
             res.status(500).send({message: '数据库错误，未能删除文件'})
@@ -244,6 +227,63 @@ exports.deleteFile = function(req, res) {
                     })
                 }
             })
+        }
+    });
+};
+
+/**
+ * @param req
+ * @param res
+ */
+exports.deleteFile = function(req, res) {
+    var file = req.file;
+    File.findByIdAndUpdate(file._id, {deleted_at: Date.now(), shared: false},function(err) {
+        if(err) {
+            res.status(500).send({message: '数据库错误，未能删除文件'})
+        }else {
+            if(req.query.folderId) {
+                var folderId = req.query.folderId;
+                //fs.renameSync(file.path, trash_path + file.name); // move the old file to trash
+                Folder.findById(folderId, function(err, folder) {
+                    if(err) {
+                        res.status(500).send({message: '数据库错误，未能找到文件所在的文件夹'});
+                    }else if(!folder) {
+                        res.status(200).send(file);
+                    }else {
+                        folder.files.splice(folder.files.indexOf(file._id), 1);
+                        folder.updated_at = Date.now();
+                        folder.save(function(err) {
+                            if(err) {
+                                res.status(500).send({message: '数据库错误，未能删除文件引用'})
+                            }else {
+                                res.status(200).send(file);
+                            }
+                        })
+                    }
+                })
+            }else {
+                Folder.find({files: file._id}, function(err, folders) {
+                    if(err) {
+                        res.status(500).send({message: '数据库错误，未能找到文件所在的文件夹'});
+                    }else if(!folders.length) {
+                        res.status(200).send(file);
+                    }else {
+                        console.log('~~',folders);
+                        async.each(folders, function(folder, callback) {
+                            folder.files.splice(folder.files.indexOf(file._id), 1);
+                            folder.updated_at = Date.now();
+                            folder.save(callback)
+                        }, function(err) {
+                            if(err) {
+                                res.status(500).send({message: '数据库错误，未能删除文件引用'})
+                            }else {
+                                res.status(200).send(file);
+                            }
+                        })
+                    }
+                });
+            }
+
         }
     });
 };
