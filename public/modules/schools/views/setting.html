@@ -1,9 +1,54 @@
 <section>
-    <header class="sun-header"><h4>设置</h4></header>
-    <hr/>
-    <h5>科目</h5>
+    <header class="page-header"><h3>设置
+        <div class="alert alert-success alert-dismissible pull-right" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <strong></strong> 添加科目成功！
+        </div>
+    </h3>
 
-    <hr/>
-    <h5>年级</h5>
+    </header>
+    <div class="row">
+        <div class="col-md-12 col-lg-12" >
+            <div class="col-md-6 col-lg-6" style="padding-right:20px; border-right: 1px solid #ccc; height:300px">
+                <h5 align="center">科目</h5>
+                <form class="form-group form-inline">
+                    <span ng-show="isCreatingSubject" class="pull-right">
+                        <input type="text" class="form-control" placeholder="请输入科目名称" ng-model="tmp.subject"/>
+                        <button class="btn btn-success" ng-click="createSubject()">确定</button>
+                        <button class="btn" ng-click="isCreatingSubject=false">取消</button>
+                    </span>
+                    <span  ng-hide="isCreatingSubject" >
+                        <button class="btn btn-success pull-right" ng-click="isCreatingSubject=true">添加科目</button>
+                    </span>
+                </form>
 
+                <table class="table" id="subject-table">
+                    <tr ng-repeat="subject in subjects"   ng-mouseenter="hover(subject)" ng-mouseleave="hover(subject)">
+                        <td><a href="" ng-click="selectSubject(subject._id)"><strong>{{subject.name}}</strong></a></td>
+                        <td><a href="" ng-show="subject.showDelete" class="button" ng-click="removeSubject(subject)"><i class="fa fa-times-circle text-danger"></i></a></td>
+                    </tr>
+                </table>
+            </div>
+            <div class="col-md-6 col-lg-6">
+
+                <h5 align="center">年级</h5>
+                <form class="form-group form-inline">
+                    <span ng-show="isCreatingSemester" class="pull-right">
+                        <input type="text" class="form-control" placeholder="请输入年级名称" ng-model="tmp.semester"/>
+                        <button class="btn btn-success" ng-click="createSemester()">确定</button>
+                        <button class="btn" ng-click="isCreatingSemester=false">取消</button>
+                    </span>
+                    <span  ng-hide="isCreatingSemester" >
+                        <button class="btn btn-success pull-right" ng-click="isCreatingSemester=true">添加年级</button>
+                    </span>
+                </form>
+                <table class="table" id="semester-table">
+                    <tr ng-repeat="semester in semesters"   ng-mouseenter="hover(semester)" ng-mouseleave="hover(semester)">
+                        <td><a href="" ng-click="selectSemester(semester._id)"><strong>{{semester.name}}</strong></a></td>
+                        <td><a href="" ng-show="semester.showDelete" class="button" ng-click="removeSemester(semester)"><i class="fa fa-times-circle text-danger"></i></a></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
 </section>

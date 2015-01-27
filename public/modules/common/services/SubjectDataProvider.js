@@ -30,10 +30,40 @@ angular.module('common')
             return thePromise;
         };
 
+        var createSubject = function(name) {
+            return $http({
+                method: "POST",
+                url: '/subjects',
+                data: {
+                    name: name
+                }
+            })
+        };
+
+        var editSubject = function(info) {
+            return $http({
+                method: "PUT",
+                url: '/subjects/' + info._id,
+                data: {
+                    name: info.name
+                }
+            })
+        };
+
+        var deleteSubject = function(info) {
+            return $http({
+                method: "DELETE",
+                url: '/subjects/' + info._id
+            })
+        };
+
 
         return {
             getSubject: getSubject,
-            getAllSubjects: getAllSubjects
+            getAllSubjects: getAllSubjects,
+            createSubject: createSubject,
+            editSubject: editSubject,
+            deleteSubject: deleteSubject
 
         };
     }]);

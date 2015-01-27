@@ -18,7 +18,7 @@ module.exports = function(app) {
 	var users = require('../../app/controllers/users');
 	var rooms = require('../../app/controllers/rooms');
 	var schools = require('../../app/controllers/schools');
-	var userTablets = require('../../app/controllers/userTablets');
+	var userTablets = require('../controllers/userTablets');
 	var apps = require('../../app/controllers/apps');
 	var folders = require('../../app/controllers/folders');
 	var files = require('../../app/controllers/files');
@@ -181,7 +181,7 @@ module.exports = function(app) {
 		version: '',
 		lowercase: true,
 		middleware: [users.restifySubject],
-		findOneAndUpdate: false,
+		//findOneAndUpdate: false,
 		findOneAndRemove: false,
 		fullErrors: true
 	};

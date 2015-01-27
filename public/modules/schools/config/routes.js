@@ -102,7 +102,19 @@ angular.module('schools').config(['$stateProvider', '$urlRouterProvider',
                 url: '^/setting',
                 parent: 'schoolsNav',
                 controller: 'settingRootController',
-                templateUrl: __templates + 'setting.html'
+                templateUrl: __templates + 'setting.html',
+                resolve: {
+                    subjects: ['SubjectDataProvider',
+                        function(SubjectDataProvider) {
+                            return SubjectDataProvider.getAllSubjects();
+                        }
+                    ],
+                    semesters: ['SemesterDataProvider',
+                        function(SemesterDataProvider) {
+                            return SemesterDataProvider.getAllSemesters();
+                        }
+                    ]
+                }
             })
         ;
     }
