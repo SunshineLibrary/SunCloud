@@ -30,10 +30,41 @@ angular.module('common')
             return thePromise;
         };
 
+        var createSemester = function(name) {
+            return $http({
+                method: "POST",
+                url: '/semesters',
+                data: {
+                    name: name
+                }
+            })
+        };
+
+        var editSemester = function(info) {
+            return $http({
+                method: "PUT",
+                url: '/semesters/' + info._id,
+                data: {
+                    name: info.name
+                }
+            })
+        };
+
+        var deleteSemester = function(info) {
+            return $http({
+                method: "DELETE",
+                url: '/semesters/' + info._id
+            })
+        };
+
+
 
         return {
             getSemester: getSemester,
-            getAllSemesters: getAllSemesters
+            getAllSemesters: getAllSemesters,
+            createSemester: createSemester,
+            editSemester: editSemester,
+            deleteSemester: deleteSemester
 
         };
     }]);
