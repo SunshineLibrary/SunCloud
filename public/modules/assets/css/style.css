@@ -15,3 +15,14 @@
     -moz-box-shadow: none !important;
     box-shadow: none !important;
 }
+
+
+/* customize xeditable css */
+a.editable-click {
+    color: #16a085;
+    border-bottom: solid 1px #16a085;
+}
+a.editable-click:hover {
+    color: #2ecc71;
+    border-bottom-color: #2ecc71;
+}

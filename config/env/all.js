@@ -45,7 +45,8 @@ module.exports = {
 				'public/lib/bower/flat-ui-pro/docs/assets/css/docs.css',
 				'public/lib/bower/ng-grid/ng-grid.css',
 				'public/lib/bower/sweetalert/lib/sweet-alert.css',
-				'public/lib/bower/font-awesome/css/font-awesome.css'
+				'public/lib/bower/font-awesome/css/font-awesome.css',
+                'public/lib/bower/angular-xeditable/dist/css/xeditable.css'
 			],
 			js: [
 				//'public/lib/bower/ng-file-upload/angular-file-upload-shim.js',
@@ -69,7 +70,8 @@ module.exports = {
 				'public/lib/flat-ui-pro/dist/js/flat-ui-pro.js',
 				'public/lib/bower/angular-breadcrumb/dist/angular-breadcrumb.js',
 				'public/lib/bower/d3/d3.js',
-				'public/lib/bower/videojs/dist/video-js/video.js'
+				'public/lib/bower/videojs/dist/video-js/video.js',
+                'public/lib/bower/angular-xeditable/dist/js/xeditable.js'
 			]
 		},
 		css: [
