@@ -27,6 +27,7 @@ angular.module('schools')
                     {field: '_id', visible: false},
                     {field: 'name', displayName: '姓名'},
                     {field: 'username', displayName: '用户名'},
+                    {field: 'birthday', displayName: '生日'},
                     {field: 'school.name', displayName: '学校'},
                     {field: '', displayName: '编辑', cellTemplate:
                     '<div class="ngCellText" ng-class="col.colIndex()" ng-show="showedit">' +

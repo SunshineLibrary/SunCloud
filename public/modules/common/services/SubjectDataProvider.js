@@ -50,10 +50,10 @@ angular.module('common')
             })
         };
 
-        var deleteSubject = function(info) {
+        var deleteSubject = function(subjectId) {
             return $http({
                 method: "DELETE",
-                url: '/subjects/' + info._id
+                url: '/subjects/' + subjectId
             })
         };
 

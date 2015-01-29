@@ -1,5 +1,7 @@
 <div class="container-fluid">
-    <h4 class="tableTitle pull-left">所有老师 &nbsp;&nbsp;</h4>
+    <h4 class="tableTitle pull-left">所有老师
+        <span class="label label-info small" style="font-size: small;color:white">{{teachers.length}}</span> &nbsp;&nbsp;
+    </h4>
 
     <div class=" pull-right" style="margin-top:10px">
         <a role="button" class="btn btn-primary" href="#createTeacherDialog" data-toggle="modal"><i class="glyphicon glyphicon-plus"></i>创建老师</a>
@@ -72,28 +74,28 @@
                 <form name="editForm" class="form-group">
                     <div class="input-group">
                         <span class="input-group-btn"><button class="btn" type="button"><span class="">&nbsp;&nbsp;&nbsp;&nbsp;姓名</span></button></span>
-                        <input type="text" id="newName" class="form-control"  placeholder="新姓名" ng-model="temp.newName" required>
+                        <input type="text" tabindex="1" id="newName" class="form-control"  placeholder="新姓名" ng-model="temp.newName" required>
                     </div>
                     <br>
                     <div class="input-group">
                         <span class="input-group-btn"><button class="btn" type="button"><span class="">用户名</span></button></span>
-                        <input type="text" id="newUsername" class="form-control" placeholder="新用户名" ng-model="temp.newUsername" required>
+                        <input type="text" tabindex="2" id="newUsername" class="form-control" placeholder="新用户名" ng-model="temp.newUsername" required>
                     </div>
                     <br>
                     <div class="input-group">
                         <span class="input-group-btn"><button class="btn" type="button"><span class="">&nbsp;&nbsp;&nbsp;&nbsp;学校</span></button></span>
-                        <select class="form-control" id="newSchool" ng-model="temp.newSchool" ng-options="school.name for school in schools" required>
+                        <select class="form-control" tabindex="3" id="newSchool" ng-model="temp.newSchool" ng-options="school.name for school in schools" required>
                         </select>
                     </div>
                     <br>
                     <div class="input-group">
                         <span class="input-group-btn"><button class="btn" type="button"><span class="">&nbsp;&nbsp;&nbsp;&nbsp;电话</span></button></span>
-                        <input type="text" id="newPhone" class="form-control"  placeholder="电话号码" ng-model="temp.newPhone">
+                        <input type="text" id="newPhone" tabindex="4" class="form-control"  placeholder="电话号码" ng-model="temp.newPhone">
                     </div>
                     <br>
                     <div class="input-group">
                         <span class="input-group-btn"><button class="btn" type="button"><span class="">&nbsp;&nbsp;&nbsp;&nbsp;邮箱</span></button></span>
-                        <input type="text" id="newEmail" class="form-control" placeholder="邮箱" ng-model="temp.newEmail">
+                        <input type="text" id="newEmail" tabindex="5" class="form-control" placeholder="邮箱" ng-model="temp.newEmail">
                     </div>
                     <br>
                 </form>
@@ -101,7 +103,7 @@
             </div>
             <div class="modal-footer">
                 <button class="btn btn-defautl" data-dismiss="modal">取消</button>
-                <button class="btn btn-success btn-lg" ng-click="editTeacher(row)" ng-disabled="editForm.$invalid">确定</button>
+                <button class="btn btn-success btn-lg" tabindex="6" ng-click="editTeacher(row)" ng-disabled="editForm.$invalid">确定</button>
             </div>
         </div>
     </div>

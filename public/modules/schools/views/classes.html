@@ -1,5 +1,7 @@
 <div class="container-fluid">
-    <h4 class="tableTitle">所有班级</h4>
+    <h4 class="tableTitle">所有班级
+        <span class="label label-info small" style="font-size: small;color:white">{{rooms.length}}</span> &nbsp;&nbsp;
+    </h4>
     <div class="table">
         <div class="gridStyle" ng-grid="gridOptions" ng-click="selectClass()"></div>
     </div>

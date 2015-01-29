@@ -1,5 +1,7 @@
 <div class="container-fluid">
-    <h4 class="tableTitle pull-left">所有学校 &nbsp;&nbsp;</h4>
+    <h4 class="tableTitle pull-left">所有学校
+        <span class="label label-info small" style="font-size: small;color:white">{{schools.length}}</span> &nbsp;&nbsp;
+    </h4>
 
     <div class=" pull-right" style="margin-top:10px">
         <a role="button" class="btn btn-primary" href="#createSchoolDialog" data-toggle="modal"><i class="fui-plus"></i>新建学校</a>
@@ -59,34 +61,34 @@
                 <form name="editForm" class="form-group" >
                     <div class="input-group">
                         <span class="input-group-btn"><button class="btn" type="button"><span class="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;学校名</span></button></span>
-                        <input type="text" id="newName" class="form-control" placeholder="" ng-model="temp.newName" required>
+                        <input type="text" tabindex="1" id="newName" class="form-control" placeholder="" ng-model="temp.newName" required>
                     </div>
                     <br>
                     <div class="input-group input-group-lg">
                         <span class="input-group-btn"><button class="btn" type="button"><span class="">&nbsp;&nbsp;学校代号</span></button></span>
-                        <input type="text" id="newCode" class="form-control"  placeholder="" ng-model="temp.newCode" required>
+                        <input type="text" tabindex="2" id="newCode" class="form-control"  placeholder="" ng-model="temp.newCode" required>
                     </div>
                     <br>
                     <div class="input-group">
                         <span class="input-group-btn"><button class="btn" type="button"><span class="">学校所在地</span></button></span>
-                        <input type="text" id="newAddress" class="form-control"  placeholder="" ng-model="temp.newAddress">
+                        <input type="text" tabindex="3" id="newAddress" class="form-control"  placeholder="" ng-model="temp.newAddress">
                     </div>
                     <br>
                     <div class="input-group">
                         <span class="input-group-btn"><button class="btn" type="button"><span class="">服务器域名</span></button></span>
-                        <input type="text" id="newServerUrl" class="form-control" placeholder="" ng-model="temp.newServerUrl">
+                        <input type="text" tabindex="4" id="newServerUrl" class="form-control" placeholder="" ng-model="temp.newServerUrl">
                     </div>
                     <br>
                     <div class="input-group">
                         <span class="input-group-btn"><button class="btn" type="button"><span class="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;服务器IP</span></button></span>
-                        <input type="text" id="newServerIP" class="form-control" placeholder="" ng-model="temp.newServerIP">
+                        <input type="text" tabindex="5" id="newServerIP" class="form-control" placeholder="" ng-model="temp.newServerIP">
                     </div>
                 </form>
                 <span style="color: red" ng-show="error">修改失败，可能由于学校代号或名称已存在。请修改后重试。</span>
             </div>
             <div class="modal-footer">
                 <button class="btn btn-defautl" data-dismiss="modal">取消</button>
-                <button class="btn btn-success btn-lg" ng-click="editSchool(row)" ng-disabled="editForm.$invalid">确定</button>
+                <button class="btn btn-success btn-lg" tabindex="6" ng-click="editSchool(row)" ng-disabled="editForm.$invalid">确定</button>
             </div>
         </div>
     </div>

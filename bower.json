@@ -24,7 +24,8 @@
     "font-awesome": "~4.2.0",
     "angular-breadcrumb": "",
     "d3" : "",
-    "video.js": ""
+    "video.js": "",
+    "angular-xeditable": "~0.1.8"
 
 
   },

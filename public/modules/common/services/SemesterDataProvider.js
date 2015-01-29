@@ -50,10 +50,10 @@ angular.module('common')
             })
         };
 
-        var deleteSemester = function(info) {
+        var deleteSemester = function(semesterId) {
             return $http({
                 method: "DELETE",
-                url: '/semesters/' + info._id
+                url: '/semesters/' + semesterId
             })
         };
 
