@@ -41,13 +41,21 @@ angular.module('common')
         };
 
         var editSemester = function(info) {
-            return $http({
+            var defered = $q.defer();
+            var thePromise = defered.promise;
+            $http({
                 method: "PUT",
                 url: '/semesters/' + info._id,
                 data: {
                     name: info.name
                 }
-            })
+            }).success(function(){
+                defered.resolve(true);
+            }).error(function(err){
+                console.error(err);
+                defered.reject('年级已存在');
+            });
+            return thePromise;
         };
 
         var deleteSemester = function(semesterId) {

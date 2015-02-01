@@ -11,6 +11,7 @@ angular.module('repository')
         $scope.editFile = {};
         $scope.error = {};
         $scope.selectedIndex = 0;
+        $scope.temp = {};
         var me = Authentication.user;
         var subjectIds = _.map($scope.subjects, function(subject) {return subject._id});
         var semesterIds =  _.map($scope.semesters, function(semester) {return semester._id});
@@ -18,6 +19,7 @@ angular.module('repository')
         $scope.allSubjects = [{_id: subjectIds, name: '所有科目'}].concat($scope.subjects);
         $scope.allSemesters = [{_id: semesterIds, name: '所有年级'}].concat($scope.semesters);
 
+        //console.log(me);
         $scope.selectedSubject = $scope.allSubjects[0]._id;
         $scope.selectedSemester = $scope.allSemesters[0]._id;
 
@@ -49,13 +51,66 @@ angular.module('repository')
             $scope.editFile.fileName = $scope.theFile.name.substr(0, dotIndex < 0 ? $scope.theFile.name.length : dotIndex);
             $scope.editFile.extension = $scope.theFile.name.substr(dotIndex < 0 ? $scope.theFile.name.length : dotIndex, $scope.theFile.name.length);
             $scope.editFile.description = $scope.theFile.description;
-            $('#editFileDialog').modal('show');
+            $('#editFileInfoDialog').modal('show');
         };
-        $scope.editFile = function() {
+        $scope.editFileInfo = function() {
             $scope.uploader.queue[$scope.index].file.name = $scope.editFile.fileName + $scope.editFile.extension;
             $scope.uploader.queue[$scope.index].file.description = $scope.editFile.description;
-            $('#editFileDialog').modal('hide');
+            $('#editFileInfoDialog').modal('hide');
         };
+
+        $scope.showEditFileDialog = function(event, row) {
+            event.stopPropagation();
+            $('#editFileDialog').modal('show');
+            console.log('clearing queue');
+            $scope.editFileUploader.clearQueue();
+            $scope.row = row;
+            var dotIndex = $scope.row.entity.originalname.lastIndexOf('.');
+            $scope.temp.newFileName = $scope.row.entity.originalname.substr(0, dotIndex < 0 ? $scope.row.entity.originalname.length : dotIndex);
+            $scope.temp.extension = $scope.row.entity.originalname.substr(dotIndex < 0 ? $scope.row.entity.originalname.length : dotIndex, $scope.row.entity.originalname.length);
+            $scope.temp.newFileDescription = row.entity.description;
+        };
+        $scope.editFile = function(row) {
+            var info = {};
+            info._id = row.entity._id;
+            info.name = $scope.temp.newFileName + $scope.temp.extension;
+            info.description = $scope.temp.newFileDescription;
+            if($scope.editFileUploader.queue.length) {
+                $scope.editFileUploader.uploadAll();
+                $scope.editFileUploader.onErrorItem = function(item, response, status) {
+                    swal({title: " 修改文件内容失败", text: response.message,type: 'error', timer: 2000});
+                    if (status == 406) {
+                        $scope.editFileUploader.clearQueue();
+                    }
+                };
+                $scope.editFileUploader.onSuccessItem = function(item, response) {
+                    swal({title: "修改文件成功", type: 'success', timer: 2000});
+                    $('#editFileDialog').modal('hide');
+                    $scope.row.entity.originalname = response.originalname;
+                    $scope.row.entity.description = response.description;
+                    $scope.row.entity.size = response.size;
+                    $scope.row.entity.mimetype = response.mimetype;
+                    $scope.row.entity.updated_at = Date.now();
+                    $scope.editFileUploader.clearQueue();
+
+                };
+            }else {
+                FileDataProvider.editFileNameAndDescription(info)
+                    .success(function(editedFile) {
+                        $scope.row.entity.originalname = editedFile.originalname;
+                        $scope.row.entity.description = editedFile.description;
+                        $scope.temp = {};
+                        swal({title: '修改成功', type: 'success', timer: 2000});
+                        $('#editFileDialog').modal('hide');
+                    })
+                    .error(function(err) {
+                        console.error(err);
+                        swal({title: '修改失败', text: '请重试', type: 'error'});
+                    })
+            }
+        };
+
+
 
         $scope.toAddDescription = function(index) {
             $scope.index = index;
@@ -81,7 +136,10 @@ angular.module('repository')
         });
 
         $scope.uploader.onBeforeUploadItem = function(item) {
-            item.formData = [{description: item.file.description, createBy: 'admin'}];
+            //item.formData = [{description: item.file.description, createBy: 'admin'}];
+            var description = (typeof item.file.description === "undefined") ? "": item.file.description;
+            item.formData = [{description: description, createBy: 'admin', semester: $scope.newResource.semester._id, subject: $scope.newResource.subject._id}];
+
         };
 
         $scope.uploader.onErrorItem = function(item, response, status) {
@@ -91,10 +149,13 @@ angular.module('repository')
             }
         };
         $scope.uploader.onSuccessItem = function(item, response) {
-            response.subject = $scope.newResource.subject;
-            response.semester = $scope.newResource.semester;
-            response.owner = me;
-            $scope.displayFiles.push(response);
+            console.log(response.file);
+            console.log(response);
+            response.file.subject = $scope.newResource.subject;
+            response.file.semester = $scope.newResource.semester;
+            response.file.owner = me;
+            response.file.school = response.school;
+            $scope.displayFiles.push(response.file);
             //$rootScope.$broadcast('addFile', {folderId: folder._id, updated_at: Date.now()});
         };
         $scope.uploader.onCompleteAll = function() {
@@ -104,15 +165,26 @@ angular.module('repository')
                 $scope.uploader.clearQueue();
             }, 1200);
         };
+
+        $scope.editFileUploader = new FileUploader({
+            url: "/edit/file",
+            method: "POST",
+            queueLimit: 1
+        });
+        $scope.editFileUploader.onBeforeUploadItem = function(item) {
+            var name = $scope.temp.newFileName;
+            var description =  (typeof $scope.temp.newFileDescription === "undefined") ? "": $scope.temp.newFileDescription;
+            item.formData = [{fileId: $scope.row.entity._id,originalname: name,description: description}];
+        };
         $scope.gridOptions =
         {
             data: 'displayFiles',
             multiSelect: false,
             enableFiltering: true,
             enableColumnResize: true,
-            //rowTemplate: '<div  ng-mouseover="$parent.showedit=true" ng-mouseleave="$parent.showedit=false" ng-style="{\'cursor\': row.cursor, \'z-index\': col.zIndex() }" ' +
-            //'ng-repeat="col in renderedColumns" ng-class="col.colIndex()" ' +
-            //'class="ngCell {{col.cellClass}}" ng-cell></div>',
+            rowTemplate: '<div  ng-mouseover="$parent.showedit=true" ng-mouseleave="$parent.showedit=false" ng-style="{\'cursor\': row.cursor, \'z-index\': col.zIndex() }" ' +
+            'ng-repeat="col in renderedColumns" ng-class="col.colIndex()" ' +
+            'class="ngCell {{col.cellClass}}" ng-cell></div>',
             columnDefs: [
                 {field: '_id', visible: false},
                 {field: 'type', displayName: '文件类型',cellTemplate: '<div><span ng-bind-html="row.entity.type | typeFilter"></span></div>'},
@@ -122,20 +194,17 @@ angular.module('repository')
                 ' {{row.entity.description}}</div><div ng-hide="row.entity.description"><button class="btn btn-xs btn-success" ng-click="toAddDescriptionOnRow(row)"><i class="fa fa-comments"></i> 添加</button></div>'},
                 {field: 'size', displayName: '大小', cellTemplate: '<div>{{row.entity.size | fileSizeFilter}}</div>'},
                 {filed: 'like', displayName: '点赞', cellTemplate: '<div>{{row.entity.like.length}}</div>'},
-                {field: '', displayName: '分享'},
+                //{field: '', displayName: '分享'},
                 {field: 'subject.name', displayName: '科目'},
                 {field: 'semester.name', displayName: '年级'},
-                {field: 'owner.name', displayName: '创建人', cellTemplate: '<div ng-hide="row.entity.createByRoot">{{row.entity.owner.name}}</div><div ng-show="row.entity.createByRoot">{{row.entity.school.name}}</div>'},
+                {field: 'owner', displayName: '创建人', cellTemplate: '<div ng-show="row.entity.createBy === \'root\' || row.entity.createBy === \'admin\'">{{row.entity.school.name}}</div><div ng-show="row.entity.createBy === \'teacher\'">{{row.entity.owner.name}}</div>'},
                 //{field: 'school.name', displayName: '学校'},
                 {field: 'created_at', displayName: '创建时间', cellTemplate: '<span class="label label-success" am-time-ago="row.entity.created_at"></span>'},
-                //{field: 'name', displayName: '分享次数'},
-                //{field: 'name', displayName: '使用人数'},
-                //{field: 'tablet', displayName: '正在使用的晓书',cellTemplate:'<div class="ngCellText" ng-class="col.colIndex()"><a href="/#/tablets/{{row.entity.tablet}}">{{row.getProperty(col.field)}}</a></div>'},
                 {field: 'name', displayName: '编辑', cellTemplate:
-                '<div class="ngCellText" ng-class="col.colIndex()">' +
-                '<a class="fa fa-edit text-success fa-2x" ng-click="showEditStudentDialog($event, row)"></a> &nbsp;&nbsp;' +
+                '<div class="ngCellText" ng-class="col.colIndex()" ng-show="showedit">' +
+                '<a class="fa fa-edit text-success fa-2x" ng-click="showEditFileDialog($event, row)"></a> &nbsp;&nbsp;' +
                     //'<a class="fui-cross text-danger" ng-click="removeStudent($event, row)"></a>' +
-                '<a class="fa fa-star-o text-success fa-2x" ng-click="removeStudent($event, row)"></a> &nbsp;&nbsp;' +
+                //'<a class="fa fa-star-o text-success fa-2x" ng-click="removeStudent($event, row)"></a> &nbsp;&nbsp;' +
                 '<a class="fa fa-close text-danger fa-2x " ng-click="deleteFile($event, row)"></a>' +
 
                 '</div>'}

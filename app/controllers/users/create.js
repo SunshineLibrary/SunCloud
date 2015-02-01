@@ -93,6 +93,7 @@ exports.autoCreateAddStudents = function(req, res) {
     var names = req.body.names;
     var schoolId = req.body.schoolId;
     var roomId = req.body.roomId;
+    console.log(names)
 
     School.findById(schoolId, function(err, school) {
         if(err) {
@@ -117,6 +118,7 @@ exports.autoCreateAddStudents = function(req, res) {
                         student.created_at = Date.now();
                         student.save(function(err) {
                             if(err){
+                                console.error(err);
                                 callback(false);
                             }else {
                                 successList.push(student);

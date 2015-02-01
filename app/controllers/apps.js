@@ -3,13 +3,13 @@
 /**
  * Module dependencies.
  */
-var mongoose = require('mongoose'),
-    errorHandler = require('./errors'),
-    App = mongoose.model('App'),
-    _ = require('underscore'),
-    async = require('async'),
-    path = require('path');
-var Record = mongoose.model('UserTablet');
+var mongoose = require('mongoose');
+var errorHandler = require('./errors');
+var App = mongoose.model('App');
+var _ = require('underscore');
+var async = require('async');
+var path = require('path');
+var Record = mongoose.model('Record');
 var Room = mongoose.model('Room');
 var Q = require('q');
 var fs = require('fs');
@@ -34,7 +34,7 @@ exports.upload = function(req, res, next) {
 };
 
     var new_fileName = file.originalname.substr(0, file.originalname.lastIndexOf('.')) + '_' + newApk.versionCode + '.apk';
-    var appId = req.param('appId');
+    var appId = req.params.appId;
     if(file.extension !== 'apk') {
         res.status(406).send({message: '只能上传后缀名为apk的文件'});
     }else{
@@ -144,7 +144,7 @@ exports.getUpdate = function(req, res) {
 
 exports.downloadApk = function(req, res) {
     var access_token = req.query.access_token;
-    var apkId = parseInt(req.param('apkId'));
+    var apkId = parseInt(req.params.appId);
     App.findOne({'apks.id': apkId}, function(err, app) {
        if(err) {
            console.error(err);

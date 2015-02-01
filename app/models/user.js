@@ -3,17 +3,10 @@
 /**
  * Module dependencies.
  */
-var mongoose = require('mongoose'),
-	_ = require('underscore'),
-	Schema = mongoose.Schema,
-	crypto = require('crypto');
-
-/**
- * A Validation function for local strategy properties
- */
-var validateLocalStrategyProperty = function(property) {
-	return ((this.provider !== 'local' && !this.updated) || property.length);
-};
+var mongoose = require('mongoose');
+var _ = require('underscore');
+var Schema = mongoose.Schema;
+var crypto = require('crypto');
 
 /**
  * A Validation function for local strategy password
@@ -26,15 +19,9 @@ var validateLocalStrategyPassword = function(password) {
  * User Schema
  */
 var UserSchema = new Schema({
-    _id: { type: Schema.Types.ObjectId,
-        index: true,
-        default: function () {
-            return new mongoose.Types.ObjectId
-        }
-    },
 	username: {
 		type: String,
-		unique: 'username unique',
+		unique: '用户名已存在',
 		required: '请输入用户名',
 		trim: true
 	},
@@ -57,7 +44,6 @@ var UserSchema = new Schema({
 	provider: {
 		type: String,
 		default: 'local'
-		//required: 'Provider is required'
 	},
 	roles: {
 		type: [{
@@ -92,7 +78,6 @@ var UserSchema = new Schema({
         type: String,
         enum: ['male','female']
     },
-	//school: String,
     school: {
         type: Schema.Types.ObjectId,
         ref: 'School'
@@ -103,7 +88,6 @@ var UserSchema = new Schema({
 		type: String,
 		trim: true,
 		default: '',
-		//validate: [validateLocalStrategyProperty, 'Please fill in your email'],
 		match: [/.+\@.+\..+/, '电子邮箱格式不正确']
 	},
 	phone: {
@@ -145,10 +129,7 @@ UserSchema.virtual('profile').get(function () {
  * Hook a pre save method to hash the password
  */
 UserSchema.pre('save', function(next) {
-	console.info('pre save~~~~~');
 	if (this.password && this.password.length > 5) {
-		console.info('pre save------');
-
 		this.salt = new Buffer(crypto.randomBytes(16).toString('base64'), 'base64');
 		this.password = this.hashPassword(this.password);
 	}
@@ -156,7 +137,6 @@ UserSchema.pre('save', function(next) {
 });
 
 UserSchema.pre('remove', function(next) {
-	console.log('------pre remove');
 	var Room = mongoose.model('Room');
 	var thisUserId = this._id;
 	Room.find({students: thisUserId}, function(err, rooms) {

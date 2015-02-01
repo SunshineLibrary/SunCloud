@@ -4,26 +4,13 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var SubjectSchema = new Schema({
-    _id: { type: Schema.Types.ObjectId,
-        index: true,
-        default: function () {
-            return new mongoose.Types.ObjectId
-        }
-    },
     name: {
         type: String,
         required: true,
-        //unique: 'unique subject name'
-        index: { unique: true }
+        unique: true
+        //index: { unique: true }
         //enum:['语文', '数学', '英语', '历史', '地理', '物理', '化学','阳光书屋', '其他']
-    },
-    EnglishName: {
-        type: String
-    },
-    chapter: {
-
     }
-
 });
 
 
@@ -66,7 +53,6 @@ var Subject = mongoose.model('Subject', SubjectSchema);
 
 Subject.on('index', function(err) {
     if (err) {
-        // Log and throw
         console.error(err);
     }
 });

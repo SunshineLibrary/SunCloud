@@ -29,9 +29,6 @@ angular.module('repositories').config(['$stateProvider', '$urlRouterProvider',
                             return RootDataProvider.getAllTeachersMin();
                         }
                     ],
-                    folders: ['FolderDataProvider', function(FolderDataProvider) {
-                        return FolderDataProvider.getAllFolders();
-                    }],
                     files: ['FileDataProvider', function(FileDataProvider) {
                         return FileDataProvider.getAllFiles();
                     }]

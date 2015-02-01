@@ -3,13 +3,13 @@
 /**
  * Module dependencies.
  */
-var mongoose = require('mongoose'),
-    errorHandler = require('./errors'),
-    School = mongoose.model('School'),
-    Room = mongoose.model('Room'),
-    User = mongoose.model('User'),
-    async = require('async'),
-    _ = require('lodash');
+var mongoose = require('mongoose');
+var errorHandler = require('./errors');
+var School = mongoose.model('School');
+var Room = mongoose.model('Room');
+var User = mongoose.model('User');
+var async = require('async');
+var _ = require('underscore');
 
 /**
  * Create a school

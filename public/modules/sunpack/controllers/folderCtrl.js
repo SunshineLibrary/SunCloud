@@ -172,7 +172,7 @@ angular.module('sunpack')
             info._id = $scope.folder._id;
             info.name = $scope.temp.newName;
             info.semester = $scope.temp.newSemester._id;
-            if (folder.semester._id.toString() === info.semester.toString()) {
+            if (folder.semester && folder.semester._id.toString() === info.semester.toString()) {
                 FolderDataProvider.editFolderName(info)
                     .success(function(editedFolder) {
                         $scope.folder.name = editedFolder.name;
@@ -205,6 +205,7 @@ angular.module('sunpack')
             event.stopPropagation();
             $('#editFileDialog').modal('show');
             $scope.row = row;
+            $scope.editFileUploader.clearQueue();
             var dotIndex = $scope.row.entity.originalname.lastIndexOf('.');
             $scope.temp.newFileName = $scope.row.entity.originalname.substr(0, dotIndex < 0 ? $scope.row.entity.originalname.length : dotIndex);
             $scope.temp.extension = $scope.row.entity.originalname.substr(dotIndex < 0 ? $scope.row.entity.originalname.length : dotIndex, $scope.row.entity.originalname.length);
@@ -222,7 +223,7 @@ angular.module('sunpack')
                 $scope.editFileUploader.onErrorItem = function(item, response, status) {
                     swal({title: " 修改文件内容失败", text: response.message,type: 'error', timer: 2000});
                     if (status == 406) {
-                        $scope.uploader.clearQueue();
+                        $scope.editFileUploader.clearQueue();
                     }
                 };
                 $scope.editFileUploader.onSuccessItem = function(item, response) {
@@ -231,6 +232,9 @@ angular.module('sunpack')
                     $scope.row.entity.originalname = response.originalname;
                     $scope.row.entity.description = response.description;
                     $scope.row.entity.size = response.size;
+                    $scope.row.entity.mimetype = response.mimetype;
+                    $scope.row.entity.updated_at = Date.now();
+                    $scope.editFileUploader.clearQueue();
                 };
             }else {
                 FileDataProvider.editFileNameAndDescription(info)

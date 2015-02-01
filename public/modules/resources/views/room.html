@@ -27,7 +27,7 @@
                 </div>
                 <br>
                 <div class="table">
-                    <div class="gridStyle style1"  ng-grid="gridOptions1" ng-click="selectStudent()"></div>
+                    <div class="gridStyle style1"  ng-grid="gridOptions1"></div>
                 </div>
                 <!--<table class="table  table-hover">-->
                     <!--<th>姓名</th>-->
@@ -142,7 +142,12 @@
                         <br>
                         <p style="color: green; font-weight: bold;">&nbsp;&nbsp;姓名1，用户名1 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 或 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 姓名1 &nbsp;  用户名1 </p>
                         <p style="color: green; font-weight: bold;">&nbsp;&nbsp;姓名2，用户名2  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   姓名2 &nbsp; 用户名2 </p>
-                        <span style="color: red" ng-show="temp.manualCreateError">以下学生创建失败，可能由于用户名已存在，请修改用户名后重试</span>
+                        <!--<span style="color: red" ng-show="temp.manualCreateError">以下学生创建失败，可能由于用户名已存在，请修改用户名后重试</span>-->
+                        <p style="color: red" ng-show="error.unique">由于用户名已存在，以下学生创建失败，请修改用户名后重试</p>
+                        <p style="color: red" ng-show="error.format">输入格式不正确，请修改后重试</p>
+                        <p style="color: red" ng-show="error.username">用户名只能包含字母、数字、“-”、“_”、“@”、“.”</p>
+                        <p style="color: red" ng-show="error.name">姓名只能包含中文、数字、字母</p>
+
                         <textarea ng-model="newStudentsList" style="height: 200px" placeholder="姓名1， 用户名1
 姓名2， 用户名2" class="form-control" required></textarea>
 
@@ -159,7 +164,8 @@
                         <!--<br>-->
                         <li>生成的学生用户名格式为：学校代号+班级代号+数字</li>
                         <br>
-                        <div ng-show="!room.code">
+
+                    <div ng-show="!room.code">
                             <div ng-if="!isAddingCode">
                                 <button class="btn btn-success pull-right" style="margin-top:-5px" ng-click="toAddCode()">添加班级代号</button>
                                 <p class="pull-right" style="color:orangered">您还没有添加班级代号 &nbsp;</p>
@@ -178,8 +184,8 @@
                     <textarea class="form-control" rows="10" placeholder="学生姓名1
 学生姓名2" ng-model="newNamesList" required></textarea>
                         <br>
-                        <span style="color: red" ng-show="temp.student_count_max">班级人数不能超过100人</span>
-                        <span style="color: red" ng-show="temp.autoCreateError">批量创建学生失败，请重试，或者手动创建</span>
+                        <span style="color: red" ng-show="error.maxlength">班级人数不能超过100人</span>
+                        <span style="color: red" ng-show="error.auto">批量创建学生失败，请重试，或者手动创建</span>
                     </form>
                 </div>
                 <button ng-show="manualState" type="submit" class="btn btn-success btn-block" ng-click="manualCreateStudents()" ng-disabled="manualForm.$invalid">添加</button>

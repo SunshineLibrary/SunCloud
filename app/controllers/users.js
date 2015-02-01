@@ -3,7 +3,7 @@
 /**
  * Module dependencies.
  */
-var _ = require('lodash');
+var _ = require('underscore');
 
 /**
  * Extend user's controller

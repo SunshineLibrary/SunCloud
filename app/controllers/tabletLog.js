@@ -3,17 +3,16 @@
 /**
  * Module dependencies.
  */
-var _ = require('underscore'),
-    errorHandler = require('./errors'),
-    mongoose = require('mongoose'),
-    Q = require('q'),
-    User = mongoose.model('User'),
-    Tablet = mongoose.model('Tablet'),
-    UserTablet = mongoose.model('UserTablet'),
-    Room = mongoose.model('Room'),
-    App = mongoose.model('App'),
-    Q = require('q'),
-    async = require('async');
+var _ = require('underscore');
+var errorHandler = require('./errors');
+var mongoose = require('mongoose');
+var Q = require('q');
+var User = mongoose.model('User');
+var Tablet = mongoose.model('Tablet');
+var Record = mongoose.model('Record');
+var Room = mongoose.model('Room');
+var App = mongoose.model('App');
+var async = require('async');
 
 /**
  * getAllowedApps
@@ -130,7 +129,7 @@ exports.tabletLogin = function(req, res) {
             })
         },
         function(user, tablet, callback) {
-            UserTablet.findOne({userId: user._id, tabletId: tablet._id, logout_at: {$exists: false}}, function(err, record){
+            Record.findOne({userId: user._id, tabletId: tablet._id, logout_at: {$exists: false}}, function(err, record){
                 if(err){
                     error = '数据库错误，未能找到晓书登录记录, 请重试.';
                     errorCode = 500;
@@ -144,7 +143,7 @@ exports.tabletLogin = function(req, res) {
             })
         },
         function(user, tablet, callback) {
-            UserTablet.findOne({userId: user._id, logout_at: {$exists: false}},function(err, anotherTablet){
+            Record.findOne({userId: user._id, logout_at: {$exists: false}},function(err, anotherTablet){
                 if(err) {
                     error = '数据库错误，未能找到登录记录, 请重试.';
                     errorCode = 500;
@@ -157,7 +156,7 @@ exports.tabletLogin = function(req, res) {
             })
         },
         function(user, tablet, callback) {
-            UserTablet.findOne({tabletId: tablet._id, logout_at: {$exists: false}}).populate('userId').exec(function(err, anotherUser){
+            Record.findOne({tabletId: tablet._id, logout_at: {$exists: false}}).populate('userId').exec(function(err, anotherUser){
                 if(err) {
                     error = '数据库错误，未能找到登录记录，请重试.';
                     errorCode = 500;
@@ -198,7 +197,7 @@ exports.tabletLogin = function(req, res) {
                 user_class: room? room.name: '暂无班级',
                 user_password: user.school.launcherPassword
             };
-            UserTablet.addRecord(user._id, tablet._id,function(err, newRecord) {
+            Record.addRecord(user._id, tablet._id,function(err, newRecord) {
                 if(err) {
                     error = '数据库错误，未能添加登录记录, 请重试.';
                     errorCode = 500;
@@ -228,7 +227,7 @@ exports.tabletLogin = function(req, res) {
 exports.tabletLogout = function(req, res) {
     var tabletId = req.body.tabletId;
     var userId = req.body.userId;
-    UserTablet.removeRecord(userId, tabletId,function(err,record){
+    Record.removeRecord(userId, tabletId,function(err,record){
         if(err){
             res.status(500).send({
                 message: errorHandler.getErrorMessage(err)
@@ -245,7 +244,7 @@ exports.checkToken = function(req, res){
     var errorCode = 401;
     async.waterfall([
             function(callback) {
-                UserTablet.findOne({access_token: req.query.access_token}, function(err, record){
+                Record.findOne({access_token: req.query.access_token}, function(err, record){
                     if(err) {
                         console.error(err);
                         error = '数据库错误，未能找到登录记录， 请重试.';

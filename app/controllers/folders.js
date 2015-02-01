@@ -3,13 +3,13 @@
 /**
  * Module dependencies.
  */
-var mongoose = require('mongoose'),
-    errorHandler = require('./errors'),
-    Folder = mongoose.model('Folder'),
-    File = mongoose.model('File'),
-    _ = require('underscore'),
-    async = require('async'),
-    path = require('path');
+var mongoose = require('mongoose');
+var errorHandler = require('./errors');
+var Folder = mongoose.model('Folder');
+var File = mongoose.model('File');
+var _ = require('underscore');
+var async = require('async');
+var path = require('path');
 var Q = require('q');
 var fs = require('fs');
 var util = require('util');
@@ -140,7 +140,7 @@ exports.deleteFolder = function(res, result, done) {
  * @param res
  */
 exports.editFolder = function(req, res) {
-    var folderId = req.param('folderId');
+    var folderId = req.params.folderId;
     var folder = req.folder;
     var semester = req.body.semester;
     folder = _.extend(folder, req.body);

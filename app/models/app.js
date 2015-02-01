@@ -4,12 +4,6 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var AppSchema = new Schema({
-    _id: { type: Schema.Types.ObjectId,
-        index: true,
-        default: function () {
-            return new mongoose.Types.ObjectId
-        }
-    },
     name: {
         type: String,
         unique: true,

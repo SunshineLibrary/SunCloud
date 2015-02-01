@@ -66,14 +66,14 @@ angular.module('common')
         var getTabletUser = function(tabletId) {
             return $http({
                 method: "GET",
-                url: "/usertablets?tabletId="+tabletId+"&logout_at&populate=userId"
+                url: "/records?tabletId="+tabletId+"&logout_at&populate=userId"
             })
         };
 
         var logout = function(userId, tabletId) {
             return $http({
-                method: 'GET',
-                url: '/usertablet?userId=' + userId + '&tabletId=' + tabletId
+                method: 'DELETE',
+                url: '/records/' + userId + '/' + tabletId
             })
         };
 

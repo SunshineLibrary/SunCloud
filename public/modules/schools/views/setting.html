@@ -1,10 +1,8 @@
 <section>
-    <header class="page-header"><h3>设置
-        <!--<div class="alert alert-success alert-dismissible pull-right" role="alert">-->
-            <!--<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>-->
-            <!--<strong></strong> 添加科目成功！-->
-        <!--</div>-->
+    <header class="page-header"><h3>设置&nbsp;
+        <span class="text-warning" style="font-size:medium">提醒：请在最开始设置好科目和年级， 不要随意删除，否则与之相关的阳光书包文件会出错.</span>
     </h3>
+
 
     </header>
     <div class="row">
@@ -23,10 +21,10 @@
                 </form>
 
                 <table class="table" id="subject-table">
-                    <tr ng-repeat="subject in subjects"   ng-mouseenter="hover(subject)" ng-mouseleave="hover(subject)">
+                    <tr ng-repeat="subject in subjects"   ng-mouseenter="hover(subject)" ng-mouseleave="leave(subject)">
                         <!--<td><a href=""><strong>{{subject.name}}</strong></a></td>-->
                         <td>
-                            <a href="" editable-text="subject.name" onaftersave="editSubject(subject)">{{ subject.name }}</a>
+                            <a href="" editable-text="subject.name" onbeforesave="editSubject($data, subject._id)">{{ subject.name }}</a>
                         </td>
                         <td>
                             <!--<a href="" ng-show="subject.showEdit" class="button" ng-click="editSubject(subject)"><i class="fa fa-edit text-success"></i></a> &nbsp;&nbsp;&nbsp;&nbsp;-->
@@ -49,10 +47,10 @@
                     </span>
                 </form>
                 <table class="table" id="semester-table">
-                    <tr ng-repeat="semester in semesters"   ng-mouseenter="hover(semester)" ng-mouseleave="hover(semester)">
+                    <tr ng-repeat="semester in semesters"   ng-mouseenter="hover(semester)" ng-mouseleave="leave(semester)">
                         <!--<td><a href=""><strong>{{semester.name}}</strong></a></td>-->
                         <td>
-                            <a href="" editable-text="semester.name" onaftersave="editSemester(semester)"><strong>{{ semester.name }}</strong></a>
+                            <a href="" editable-text="semester.name" onbeforesave="editSemester($data, semester._id)"><strong>{{ semester.name }}</strong></a>
 
                         </td>
                         <td><a href="" ng-show="semester.showEdit" class="button" ng-click="removeSemester(semester)"><i class="fa fa-times text-danger"></i></a></td>

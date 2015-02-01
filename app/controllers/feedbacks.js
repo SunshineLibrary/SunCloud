@@ -1,16 +1,13 @@
-/**
- * Created by solomon on 14-6-28.
- */
 'use strict';
 
 var mongoose = require('mongoose');
-require('../models/feedback');
 var Feedback = mongoose.model('Feedback');
 var _ = require('underscore');
-//var smtp = require('../services/smtp');
 var smtp = require('sendmail')();
 var os = require("os");
 var School = mongoose.model('School');
+require('../models/feedback');
+
 
 var htmlifyFeedbackContent = function (content) {
     var ret = '';

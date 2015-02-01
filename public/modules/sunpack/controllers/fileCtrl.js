@@ -31,7 +31,6 @@ angular.module('sunpack')
             var name = $scope.temp.newName;
             var description =  (typeof $scope.temp.newDescription === "undefined") ? "": $scope.temp.newDescription;
             item.formData = [{fileId: $scope.file._id,originalname: name,description: description}];
-            console.log('~~',item.formData);
         };
 
 
@@ -52,7 +51,7 @@ angular.module('sunpack')
                 $scope.editFileUploader.onErrorItem = function(item, response, status) {
                     swal({title: " 修改文件内容失败", text: response.message,type: 'error', timer: 2000});
                     if (status == 406) {
-                        $scope.uploader.clearQueue();
+                        $scope.editFileUploader.clearQueue();
                     }
                 };
                 $scope.editFileUploader.onSuccessItem = function(item, response) {
@@ -63,6 +62,10 @@ angular.module('sunpack')
                     $scope.file.originalname = response.originalname;
                     $scope.file.description = response.description;
                     $scope.file.size = response.size;
+                    $scope.mimetype = response.mimetype;
+                    $scope.fileUrl = $sce.trustAsResourceUrl('/sunpack/' + file._id);
+                    $state.reload();
+
                 };
             }else {
                 FileDataProvider.editFileNameAndDescription(info)
@@ -133,7 +136,6 @@ angular.module('sunpack')
         //var myPlayer = videojs('sunvideo');
 
         $scope.fileUrl = $sce.trustAsResourceUrl('/sunpack/' + file._id);
-        $scope.videoUrl = $sce.trustAsResourceUrl('/sunpack/' + file._id);
 
         //$state.transitionTo($state.current, $stateParams, {
         //    reload: true,

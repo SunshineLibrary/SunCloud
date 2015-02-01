@@ -1,3 +1,8 @@
+'use strict';
+
+/**
+ * Module dependencies.
+ */
 var mongoose = require('mongoose');
 var ClassCode = mongoose.model('ClassCode');
 var _ = require('underscore');
@@ -13,7 +18,7 @@ var getClassStr = function() {
     }
     return classCode.join('');
 
-}
+};
 
 var createClassCodeFn = exports.createClassCode = function(callback) {
     var classCodeString = getClassStr();
@@ -34,4 +39,4 @@ var createClassCodeFn = exports.createClassCode = function(callback) {
             });
         }
     })
-}
+};

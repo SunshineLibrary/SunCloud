@@ -3,7 +3,7 @@
 /**
  * Module dependencies.
  */
-var passport = require('passport');
+//var passport = require('passport');
 var mongoose = require('mongoose');
 var restify = require('express-restify-mongoose');
 var multer = require('multer');
@@ -18,13 +18,14 @@ module.exports = function(app) {
 	var users = require('../../app/controllers/users');
 	var rooms = require('../../app/controllers/rooms');
 	var schools = require('../../app/controllers/schools');
-	var userTablets = require('../controllers/userTablets');
+	var records = require('../../app/controllers/records');
+    var tablets = require('../../app/controllers/tablets');
 	var apps = require('../../app/controllers/apps');
 	var folders = require('../../app/controllers/folders');
 	var files = require('../../app/controllers/files');
 	var tabletLog = require('../../app/controllers/tabletLog');
-	var FeedbackModel = mongoose.model('Feedback');
 	var feedbacks = require('../../app/controllers/feedbacks');
+    var core = require('../../app/controllers/core');
 
 
 
@@ -32,35 +33,20 @@ module.exports = function(app) {
 	var sunpackMiddleware = multer({dest: __dirname+ '/../../upload/tmp'});
 
 
-	// Setting up the users profile api
-	app.route('/me').get(users.me);
+    app.route('/').get(core.index);
+
+    // Setting up the users profile api
+    app.route('/me').get(users.me);
 	app.route('/users').put(users.update);
-	app.route('/users/accounts').delete(users.removeOAuthProvider);
-	app.use('/sunpack/:fileId', function(req, res, next) {
-		var fileId = req.param('fileId');
-		File.findById(fileId, function(err, file) {
-			if(err) {
-				next(err);
-			}else {
-				if(!file) {
-					next('Not Found')
-				}else {
-					console.log(file.mimetype);
-					res.set('content-type', file.mimetype);
-					next();
-				}
-			}
-		});
-	});
-	app.use(express.static(path.resolve('./upload')));
+	//app.route('/users/accounts').delete(users.removeOAuthProvider);
 
 
 	// Setting up the users password api
 	app.route('/users/password').post(users.changePassword);
 	app.route('/password/reset').post(users.resetPassword);
-	app.route('/auth/forgot').post(users.forgot);
-	app.route('/auth/reset/:token').get(users.validateResetToken);
-	app.route('/auth/reset/:token').post(users.reset);
+	//app.route('/auth/forgot').post(users.forgot);
+	//app.route('/auth/reset/:token').get(users.validateResetToken);
+	//app.route('/auth/reset/:token').post(users.reset);
 
 	// Setting up the users authentication api
 	//app.route('/auth/signup').post(users.signup);
@@ -71,45 +57,51 @@ module.exports = function(app) {
 	/**
 	 * create students
 	 */
-	app.route('/students/batch').post(users.createStudentBatch);
-	app.route('/students/auto').post(users.autoCreateAddStudents);
-	app.route('/students/manual').post(users.manualCreateAddStudents);
+	app.route('/students/batch').post(users.requiresLogin, users.createStudentBatch);
+	app.route('/students/auto').post(users.requiresLogin, users.autoCreateAddStudents);
+	app.route('/students/manual').post(users.requiresLogin, users.manualCreateAddStudents);
 
 	/**
 	 *
 	 */
-	app.route('/rooms').post(users.restifyRoom, rooms.createRoom);
-	app.route('/rooms/:roomId').delete(users.restifyRoom, rooms.removeRoom);
-	app.route('/assign/apps').post(users.restifyRoom, rooms.assignApp);
-	app.route('/assign/sunpack').post(users.restifyRoom, rooms.assignSunpack);
+	app.route('/rooms').post(users.requiresLogin, rooms.createRoom);
+	app.route('/rooms/:roomId').delete(users.requiresLogin, rooms.removeRoom);
+	app.route('/assign/apps').post(users.requiresLogin, rooms.assignApp);
+	app.route('/assign/sunpack').post(users.requiresLogin, rooms.assignSunpack);
 
 
-
-	app.route('/usertablet/').get(userTablets.logout);
-	app.route('/usertablet/count').get(userTablets.countBySchool);
+    /**
+     * logout xiaoshu
+     */
+	app.route('/records/:userId/:tabletId').delete(users.requiresLogin, records.logout);
+	app.route('/usertablet/count').get(users.requiresLogin, records.countBySchool);
 
 	/**
 	 * 	apk upload and download
 	 */
-	app.route('/upload/app/:appId').post(users.restifyApp, multerMiddleware, apps.upload);
+	app.route('/upload/app/:appId').post(users.requiresLogin, multerMiddleware, apps.upload);
 	app.route('/download/apks/:apkId').get(apps.downloadApk);
 	app.route('/apks/get_updates').post(apps.getUpdate);
 
 	/**
 	 * Sunpack
 	 */
-	app.route('/upload/files/:folderId').post(users.restifyFolder,sunpackMiddleware, files.uploadFiles);
-	app.route('/edit/file').post(sunpackMiddleware, files.editFile);
-	app.route('/files/:fileId').delete(files.deleteFile);
-	//app.route
+    app.use('/sunpack/:fileId', users.requiresLogin, files.setContentType);
+    app.use(express.static(path.resolve('./upload')));
+    app.route('/upload/files/:folderId').post(users.requiresLogin,sunpackMiddleware, files.uploadFiles);
+	app.route('/edit/file').post(users.requiresLogin, sunpackMiddleware, files.editFile);
+	app.route('/delete/files/:fileId').put(users.requiresLogin, files.deleteFile);
+    app.route('/files/:fileId').delete(users.requiresLogin, files.destroyFile);
+    //app.route
 	//app.route('/upload/file/:fileId').post(sunpackMiddleware, files.uploadFile);
 	app.route('/download/files/:fileId').get(files.downloadFile);
-	app.route('/repository').post(sunpackMiddleware, files.uploadRepo);
-	app.route('/folders/semester/:folderId').put(folders.editFolder);
-	app.route('/view/files/:fileId').get(files.viewFile);
-	app.route('/folders/room/:roomId').get(folders.getFoldersByRoom);
-	app.route('/folders/room/:roomId/teacher/:userId').get(folders.getFoldersByRoomAndTeacher);
-	app.route('/count/folders/room/:roomId/teacher/:userId').get(folders.getFoldersCountByRoomAndTeacher);
+	app.route('/repository').post(users.requiresLogin, sunpackMiddleware, files.uploadRepo);
+	app.route('/folders/semester/:folderId').put(users.requiresLogin, folders.editFolder);
+	app.route('/view/files/:fileId').get(users.requiresLogin, files.viewFile);
+	app.route('/folders/room/:roomId').get(users.requiresLogin, folders.getFoldersByRoom);
+	app.route('/folders/room/:roomId/teacher/:userId').get(users.requiresLogin, folders.getFoldersByRoomAndTeacher);
+	app.route('/count/folders/room/:roomId/teacher/:userId').get(users.requiresLogin, folders.getFoldersCountByRoomAndTeacher);
+
 
 	/**
 	 * 	xiaoshu login
@@ -118,7 +110,7 @@ module.exports = function(app) {
 	app.route('/machines/sign_in.json').post(tabletLog.tabletLogin);
 	app.route('/machines/check_token').get(tabletLog.checkToken);
 
-	app.route('/feedbacks').post();
+	//app.route('/feedbacks').post();
 
 	//app.post('/users', user.requiresLogin, users.create);
 
@@ -126,7 +118,7 @@ module.exports = function(app) {
 		strict: true,
 		prefix: '',
 		version: '',
-		middleware: [users.restifyUser],
+		middleware: [users.requiresLogin],
 		lowercase: true,
 		access: users.userAccess,
 		//findOneAndUpdate: false,
@@ -144,7 +136,7 @@ module.exports = function(app) {
 		prefix: '',
 		version: '',
 		lowercase: true,
-		middleware: [users.restifySchool],
+        middleware: [users.requiresLogin],
 		access: users.schoolAccess,
 		private: "launcherPassword",
 		findOneAndUpdate: false,
@@ -159,39 +151,29 @@ module.exports = function(app) {
 		prefix: '',
 		version: '',
 		lowercase: true,
-		middleware: [users.restifyRoom],
+        middleware: [users.requiresLogin],
 		//findOneAndUpdate: false,
 		findOneAndRemove: false,
 		fullErrors: true
 	};
-	var userTabletOptions = {
+	var recordOptions = {
 		strict: true,
 		prefix: '',
 		version: '',
 		lowercase: true,
-		middleware: [users.restifyUserTablet],
+		middleware: [users.requiresLogin],
 		findOneAndUpdate: false,
 		findOneAndRemove: false,
 		fullErrors: true
 	};
 
-	var subjectOptions = {
-		strict: true,
-		prefix: '',
-		version: '',
-		lowercase: true,
-		middleware: [users.restifySubject],
-		//findOneAndUpdate: false,
-		findOneAndRemove: false,
-		fullErrors: true
-	};
 
 	var tabletOptions = {
 		strict: true,
 		prefix: '',
 		version: '',
 		lowercase: true,
-		middleware: [users.restifyTablet],
+        middleware: [users.requiresLogin],
 		findOneAndUpdate: false,
 		findOneAndRemove: false,
 		fullErrors: true
@@ -202,7 +184,7 @@ module.exports = function(app) {
 		prefix: '',
 		version: '',
 		lowercase: true,
-		middleware: [users.restifyApp],
+        middleware: [users.requiresLogin],
 		findOneAndUpdate: false,
 		findOneAndRemove: false,
 		postDelete: apps.deleteApp,
@@ -214,7 +196,7 @@ module.exports = function(app) {
 		prefix: '',
 		version: '',
 		lowercase: true,
-		//middleware: [users.restifySubject],
+        middleware: [users.requiresLogin],
 		//findOneAndUpdate: false,
 		findOneAndRemove: false,
 		postDelete: folders.deleteFolder,
@@ -226,63 +208,78 @@ module.exports = function(app) {
 		prefix: '',
 		version: '',
 		lowercase: true,
-		//middleware: [users.restifySubject],
+        middleware: [users.requiresLogin],
 		//findOneAndUpdate: false,
 		findOneAndRemove: false,
 		//postDelete: files.deleteFile,
 		fullErrors: true
 	};
 
-	var semesterOptions = {
+    var subjectOptions = {
+        strict: true,
+        prefix: '',
+        version: '',
+        lowercase: true,
+        prereq: users.isRootRestify,
+        findOneAndUpdate: false,
+        findOneAndRemove: false,
+        fullErrors: true
+    };
+
+    var semesterOptions = {
 		strict: true,
 		prefix: '',
 		version: '',
 		lowercase: true,
-		//middleware: [users.restifySubject],
-		findOneAndUpdate: false,
+		prereq: users.isRootRestify,
+        findOneAndUpdate: false,
 		findOneAndRemove: false,
 		fullErrors: true
 	};
 
-	restify.serve(app, FeedbackModel, {
-		postCreate: feedbacks.sendFeedbackMail,
-		strict: true,
-		prefix: '',
-		version: ''
-		//middleware: [auth.user.restify]
-	});
+    var feedbackOptions = {
+        postCreate: feedbacks.sendFeedbackMail,
+        strict: true,
+        prefix: '',
+        version: ''
+    };
+
 
 	var UserModel = mongoose.model('User');
 	var SchoolModel = mongoose.model('School');
 	var RoomModel = mongoose.model('Room');
-	var UserTabletModel = mongoose.model('UserTablet');
+	var RecordModel = mongoose.model('Record');
 	var SubjectModel = mongoose.model('Subject');
 	var TabletModel = mongoose.model('Tablet');
 	var AppModel = mongoose.model('App');
 	var FolderModel = mongoose.model('Folder');
 	var FileModel = mongoose.model('File');
 	var SemesterModel = mongoose.model('Semester');
+    var FeedbackModel = mongoose.model('Feedback');
 
 
-	restify.serve(app, UserModel, userOptions);
+    restify.serve(app, UserModel, userOptions);
 	restify.serve(app, SchoolModel, schoolOptions);
 	restify.serve(app, RoomModel, roomOptions);
-	restify.serve(app, UserTabletModel, userTabletOptions);
+	restify.serve(app, RecordModel, recordOptions);
 	restify.serve(app, SubjectModel, subjectOptions);
 	restify.serve(app, TabletModel, tabletOptions);
 	restify.serve(app, AppModel, appOptions);
 	restify.serve(app, FolderModel, folderOptions);
 	restify.serve(app, FileModel, fileOptions);
 	restify.serve(app, SemesterModel, semesterOptions);
+    restify.serve(app, FeedbackModel, feedbackOptions);
 
 
 
-	// Finish by binding the user middleware
-	app.param('userId', users.userByID);
+
+    // Finish by binding the user middleware
+	app.param('userId', users.getUserByID);
 	app.param('roomId', rooms.getRoomById);
 	app.param('schoolId', schools.getSchoolById);
 	app.param('folderId', folders.getFolderById);
 	app.param('fileId', files.getFileById);
+    app.param('tabletId', tablets.getTabletById);
 
 
 

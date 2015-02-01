@@ -11,7 +11,7 @@ angular.module('common')
                 var tabletPromise = defered.promise;
                 $http({
                     method: "GET",
-                    url: "/usertablets?userId=" + userId + "&logout_at&populate=tabletId"
+                    url: "/records?userId=" + userId + "&logout_at&populate=tabletId"
                 }).success(function(theTablet){
                     defered.resolve(theTablet);
                 }).error(function(err){
@@ -26,7 +26,7 @@ angular.module('common')
                 var tabletPromise = defered.promise;
                 $http({
                     method: "GET",
-                    url: "/usertablets?userId=" + studentId + "&populate=tabletId"
+                    url: "/records?userId=" + studentId + "&populate=tabletId"
                 }).success(function(theTablet){
                     defered.resolve(theTablet);
                 }).error(function(err){
@@ -42,7 +42,7 @@ angular.module('common')
                 var userPromise = defered.promise;
                 $http({
                     method: "GET",
-                    url: "/usertablets?tabletId=" + tabletId + "&logout_at&populate=userId"
+                    url: "/records?tabletId=" + tabletId + "&logout_at&populate=userId"
                 }).success(function(theUser){
                     if(callBack){
                         callBack(theUser);

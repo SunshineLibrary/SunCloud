@@ -302,8 +302,12 @@
                                       <input type="file" name="..." nv-file-select uploader="editFileUploader">
                                     </span>
 
-                            <span class="fileinput-filename"></span>
-                            <a href="#" class="close fileinput-exists" data-dismiss="fileinput" style="float: none">×</a>
+                             <span ng-show="editFileUploader.queue.length">
+                                {{editFileUploader.queue[0].file.name}}
+                                <button type="button" class="btn btn-danger btn-xs" ng-click="editFileUploader.queue[0].remove()">
+                                    <span class="glyphicon glyphicon-trash"></span> 删除
+                                </button>
+                            </span>
                         </div>
                     </div>
 

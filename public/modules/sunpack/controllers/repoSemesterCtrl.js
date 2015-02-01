@@ -60,7 +60,8 @@ angular.module('sunpack')
                     {field: 'description', displayName: '描述', cellTemplate: '<div ng-show="row.entity.description">' +
                     '<a title="文件描述:{{row.entity.description}}" id="info-tooltip" data-placement="right" data-toggle="tooltip"  type="button"><i class="glyphicon glyphicon-info-sign text-success" ng-mouseover="tooltip()"></i></a>'+
                     ' {{row.entity.description}}</div><div ng-hide="row.entity.description"><span class="label label-default">无</span></div>'},
-                    {field: 'created_at', displayName: '创建时间', cellTemplate: '<div class="label label-primary">{{row.entity.created_at | amDateFormat:\'L a h:mm\'}}</div>'},
+                    {field: 'owner', displayName: '创建人', cellTemplate: '<div ng-show="row.entity.createBy === \'root\' || row.entity.createBy === \'admin\'">{{row.entity.school.name}}</div><div ng-show="row.entity.createBy === \'teacher\'">{{row.entity.owner.name}}</div>'},
+                    {field: 'created_at', displayName: '创建时间', cellTemplate: '<div class="label label-primary">{{row.entity.created_at | amDateFormat:\'L\'}}</div>'},
                     {field: 'users.length', displayName: '使用人数', width: '10%'},
                     {field: 'size', displayName: '文件大小',width: '10%', cellTemplate: '<div>{{row.entity[col.field] | fileSizeFilter }} </div>'},
                 //    {field: '', displayName: '编辑', width: '10%',cellTemplate:
@@ -171,13 +172,16 @@ angular.module('sunpack')
                 $scope.type = {};
                 $('#previewFileDialog').modal('hide');
             };
-            $('[data-toggle="tooltip"]').tooltip();
-            // Add style class name to a tooltips
-            $('.tooltip').addClass(function () {
-                if ($(this).prev().attr('data-tooltip-style')) {
-                    return 'tooltip-' + $(this).prev().attr('data-tooltip-style');
-                }
-            });
+            $scope.tooltip = function() {
+                $('[data-toggle="tooltip"]').tooltip();
+                // Add style class name to a tooltips
+                $('.tooltip').addClass(function () {
+                    if ($(this).prev().attr('data-tooltip-style')) {
+                        return 'tooltip-' + $(this).prev().attr('data-tooltip-style');
+                    }
+                });
+            };
+
             //$scope.goto = function(semesterId) {
             //    console.log(semesterId);
             //    $state.go('sunpack.repo.subject.semester', {subjectId: subject._id,semesterId: semesterId});

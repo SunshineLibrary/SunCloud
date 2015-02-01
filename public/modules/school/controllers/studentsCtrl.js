@@ -6,7 +6,7 @@ angular.module('schoolManage')
             var me = AuthService.me;
             $scope.noTabletNum = 0;
             $scope.temp = {};
-            $scope.errorMessage = false;
+            $scope.error = {};
             $scope.selectedStudent = [];
             $scope.filterOptions = {
                 filterText: ''
@@ -142,19 +142,28 @@ angular.module('schoolManage')
             };
 
             $scope.createStudentBatch = function() {
-                    var newStudents = [];
-                    $scope.newStudentsList = $scope.newStudentsList.trim();
-                    var lines = $scope.newStudentsList.split(/\n/);
-                    for (var i = 0; i < lines.length; i++) {
-                        lines[i] = lines[i].trim().replace(/[,， \s]+/igm, ' ');
-                        var name = lines[i].split(/[,， \s]/)[0];
-                        var username = lines[i].split(/[,， \s]/)[1];
-                        if (!username.match(/^[@\.a-zA-Z0-9_-]+$/)) {
-                            alert('用户名只能包含字母、数字、“-”、“_”、“@”、“.”。\n操作已取消，请重新检查！');
-                            return;
-                        }
-                        newStudents.push({name: name, username: username, school: me.school, roles: ['student']});
+                $scope.error = {};
+                var newStudents = [];
+                $scope.newStudentsList = $scope.newStudentsList.trim();
+                var lines = $scope.newStudentsList.split(/\n/);
+                for (var i = 0; i < lines.length; i++) {
+                    lines[i] = lines[i].trim().replace(/[,， \s]+/igm, ' ');
+                    var name = lines[i].split(/[,， \s]/)[0];
+                    var username = lines[i].split(/[,， \s]/)[1];
+                    if(!name.match(/^[a-zA-Z0-9\u4e00-\u9fa5]+$/)) {
+                        $scope.error.name = true;
+                        return;
                     }
+                    if(!username) {
+                        $scope.error.format = true;
+                        return;
+                    }
+                    if (!username.match(/^[@\.a-zA-Z0-9_-]+$/)) {
+                        $scope.error.username = true;
+                        return;
+                    }
+                    newStudents.push({name: name, username: username, school: me.school, roles: ['student']});
+                }
                 StudentDataProvider.createStudentBatch(newStudents)
                     .success(function(students){
                         console.log(students);
@@ -162,16 +171,16 @@ angular.module('schoolManage')
                         $scope.students = $scope.students.concat(students);
                         $('#createStudentBatchDialog').modal('hide');
                         $scope.newStudentsList = null;
-                        $scope.errorMessage = false;
+                        $scope.error = {};
                     })
                     .error(function(err) {
-                        console.log(err);
+                        console.error(err);
                         var errList = '';
                         _.each(err, function(e) {
                             errList = errList.concat(e.name + ', ' + e.username + '\n');
                         });
                         swal({title: '部分学生创建失败', text: '由于用户名已存在，以下学生创建失败，\n'+'请修改用户名后重试.\n'  + errList, type: 'error'})
-                        $scope.errorMessage = true;
+                        $scope.error.unique = true;
                         $scope.newStudentsList = errList;
                     })
 
