@@ -7,6 +7,7 @@ var mongoose = require('mongoose');
 var errorHandler = require('./errors');
 var Folder = mongoose.model('Folder');
 var File = mongoose.model('File');
+var School = mongoose.model('School');
 var _ = require('underscore');
 var async = require('async');
 var path = require('path');
@@ -93,18 +94,32 @@ var saveFileToFolder = function(file, folderId, res) {
 
 var saveFile = function(file, res) {
     file.name = file._id.toString();
-    console.log(file._id, file.name, '~~~~');
     file.path = file_path + file.name;
     file.save(function(err) {
         if(err) {
             res.status(500).send({message: "数据库错误，未能保存此文件"});
         }else {
-            res.status(200).send(file);
+            School.findById(file.school, function(err, school) {
+                if(err) {
+                    console.error(err);
+                }else {
+                    //var thefile = {originalname: file.originalname, school:school, size: file.size};
+                    //var thefile = {type:file.type, originalname:};
+                    //thefile.hi = school;
+                    //console.log(thefile,'~~',thefile.hi);
+                    res.status(200).send({file: file, school:school});
+                }
+            });
         }
     });
 };
 
 
+exports.setContentType = function(req, res, next) {
+    res.set('X-Frame-Options', 'SAMEORIGIN');
+    res.set('content-type', req.file.mimetype);
+    next();
+};
 exports.getFileById = function (req, res, next, fileId) {
     File.findById(fileId, function(err, file) {
         if(err) {
@@ -119,7 +134,7 @@ exports.getFileById = function (req, res, next, fileId) {
 };
 
 exports.uploadFiles = function(req, res) {
-    var folderId = req.param('folderId');
+    var folderId = req.params.folderId;
     var file = new File(req.files.file);
     file.description = req.body.description;
     file.owner = req.user._id;
@@ -138,8 +153,29 @@ exports.uploadRepo = function(req, res) {
     file.subject = req.body.subject;
     file.semester = req.body.semester;
     file.school = req.user.school;
+    console.log(req.user.school,file.school,'>>>>');
     fs.renameSync(file.path, file_path + file._id.toString());
     saveFile(file, res);
+    //file.name = file._id.toString();
+    //file.path = file_path + file.name;
+    //file.save(function(err) {
+    //    if(err) {
+    //        res.status(500).send({message: "数据库错误，未能保存此文件"});
+    //    }else {
+    //        School.findById(file.school, function(err, school) {
+    //            if(err) {
+    //                console.error(err);
+    //            }else {
+    //                //var thefile = {originalname: file.originalname, school:school, size: file.size};
+    //                //var thefile = {type:file.type, originalname:};
+    //                //thefile.hi = school;
+    //                //console.log(thefile,'~~',thefile.hi);
+    //                console.log(file,'~~');
+    //                res.status(200).send({file: file, school:school});
+    //            }
+    //        });
+    //    }
+    //});
 };
 
 exports.editFile = function(req, res) {
@@ -179,13 +215,13 @@ exports.editFile = function(req, res) {
 
 
 exports.viewFile = function(req, res) {
-    var fileId = req.param('fileId');
+    var fileId = req.params.fileId;
     var file = req.file;
     console.log(file.path);
 
     var options = {
         root: file_path,
-        dotfiles: 'deny',
+        dotfiles: 'ignore',
         headers: {
             'x-timestamp': Date.now(),
             'x-sent': true,
@@ -204,32 +240,33 @@ exports.viewFile = function(req, res) {
     });
 };
 
-var deleteFile = function(file, folderId, res) {
-    File.findByIdAndUpdate(file._id, {deleted_at: Date.now()},function(err) {
-        if(err) {
-            res.status(500).send({message: '数据库错误，未能删除文件'})
-        }else {
-            //fs.renameSync(file.path, trash_path + file.name); // move the old file to trash
-            Folder.findById(folderId, function(err, folder) {
-                if(err) {
-                    res.status(500).send({message: '数据库错误，未能找到文件所在的文件夹'});
-                }else if(!folder) {
-                    res.status(200).send({message: '删除成功'});
-                }else {
-                    folder.files.splice(folder.files.indexOf(file._id), 1);
-                    folder.updated_at = Date.now();
-                    folder.save(function(err) {
-                        if(err) {
-                            res.status(500).send({message: '数据库错误，未能删除文件引用'})
-                        }else {
-                            res.status(200).send({message: '删除成功'});
-                        }
-                    })
-                }
-            })
-        }
-    });
-};
+//var deleteFile = function(file, folderId, res) {
+//    File.findByIdAndUpdate(file._id, {deleted_at: Date.now()},function(err) {
+//        if(err) {
+//            res.status(500).send({message: '数据库错误，未能删除文件'})
+//        }else {
+//            //fs.renameSync(file.path, trash_path + file.name); // move the old file to trash
+//            Folder.findById(folderId, function(err, folder) {
+//                if(err) {
+//                    res.status(500).send({message: '数据库错误，未能找到文件所在的文件夹'});
+//                }else if(!folder) {
+//                    res.status(200).send({message: '删除成功'});
+//                }else {
+//                    folder.files.splice(folder.files.indexOf(file._id), 1);
+//                    folder.updated_at = Date.now();
+//                    folder.save(function(err) {
+//                        if(err) {
+//                            res.status(500).send({message: '数据库错误，未能删除文件引用'})
+//                        }else {
+//                            res.status(200).send({message: '删除成功'});
+//                        }
+//                    })
+//                }
+//            })
+//        }
+//    });
+//};
+
 
 /**
  * @param req
@@ -287,6 +324,17 @@ exports.deleteFile = function(req, res) {
         }
     });
 };
+exports.destroyFile = function(req, res) {
+    var file = req.file;
+    File.findByIdAndRemove(file._id,function(err) {
+        if(err) {
+            res.status(500).send({message: '数据库错误，未能删除文件'})
+        }else {
+            res.send(200);
+        }
+    });
+};
+
 
 exports.downloadFile = function(req, res) {
     var fileId = req.params.fileId;

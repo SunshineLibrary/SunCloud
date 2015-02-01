@@ -1,6 +1,7 @@
 angular.module('common')
     .filter('typeFilter', function($sce) {
     return function(type) {
+        //console.log('~~ type filter~');
         if(type === 'image') {
             return $sce.trustAsHtml('<span class="label label-info"><i class="fa fa-image"></i> 图片</span>');
         }

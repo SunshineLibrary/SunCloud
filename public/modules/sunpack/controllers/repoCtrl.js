@@ -13,10 +13,10 @@ angular.module('sunpack')
         };
 
         _.each($scope.subjects, function(subject) {
-            FolderDataProvider.getSharedFoldersBySubjectCount(subject._id).then(function(count) {
-                subject.sharedFoldersCount = count;
-                console.log(count);
-            });
+            //FolderDataProvider.getSharedFoldersBySubjectCount(subject._id).then(function(count) {
+            //    subject.sharedFoldersCount = count;
+            //    console.log(count);
+            //});
             FileDataProvider.getSharedFilesBySubjectCount(subject._id).then(function(count) {
                 subject.sharedFilesCount = count;
             });

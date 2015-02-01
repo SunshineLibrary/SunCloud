@@ -3,11 +3,11 @@
 /**
  * Module dependencies.
  */
-var mongoose = require('mongoose'),
-    errorHandler = require('./errors'),
-    Q = require('q'),
-    _ = require('underscore'),
-    Room = mongoose.model('Room');
+var mongoose = require('mongoose');
+var errorHandler = require('./errors');
+var Q = require('q');
+var _ = require('underscore');
+var Room = mongoose.model('Room');
 
 exports.getMyClasses = function(req, res){
     console.log('The teacher is: ' + req.query.teacher);

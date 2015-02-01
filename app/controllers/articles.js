@@ -3,10 +3,10 @@
 /**
  * Module dependencies.
  */
-var mongoose = require('mongoose'),
-	errorHandler = require('./errors'),
-	Article = mongoose.model('Article'),
-	_ = require('lodash');
+var mongoose = require('mongoose');
+var errorHandler = require('./errors');
+var Article = mongoose.model('Article');
+var _ = require('underscore');
 
 /**
  * Create a article

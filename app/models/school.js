@@ -6,12 +6,6 @@ var config = require('../../config/config');
 var Room = mongoose.model('Room');
 
 var SchoolSchema = new Schema({
-        _id: {
-            type: Schema.Types.ObjectId,
-            default: function () {
-                return new mongoose.Types.ObjectId
-            }
-        },
         name: {
             type: String,
             required: true,

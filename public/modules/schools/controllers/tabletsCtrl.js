@@ -12,6 +12,7 @@ angular.module('schools')
                 TabletDataProvider.getTabletUser(tabletItem._id).success(function (records) {
                     if(records.length) {
                         tabletItem.user = records[0].userId;
+                        tabletItem.update_at = records[0].update_at;
                         //tabletItem.userId = records[0].userId._id;
                         //tabletItem.userName = records[0].userId.name;
                     }
@@ -59,7 +60,7 @@ angular.module('schools')
                     {field: 'machine_id', displayName: '晓书编号', width: '25%'},
                     {field: 'OS_type', displayName: '操作系统'},
                     {field: 'OS_version', displayName: '版本', width: '10%'},
-                    {field: 'lastUpdate', displayName: '上次更新', width: '20%'},
+                    {field: 'lastUpdate', displayName: '上次更新', width: '20%', cellTemplate: '<span class="label label-success" am-time-ago="row.entity.lastUpdate"></span>'},
                     {field: 'school.name', displayName: '所属学校'},
                     {field: 'user', displayName: '正在使用',
                         cellTemplate:'<div class="ngCellText" ng-class="col.colIndex()" ng-show="row.entity.user">' +

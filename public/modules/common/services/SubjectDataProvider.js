@@ -41,13 +41,21 @@ angular.module('common')
         };
 
         var editSubject = function(info) {
-            return $http({
+            var defered = $q.defer();
+            var thePromise = defered.promise;
+            $http({
                 method: "PUT",
                 url: '/subjects/' + info._id,
                 data: {
                     name: info.name
                 }
-            })
+            }).success(function(){
+                defered.resolve(true);
+            }).error(function(err){
+                console.error(err);
+                defered.reject('科目已存在');
+            });
+            return thePromise;
         };
 
         var deleteSubject = function(subjectId) {

@@ -4,12 +4,6 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var TabletSchema = new Schema({
-    _id: { type: Schema.Types.ObjectId,
-        index: true,
-        default: function () {
-            return new mongoose.Types.ObjectId
-        }
-    },
     machine_id: String,
     name: {
         type: String,

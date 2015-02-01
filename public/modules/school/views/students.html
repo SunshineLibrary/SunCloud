@@ -87,7 +87,10 @@
                         <p style="color: green; font-weight: bold;">&nbsp;&nbsp;姓名1，用户名1 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 或 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 姓名1 &nbsp;  用户名1 </p>
                         <p style="color: green; font-weight: bold;">&nbsp;&nbsp;姓名2，用户名2  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   姓名2 &nbsp; 用户名2 </p>
                     </div>
-                    <span style="color: red" ng-show="errorMessage">由于用户名已存在，以下学生创建失败，请修改用户名后重试</span>
+                    <p style="color: red" ng-show="error.unique">由于用户名已存在，以下学生创建失败，请修改用户名后重试</p>
+                    <p style="color: red" ng-show="error.format">输入格式不正确，请修改后重试</p>
+                    <p style="color: red" ng-show="error.username">用户名只能包含字母、数字、“-”、“_”、“@”、“.”</p>
+                    <p style="color: red" ng-show="error.name">姓名只能包含中文、数字、字母</p>
 
                     <textarea ng-model="newStudentsList" style="height: 200px" class="form-control" required></textarea>
 

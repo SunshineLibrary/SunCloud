@@ -2,17 +2,11 @@
 
 var mongoose = require('mongoose');
 var crypto = require('crypto');
-var User = mongoose.model('User');
+//var User = mongoose.model('User');
 
 var Schema = mongoose.Schema;
 
-var userTabletSchema = new Schema({
-    _id: { type: Schema.Types.ObjectId,
-        index: true,
-        default: function () {
-            return new mongoose.Types.ObjectId
-        }
-    },
+var recordSchema = new Schema({
     userId: {
         type: Schema.Types.ObjectId,
         ref: 'User'
@@ -38,7 +32,7 @@ var calculateAccessToken = function(userId,tabletId){
 };
 
 
-userTabletSchema.statics.addRecord = function(userId, tabletId,callBack){
+recordSchema.statics.addRecord = function(userId, tabletId,callBack){
     var newRecord = {
         access_token: calculateAccessToken(userId, tabletId),
         userId: userId,
@@ -59,7 +53,7 @@ userTabletSchema.statics.addRecord = function(userId, tabletId,callBack){
     });
 };
 
-userTabletSchema.statics.removeRecord = function(userId, tabletId,callBack){
+recordSchema.statics.removeRecord = function(userId, tabletId,callBack){
     this.findOneAndUpdate({userId: userId, tabletId: tabletId, logout_at: null}, {access_token: null, logout_at: Date.now()}, callBack);
     //this.findOneAndRemove({userId: userId, tabletId: tabletId}, function(err, record){
     //    if(err){
@@ -79,4 +73,4 @@ userTabletSchema.statics.removeRecord = function(userId, tabletId,callBack){
     //})
 };
 
-mongoose.model('UserTablet', userTabletSchema);
+mongoose.model('Record', recordSchema);

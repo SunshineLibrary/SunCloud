@@ -34,9 +34,8 @@ angular.module('resources')
         $scope.teachers = $scope.room.teachers;
         $scope.students = $scope.room.students;
         $scope.isAdminOrRoot = (_.intersection(me.roles, ['admin', 'root'])).length ? true: false;
-        $scope.temp = {createError: false};
-        var failList = [];
-        var waitingList = [];
+        //$scope.temp = {createError: false};
+        $scope.error = {};
 
         $scope.$watch('room', function (newRoom) {
             if (newRoom) {
@@ -89,7 +88,7 @@ angular.module('resources')
             'class="ngCell {{col.cellClass}}" ng-cell></div>',
             columnDefs: [
                 {field: '_id', visible: false},
-                {field: 'name', displayName: '姓名'},
+                {field: 'name', displayName: '姓名', cellTemplate: '<a href="/#/students/{{row.entity._id}}">{{row.getProperty(col.field)}}</a>'},
                 {field: 'username', displayName: '用户名'},
                 {field: 'birthday', displayName: '生日'},
                 {field: 'tablet', displayName: '正在使用的晓书',cellTemplate:'<div class="ngCellText" ng-class="col.colIndex()" ng-show="row.entity.tablet"><a href="/#/tablets/{{row.entity.tabletId}}">{{row.getProperty(col.field)}}</a></div><div ng-hide="row.entity.tablet"><span class="label label-default">暂无</span></div>'},
@@ -485,6 +484,7 @@ angular.module('resources')
         };
 
         $scope.manualCreateStudents = function() {
+            $scope.error = {};
             var newStudents = [];
             $scope.newStudentsList = $scope.newStudentsList.trim();
             var lines = $scope.newStudentsList.split(/\n/);
@@ -492,6 +492,18 @@ angular.module('resources')
                 lines[i] = lines[i].trim().replace(/[,， \s]+/igm, ' ');
                 var name = lines[i].split(/[,， \s]/)[0];
                 var username = lines[i].split(/[,， \s]/)[1];
+                if(!name.match(/^[a-zA-Z0-9\u4e00-\u9fa5]+$/)) {
+                    $scope.error.name = true;
+                    return;
+                }
+                if(!username) {
+                    $scope.error.format = true;
+                    return;
+                }
+                if (!username.match(/^[@\.a-zA-Z0-9_-]+$/)) {
+                    $scope.error.username = true;
+                    return;
+                }
                 newStudents.push({name: name, username: username});
             }
             StudentDataProvider.manualCreateAddStudents(me.school, $scope.room._id, newStudents)
@@ -500,7 +512,7 @@ angular.module('resources')
                     swal({title: '批量创建并添加学生成功', type: 'success', timer: 2000});
                     $scope.students = $scope.students.concat(newStudents);
                     $('#addStudentsBatchDialog').modal('hide');
-                    $scope.temp.manualCreateError = false;
+                    $scope.error = {};
                 })
                 .error(function(err, status) {
                     console.log(err);
@@ -511,7 +523,7 @@ angular.module('resources')
                             errorList = errorList.concat(e.name + ',' + e.username + '\n');
                         });
                         $scope.newStudentsList = errorList;
-                        $scope.temp.manualCreateError = true;
+                        $scope.error.unique = true;
                         swal({title: '以下学生创建失败，请重试',text: errorList, type: 'error'});
                     }else if(status === 500) {
                         swal({title: '服务器内部错误', text: '请重试', type: 'error'});
@@ -523,10 +535,11 @@ angular.module('resources')
 
 
         $scope.autoCreateStudents = function() {
+            $scope.error = {};
             $scope.newNamesList = $scope.newNamesList.trim();
             var names = $scope.newNamesList.split('\n');
             if(names.length > 100) {
-                $scope.temp.student_count_max = true;
+                $scope.error.maxlength = true;
                 return;
             }
             StudentDataProvider.autoCreateAddStudents(me.school, $scope.room._id, names)
@@ -535,7 +548,7 @@ angular.module('resources')
                     swal({title: '批量创建并添加学生成功', type: 'success', timer: 2000});
                     $scope.students = $scope.students.concat(newStudents);
                     $('#addStudentsBatchDialog').modal('hide');
-                    $scope.temp.autoCreateError = false;
+                    $scope.error = {};
                 })
                 .error(function(err, status) {
                     console.error(err);
@@ -545,7 +558,7 @@ angular.module('resources')
                             errorList = errorList.concat(e + '\n');
                         });
                         $scope.newNamesList = errorList;
-                        $scope.temp.autoCreateError = true;
+                        $scope.error.auto = true;
                         swal({title: '批量创建学生失败',text: errorList, type: 'error', timer: 2000});
                     }else if(status === 500) {
                         swal({title: '添加学生到该班级失败', text: '请从学生列表中添加', type: 'error', timer: 1500});

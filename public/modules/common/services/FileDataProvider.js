@@ -32,6 +32,12 @@ angular.module('common')
 
         var deleteFile = function(fileId) {
             return $http({
+                method: "PUT",
+                url: "/delete/files/" + fileId
+            })
+        };
+        var destroyFile = function(fileId) {
+            return $http({
                 method: "DELETE",
                 url: "/files/" + fileId
             })
@@ -87,7 +93,8 @@ angular.module('common')
         var getSharedFilesBySchool = function(schoolId) {
             var defered = $q.defer();
             var thePromise = defered.promise;
-            var query = {$or:[{createBy: 'root'}, {$and:[{school: schoolId}, {shared: true}]}]};
+            //var query = {$or:[{createBy: 'root'}, {$and:[{school: schoolId}, {shared: true}]}]};
+            var query = {$and: [{shared:true}, {$or: [{createBy: 'root'},{school: schoolId}]}]};
             query = encodeURIComponent(JSON.stringify(query));
             $http({
                 method: "GET",
@@ -99,7 +106,6 @@ angular.module('common')
                 console.log(err);
             });
             return thePromise;
-
         };
 
         var getSharedFilesBySubject = function(subjectId) {
@@ -153,11 +159,12 @@ angular.module('common')
         var getSharedFilesBySubjectAndSemesterAndSchool = function(subjectId, semesterId, schoolId) {
             var defered = $q.defer();
             var thePromise = defered.promise;
-            var query = {$or:[{createBy: 'root'}, {$and:[{school: schoolId}, {shared: true}]}], subject: subjectId, semester: semesterId};
+            //var query = {$or:[{createBy: 'root'}, {$and:[{school: schoolId}, {shared: true}]}], subject: subjectId, semester: semesterId};
+            var query = {$and: [{shared:true}, {$or: [{createBy: 'root'},{school: schoolId}]}], subject: subjectId, semester: semesterId};
             query = encodeURIComponent(JSON.stringify(query));
             $http({
                 method: "GET",
-                url: "/files?query=" + query
+                url: "/files?query=" + query + '&populate=owner,school'
             }).success(function (folders) {
                 defered.resolve(folders);
             }).error(function (err) {
@@ -210,6 +217,7 @@ angular.module('common')
             getFile: getFile,
             getAllFiles: getAllFiles,
             deleteFile: deleteFile,
+            destroyFile: destroyFile,
             deleteFileFromFolder: deleteFileFromFolder,
             editFileNameAndDescription: editFileNameAndDescription,
             downloadFile: downloadFile,

@@ -24,12 +24,12 @@
                         <!--</a>-->
                         <br/>
                          <span class="inline file-count">
-                            <i class="fa fa-folder-o"></i> &nbsp;{{subject.sharedFoldersCount}} &nbsp;&nbsp;&nbsp;&nbsp;
+                            <!--<i class="fa fa-folder-o"></i> &nbsp;{{subject.sharedFoldersCount}} &nbsp;&nbsp;&nbsp;&nbsp;-->
                              <i class="fa fa-files-o"></i> &nbsp;{{subject.sharedFilesCount}}
                         </span>
                         <div ng-show="subject.mouseOn" class="inline select-semester">
                             <span ng-repeat="semester in semesters" >
-                                <button class="btn btn-inverse" ng-click="goto($event, subject._id, semester._id)">{{semester.name}}</button>&nbsp;
+                                <button class="btn btn-inverse" style="opacity: 0.8" ng-click="goto($event, subject._id, semester._id)">{{semester.name}}</button>&nbsp;
                             </span>
                         </div>
                     </span>

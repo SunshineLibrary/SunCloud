@@ -3,10 +3,10 @@
 /**
  * Module dependencies.
  */
-var mongoose = require('mongoose'),
-    errorHandler = require('./errors'),
-    Tablet = mongoose.model('Tablet'),
-    _ = require('lodash');
+var mongoose = require('mongoose');
+var errorHandler = require('./errors');
+var Tablet = mongoose.model('Tablet');
+var _ = require('underscore');
 
 /**
  * TODO:
@@ -19,6 +19,28 @@ exports.read = function(req, res) {
     res.json(req.article);
 };
 
+/**
+ * Article middleware
+ */
+exports.getTabletById = function(req, res, next, id) {
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(400).send({
+            message: 'Article is invalid'
+        });
+    }
+
+    Tablet.findById(id).exec(function(err, tablet) {
+        if (err) return next(err);
+        if (!tablet) {
+            return res.status(404).send({
+                message: 'Tablet not found'
+            });
+        }
+        req.tablet = tablet;
+        next();
+    });
+};
 /**
  * Update a article
  */

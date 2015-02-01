@@ -3,28 +3,25 @@
 /**
  * Module dependencies.
  */
-var mongoose = require('mongoose'),
-    errorHandler = require('./errors'),
-    User = mongoose.model('User'),
-    Tablet = mongoose.model('Tablet'),
-    UserTablet = mongoose.model('UserTablet'),
-    _ = require('underscore');
+var mongoose = require('mongoose');
+var errorHandler = require('./errors');
+var User = mongoose.model('User');
+var Tablet = mongoose.model('Tablet');
+var Record = mongoose.model('Record');
+var _ = require('underscore');
 
 exports.logout = function(req, res){
-
-    UserTablet.removeRecord(req.query.userId, req.query.tabletId,function(err,record){
+    Record.removeRecord(req.params.userId, req.params.tabletId,function(err,record){
         if(err){
-            res.json(500, err);
+            res.status(500).json(err);
         }
-        res.json(200,record);
+        res.status(200).json(record);
 
     })
 };
 
 exports.countBySchool = function(req, res) {
-    console.log('counting tablet by school');
-    console.log(req.query.schoolId);
-    UserTablet.find({logout_at: null}).populate({
+    Record.find({logout_at: null}).populate({
         path: 'userId',
         match: {school: req.query.schoolId}
     }).exec(function(err,records){
@@ -32,7 +29,6 @@ exports.countBySchool = function(req, res) {
             res.json(500, err);
         }
         var count = 0;
-        console.log('~~~~~',records);
         _.each(records, function(record){
             if(record.userId && _.contains(record.userId.roles, 'student')){
                 count += 1;
@@ -45,7 +41,7 @@ exports.countBySchool = function(req, res) {
 
 
 exports.getUserTabletById = function (req, res, next, userId) {
-    UserTablet.findOne(
+    Record.findOne(
         {"userId": userId},
         function (err, record) {
             if (err)return next(err);

@@ -48,10 +48,10 @@
             <div class='modal-body'>
                 <form name="roomForm" class="form-group">
                     <div class="input-group input-group-lg">
-                        <input class="form-control" placeholder="请输入新班级名称" ng-model="newRoomName" required>
+                        <input class="form-control" placeholder="请输入新班级名称" tabindex="1" ng-model="newRoomName" required>
                         <div class="input-group-btn">
                             <button type="button" class="btn  btn-success"
-                                    ng-click="createAdminRoom()" ng-disabled="roomForm.$invalid">创建</button>
+                                    ng-click="createAdminRoom()" ng-disabled="roomForm.$invalid" tabindex="2">创建</button>
                         </div>
                     </div>
                     <span ng-show="temp.createRoomTip=='noName'" class="error-msg">请填写班级名称</span>

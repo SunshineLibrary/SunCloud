@@ -8,6 +8,7 @@ var _ = require('lodash'),
 	mongoose = require('mongoose'),
 	passport = require('passport'),
 	User = mongoose.model('User');
+var School = mongoose.model('School');
 
 /**
  * Update user details
@@ -51,7 +52,14 @@ exports.update = function(req, res) {
  * Send User
  */
 exports.me = function(req, res) {
-	res.json(req.user.profile || null);
+    School.findById(req.user.profile.school, function(err, school) {
+       if(err) {
+           console.error(err);
+       }else {
+           req.user.profile.school = school;
+       }
+        res.json(req.user.profile || null);
+    });
 };
 
 exports.user = function(req, res, next, id) {

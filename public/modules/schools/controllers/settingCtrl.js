@@ -1,7 +1,7 @@
 angular.module('schools')
     .controller('settingRootController', [
-        '$scope', 'subjects', 'semesters', 'SubjectDataProvider','SemesterDataProvider',
-        function($scope, subjects, semesters, SubjectDataProvider, SemesterDataProvider) {
+        '$scope', 'subjects', 'semesters', 'SubjectDataProvider','SemesterDataProvider', '$q',
+        function($scope, subjects, semesters, SubjectDataProvider, SemesterDataProvider, $q) {
             $scope.subjects = subjects;
             $scope.semesters = semesters;
             $scope.isCreatingSubject = false;
@@ -17,6 +17,11 @@ angular.module('schools')
                     })
                     .error(function(err) {
                         console.error(err);
+                        if(err.code === 11000 || err.code === 11001) {
+                            swal({title: '科目名'+ $scope.tmp.subject +'已存在', type: 'error'})
+                        }else {
+                            swal({title: '服务器错误', text: '请重试', type: 'error'})
+                        }
                     })
             };
             $scope.createSemester = function() {
@@ -28,27 +33,25 @@ angular.module('schools')
                     })
                     .error(function(err) {
                         console.error(err);
+                        if(err.code === 11000 || err.code === 11001) {
+                            swal({title: '年级名'+ $scope.tmp.semester +'已存在', type: 'error'})
+                        }else {
+                            swal({title: '服务器错误', text: '请重试', type: 'error'})
+                        }
                     })
             };
 
-            $scope.hover = function(subject) {
-                subject.showEdit = !subject.showEdit;
+            $scope.hover = function(item) {
+                item.showEdit = true;
             };
-            $scope.editSubject = function(subject) {
-                SubjectDataProvider.editSubject(subject)
-                    .success(function() {
-                    })
-                    .error(function(err) {
-                        console.error(err);
-                    })
+            $scope.leave = function(item) {
+                item.showEdit = false;
             };
-            $scope.editSemester = function(semester) {
-                SemesterDataProvider.editSemester(semester)
-                    .success(function() {
-                    })
-                    .error(function(err) {
-                        console.error(err);
-                    })
+            $scope.editSubject = function(name, id) {
+                return SubjectDataProvider.editSubject({name: name, _id: id});
+            };
+            $scope.editSemester = function(name, id) {
+                return SemesterDataProvider.editSemester({name: name, _id: id});
             };
             $scope.removeSubject = function(subject) {
                 swal({

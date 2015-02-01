@@ -1,11 +1,11 @@
 angular.module('common')
-    .filter('fileStatusFilter', function() {
+    .filter('fileStatusFilter', function($sce) {
         return function(value) {
-            console.log(value.deleted_at);
-            if (value.deleted_at) {
-                return '已删除'
+            //console.log(value.deleted);
+            if (value.deleted) {
+                return $sce.trustAsHtml('<span class="label label-danger">已删除</span>')
             }else {
-                return value.shared ? '共享': '非共享'
+                return value.shared ? $sce.trustAsHtml('<span class="label label-success">共&nbsp;&nbsp; &nbsp;&nbsp;享</span>') : $sce.trustAsHtml('<span class="label label-inverse">非共享</span>')
             }
         };
     });
