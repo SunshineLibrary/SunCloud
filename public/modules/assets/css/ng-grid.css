@@ -1,0 +1,96 @@
+
+.style2 .ngHeaderCell {
+    /*background-color: #008B00 !important;*/
+    background-color: white !important;
+    color: black !important;
+    bottom: 0;
+    /*color: #ffffff !important;*/
+    position: absolute;
+    top: 0;
+}
+.style2 .ngViewport{
+    width: auto !important;
+    height: auto !important;
+    /*min-height:100px !important;*/
+    max-height: 350px !important;
+}
+
+.style2 .ngRow {
+    background-color: white !important;
+}
+
+.style2 .ngCanvas {
+    width: 100% !important;
+}
+.style2 .ngRow {
+    width: 100% !important;
+}
+.style2 .ngRow.selected {
+    background-color: #2ecc71 !important;
+}
+
+.style1 .ngRow.hover {
+    background-color: red !important;
+}
+
+.style1 {
+    width: 100%;
+}
+
+.style3 .ngHeaderCell {
+    background-color: #2ecc71 !important;
+    color: white !important;
+    bottom: 0;
+    position: absolute;
+    top: 0;
+}
+
+.ngHeaderCell {
+    /*background-color: #008B00 !important;*/
+    /*color: #ffffff !important;*/
+    background-color: #21A675      ;
+    color: white;
+    bottom: 0;
+    position: absolute;
+    top: 0;
+}
+.ngCellElement:focus {
+    outline: 0;
+    background-color: #ff0000;
+}
+/******** Rows ********/
+.ngRow {
+    position: absolute;
+    width: 100% !important;
+    border-bottom: none !important;
+    /*border-bottom: 1px solid rgb(229, 229, 229);*/
+}
+.ngRow.even {
+    background-color: #f3f9f1;
+    /*#e0eee8;*/
+}
+.ngRow.odd {
+    background-color: rgb(253, 253, 253);
+}
+.ngRow.selected {
+    background-color: #e0f0e9;
+}
+.ngRow.canSelect {
+    cursor: pointer;
+}
+
+.ngViewport{
+    height:auto !important;
+    min-height: 200px !important;
+    overflow-x: hidden !important;
+}
+.ngCanvas, .ngViewport, .ngRow, .ngFooterPanel, .ngTopPanel   {
+    width: 100% !important;
+}
+.ngRow {
+    border-bottom:none !important;
+}
+
+.ngVerticalBarVisible{
+    /*display: none;*/
+}

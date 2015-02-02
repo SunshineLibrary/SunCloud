@@ -224,6 +224,7 @@ angular.module('resources')
             {
                 data: 'app.apks',
                 multiSelect: false,
+                enableColumnResize: true,
                 columnDefs: [
                     {field: '_id', visible: false},
                     {field: 'id', displayName: 'ID', width: '15%'},

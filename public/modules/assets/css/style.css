@@ -26,3 +26,350 @@ a.editable-click:hover {
     color: #2ecc71;
     border-bottom-color: #2ecc71;
 }
+
+.manage-nav {
+    margin-top: 100px;
+}
+.offset-0 {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    margin: 0 !important;
+}
+
+.nopadding {
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+.myapps {
+    width: 100%;
+    border:2px solid #16a085;
+    margin:0 0 10px 0;
+    border-radius: 20px;
+}
+.appsNotAssigned {
+    width: 100%;
+    border:2px solid #bdc3c7;
+    margin:0 0 10px 0;
+    border-radius: 20px;
+}
+
+.not-assigned-apps {
+    width: 100%
+}
+
+.centered {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    margin-top: -100px;
+
+    /* bring your own prefixes */
+    transform: translate(-50%, -50%);
+}
+
+.xiaoshu {
+    font-family: "Lato", Helvetica, Arial, sans-serif;
+    font-size: xx-large;
+    color: #006400;
+}
+
+.xiaoshu2 {
+    font-family: 'Lucida Grande', sans-serif;
+    font-size: large;
+    color: limegreen;
+    margin-left: 100px;
+    /*align-content: center;*/
+}
+
+/*.list-group-item.active {*/
+/*background-color: red !important;*/
+/*}*/
+a.list-group-item-success.active, a.list-group-item-success.active:hover, a.list-group-item-success.active:focus {
+    /*background-image: none !important;*/
+    /*background-image: linear-gradient(to bottom, #32CD32 0%, #7CCD7C 100%) !important;*/
+    background-color: #00BC12;
+    border-color: #ffffff !important;
+}
+
+/*style.css*/
+.gridStyle {
+    border: none;
+    margin-top: 20px;
+    width: 100%;
+    min-width: 500px;
+}
+
+.error-msg {
+    color: #ff0000;
+}
+
+.badge.badgeStyle1 {
+    background-color: #8ef13c;
+}
+
+.badge.badgeStyle2 {
+    background-color: lightgray;
+    color: black;
+}
+.myrooms {
+    margin-top: 65px;
+}
+
+#roomsList{
+    margin-top: 20px;
+}
+
+/* enable absolute positioning */
+.inner-addon {
+    position: relative;
+}
+
+/* style icon */
+.inner-addon .glyphicon {
+    position: absolute;
+    padding: 10px;
+    pointer-events: none;
+}
+
+/* align icon */
+.left-addon .glyphicon  { left:  0px;}
+.right-addon .glyphicon { right: 0px;}
+
+/* add padding  */
+.left-addon input  { padding-left:  30px; }
+.right-addon input { padding-right: 30px; }
+
+
+/*.navbar-unread{*/
+/*width: 8px;*/
+/*height: 8px;*/
+/*background-color: #E74C3C;*/
+/*right: 6px;*/
+/*top: 14%;*/
+/*}*/
+
+.class-header{
+    /*background-color: #00A352;#f3f9f1;*/
+    background-color: #f0f0f4;
+    padding: 5px 25px 10px;
+    border-radius: 6px;
+    color: darkgreen;
+    /*font-weight: 300;*/
+    max-font-size: 10;
+    margin-top: 20px;
+}
+/*.remove-stu{*/
+/*opacity:0;*/
+/*margin-right: 20px;*/
+/*}*/
+
+/*tr:hover .remove-stu{*/
+/*opacity:1;*/
+/*}*/
+/*td{*/
+/*position: relative;*/
+/*}*/
+/*td .label-danger{*/
+/*position: absolute;*/
+/*left: 0px;*/
+/*}*/
+
+/*.opacity50{*/
+/*opacity: .5;*/
+/*}*/
+
+.navbar-text.watermark {
+    color: deepskyblue;
+}
+
+.room-header {
+    margin-top: 10px;
+    background-image:linear-gradient(to bottom left, #8cc540,#009f5d);
+    border-radius: 6px;
+    height: 50px;
+}
+
+.sun-name {
+    font-size: xx-large;
+    color: #006400;
+}
+
+.bootstrap-switch {
+    overflow: visible !important;
+    /*data-handle-width: 100px !important;*/
+    /*data-label-width: 100px !important;*/
+}
+
+.sun-id {
+    font-size: small;
+    color: white;
+    /*color: #30dff3;*/
+}
+
+.sun-error {
+    color: #ff0000;
+}
+.app-header{
+    background-color: #00A352;
+    padding: 5px 25px 10px;
+    border-radius: 6px;
+    color: white;
+    margin-top: 8px;
+    height: 100px;
+}
+
+.sun-header{
+    /*background-color: #00A352;#f3f9f1;*/
+    background-color: #f0f0f4;
+    padding: 5px 25px 10px;
+    border-radius: 6px;
+    color: darkgreen;
+    margin-top: 10px;
+    height: 70px;
+    vertical-align: text-bottom;
+}
+.assign-class {
+    list-style-type: none;
+}
+.assign-class-list-long-false {
+    list-style-type: none;
+}
+.assign-class-list-long-true {
+    list-style-type: none;
+    columns: 2;
+    -webkit-columns: 2;
+    /*-moz-columns: 2;*/
+}
+
+
+.onoffswitch-app {
+    position: absolute; width: 162px;
+    -webkit-user-select:none; -moz-user-select:none; -ms-user-select: none;
+}
+.onoffswitch-checkbox-app {
+    display: none;
+}
+.onoffswitch-label-app {
+    display: block; overflow: hidden; cursor: pointer;
+    border: 2px solid #ECF0F1; border-radius: 11px;
+}
+.onoffswitch-inner-app {
+    display: block; width: 200%; margin-left: -100%;
+    -moz-transition: margin 0.3s ease-in 0s; -webkit-transition: margin 0.3s ease-in 0s;
+    -o-transition: margin 0.3s ease-in 0s; transition: margin 0.3s ease-in 0s;
+}
+.onoffswitch-inner-app:before, .onoffswitch-inner-app:after {
+    display: block; float: left; width: 50%; height: 30px; padding: 0; line-height: 30px;
+    font-size: 14px; color: white; font-family: Trebuchet, Arial, sans-serif; font-weight: bold;
+    -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;
+}
+.onoffswitch-inner-app:before {
+    content: "默认推送给所有班级";
+    padding-right: 10px;
+    background-color: #E67E22; color: #FFFFFF;
+    text-align: right;
+}
+.onoffswitch-inner-app:after {
+    content: "需要手动推送给班级   ";
+    padding-right: 10px;
+    background-color: #16A085; color: #FFFFFF;
+
+}
+.onoffswitch-switch-app {
+    display: none; width: 0px; margin: 0px;
+    background: #FFFFFF;
+    border: 2px solid #ECF0F1; border-radius: 11px;
+    position: absolute; top: 0; bottom: 0; right: 133px;
+    -moz-transition: all 0.3s ease-in 0s; -webkit-transition: all 0.3s ease-in 0s;
+    -o-transition: all 0.3s ease-in 0s; transition: all 0.3s ease-in 0s;
+}
+.onoffswitch-checkbox-app:checked + .onoffswitch-label-app .onoffswitch-inner-app {
+    margin-left: 0;
+}
+.onoffswitch-checkbox-app:checked + .onoffswitch-label-app .onoffswitch-switch-app {
+    right: 0px;
+}
+
+.school-nav {
+    margin-top: 50px;
+}
+
+li .active {
+    color: green;
+    background-color: red;
+}
+
+.schoolList {
+    margin-top: 20px;
+}
+
+#schools-table {
+    margin-top: 30px;
+}
+
+.ngHeaderCell.style2{
+    background-color:red !important;
+
+}
+.school-header{
+    background-color: #00A352;
+    padding: 5px 25px 10px;
+    border-radius: 6px;
+    color: white;
+    margin-top: 8px;
+    height:100px;
+}
+
+.setting-header{
+    /*background-color: #00A352;#f3f9f1;*/
+    background-color: #f0f0f4;
+    padding: 5px 25px 10px;
+    border-radius: 6px;
+    color: darkgreen;
+    /*font-weight: 300;*/
+    max-font-size: 10;
+    margin-top: 8px;
+}
+
+
+table.school-overview, th.school-overview, td.school-overview  {
+    align-content: center;
+    border-collapse: collapse;
+    /*border-radius: 6px;*/
+}
+/*tr:nth-child(even) {*/
+/*background-color:#48cfad ;*/
+/*}*/
+/*tr:nth-child(odd) {*/
+/*background-color:#F5FFFA ;*/
+/*}*/
+
+
+
+td.school-overview {
+    padding: 12px;
+    text-align: center;
+}
+
+table.school-overview {
+    border-collapse: collapse;
+    border-radius: 30px;
+    overflow: hidden;
+    border-style: hidden; /* hide standard table (collapsed) border */
+    box-shadow: 0 0 0 2px #16a085;
+    background: #e3f9fd;
+}
+
+.sun-table {
+    width: 70%;
+}
+
+#schools-table{
+    margin-top: 30px;
+}
+
+.tableTitle{
+    margin-top: 20px;
+    text-color: darkgreen;
+}

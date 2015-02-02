@@ -18,6 +18,7 @@ angular.module('schools')
             {
                 data: 'teachersView',
                 multiSelect: false,
+                enableColumnResize: true,
                 filterOptions: $scope.filterOptions,
                 rowTemplate: '<div  ng-mouseover="$parent.showedit=true" ng-mouseleave="$parent.showedit=false" ng-style="{\'cursor\': row.cursor, \'z-index\': col.zIndex() }" ' +
                 'ng-repeat="col in renderedColumns" ng-class="col.colIndex()" ' +
@@ -58,7 +59,6 @@ angular.module('schools')
                 info.phone = $scope.newTeacher.phone;
                 info.email = $scope.newTeacher.email;
                 info.roles = $scope.newTeacher.isAdmin ? ['admin','teacher'] : ['teacher'];
-                info.password = 'xiaoshu';
                 TeacherDataProvider.createTeacher(info)
                     .success(function(teacher){
                         console.log(teacher);

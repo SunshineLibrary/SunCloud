@@ -38,6 +38,7 @@ angular.module('schools')
             {
                 data: 'apps',
                 multiSelect: false,
+                enableColumnResize: true,
                 filterOptions: $scope.filterOptions,
                 rowTemplate: '<div  ng-mouseover="$parent.showedit=true" ng-mouseleave="$parent.showedit=false" ng-style="{\'cursor\': row.cursor, \'z-index\': col.zIndex() }" ' +
                 'ng-repeat="col in renderedColumns" ng-class="col.colIndex()" ' +

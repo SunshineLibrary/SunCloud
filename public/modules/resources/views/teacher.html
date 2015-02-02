@@ -3,7 +3,8 @@
         <h3>{{teacher.name}}
             <small> &nbsp;
                 <span class="label label-success">老师</span>
-                <span class="label label-success" ng-show="isAdmin">超级管理员</span>
+                <span class="label label-success" ng-show="isAdmin">学校管理员</span>
+                <span class="label label-success" ng-show="isRoot">超级管理员</span>
             </small>
             <div class="pull-right">
                 <span class="sun-id">id: {{teacher._id}}</span>
@@ -90,7 +91,7 @@
                         <input type="text" id="newEmail" class="form-control"  placeholder="邮箱" ng-model="temp.newEmail">
                     </div>
                     <br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" ng-model="temp.isAdmin"/> &nbsp;&nbsp;&nbsp;是否具有超级管理员权限
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" ng-model="temp.isAdmin"/> &nbsp;&nbsp;&nbsp;是否具有学校管理员权限
 
                 </form>
                 <span style="color: red" ng-show="error">修改失败，可能由于用户名已存在。请修改用户名后重试。</span>

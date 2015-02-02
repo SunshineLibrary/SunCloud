@@ -1,7 +1,8 @@
 angular.module('sunpack')
     .controller('repoController',
-    ['$scope', '$state', 'FolderDataProvider', 'FileDataProvider', function ($scope, $state, FolderDataProvider, FileDataProvider) {
+    ['$scope', '$state', 'FolderDataProvider', 'FileDataProvider', 'AuthService',function ($scope, $state, FolderDataProvider, FileDataProvider, AuthService) {
         //$scope.showingSemester = false;
+        var me = AuthService.me;
         $scope.showSemester = function(subject) {
             subject.mouseOn = true;
             console.log('mouse over');
@@ -17,7 +18,7 @@ angular.module('sunpack')
             //    subject.sharedFoldersCount = count;
             //    console.log(count);
             //});
-            FileDataProvider.getSharedFilesBySubjectCount(subject._id).then(function(count) {
+            FileDataProvider.getSharedFilesBySubjectAndSchoolCount(subject._id, me.school).then(function(count) {
                 subject.sharedFilesCount = count;
             });
             //console.log(semester.sharedFoldersCount);

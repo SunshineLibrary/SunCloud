@@ -25,6 +25,7 @@ angular.module('manage')
             {
                 data: 'tablets',
                 multiSelect: false,
+                enableColumnResize: true,
                 columnDefs: [
                     {field: '_id', visible: false},
                     {field: 'machine_id', displayName: '晓书编号', width: '25%', cellTemplate: '<a ng-href="/#/tablets/{{row.entity._id}}">{{row.entity.machine_id}}</a>' },

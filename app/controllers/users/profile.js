@@ -52,14 +52,15 @@ exports.update = function(req, res) {
  * Send User
  */
 exports.me = function(req, res) {
-    School.findById(req.user.profile.school, function(err, school) {
-       if(err) {
-           console.error(err);
-       }else {
-           req.user.profile.school = school;
-       }
-        res.json(req.user.profile || null);
-    });
+    //School.findById(req.user.profile.school, function(err, school) {
+    //   if(err) {
+    //       console.error(err);
+    //   }else {
+    //       req.user.profile.school = school;
+    //   }
+    //});
+    res.json(req.user.profile || null);
+
 };
 
 exports.user = function(req, res, next, id) {
