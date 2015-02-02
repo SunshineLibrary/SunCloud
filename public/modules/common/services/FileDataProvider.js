@@ -11,6 +11,7 @@ angular.module('common')
                 defered.resolve(file);
             }).error(function(err){
                 defered.reject(err);
+                console.error(err);
             });
             return thePromise;
         };
@@ -25,7 +26,7 @@ angular.module('common')
                 defered.resolve(files);
             }).error(function (err) {
                 defered.reject(err);
-                console.log(err);
+                console.error(err);
             });
             return thePromise;
         };
@@ -103,7 +104,7 @@ angular.module('common')
                 defered.resolve(files);
             }).error(function (err) {
                 defered.reject(err);
-                console.log(err);
+                console.error(err);
             });
             return thePromise;
         };
@@ -119,7 +120,7 @@ angular.module('common')
                 console.log(files);
             }).error(function (err) {
                 defered.reject(err);
-                console.log(err);
+                console.error(err);
             });
             return thePromise;
         };
@@ -136,7 +137,24 @@ angular.module('common')
                 //console.log(files);
             }).error(function (err) {
                 defered.reject(err);
-                console.log(err);
+                console.error(err);
+            });
+            return thePromise;
+        };
+
+        var getSharedFilesBySubjectAndSchoolCount = function(subjectId, schoolId) {
+            var defered = $q.defer();
+            var thePromise = defered.promise;
+            var query = {$and: [{shared:true}, {$or:[{createBy:"root"},{school: schoolId}]}], subject: subjectId};
+            query = encodeURIComponent(JSON.stringify(query));
+            $http({
+                method: "GET",
+                url: "/files/count?query=" + query
+            }).success(function (count) {
+                defered.resolve(count.count);
+            }).error(function (err) {
+                defered.reject(err);
+                console.error(err);
             });
             return thePromise;
         };
@@ -151,7 +169,7 @@ angular.module('common')
                 defered.resolve(folders);
             }).error(function (err) {
                 defered.reject(err);
-                console.log(err);
+                console.error(err);
             });
             return thePromise;
         };
@@ -160,19 +178,40 @@ angular.module('common')
             var defered = $q.defer();
             var thePromise = defered.promise;
             //var query = {$or:[{createBy: 'root'}, {$and:[{school: schoolId}, {shared: true}]}], subject: subjectId, semester: semesterId};
-            var query = {$and: [{shared:true}, {$or: [{createBy: 'root'},{school: schoolId}]}], subject: subjectId, semester: semesterId};
+            var query = {$and: [{shared:true}, {$or:[{createBy:"root"},{school: schoolId}]}], subject: subjectId, semester: semesterId};
             query = encodeURIComponent(JSON.stringify(query));
             $http({
                 method: "GET",
                 url: "/files?query=" + query + '&populate=owner,school'
             }).success(function (folders) {
                 defered.resolve(folders);
+                console.log('~~',folders);
             }).error(function (err) {
                 defered.reject(err);
-                console.log(err);
+                console.error(err);
             });
             return thePromise;
         };
+
+
+        var getSharedFilesBySubjectAndSemesterAndSchoolCount = function(subjectId, semesterId, schoolId) {
+            var defered = $q.defer();
+            var thePromise = defered.promise;
+            //var query = {$or:[{createBy: 'root'}, {$and:[{school: schoolId}, {shared: true}]}], subject: subjectId, semester: semesterId};
+            var query = {$and: [{shared:true}, {$or:[{createBy:"root"},{school: schoolId}]}], subject: subjectId, semester: semesterId};
+            query = encodeURIComponent(JSON.stringify(query));
+            $http({
+                method: "GET",
+                url: "/files/count?query=" + query
+            }).success(function (count) {
+                defered.resolve(count.count);
+            }).error(function (err) {
+                defered.reject(err);
+                console.error(err);
+            });
+            return thePromise;
+        };
+
 
 
 
@@ -186,7 +225,7 @@ angular.module('common')
                 defered.resolve(count.count);
             }).error(function (err) {
                 defered.reject(err);
-                console.log(err);
+                console.error(err);
             });
             return thePromise;
         };
@@ -226,8 +265,10 @@ angular.module('common')
             getSharedFilesBySchool: getSharedFilesBySchool,
             getSharedFilesBySubject: getSharedFilesBySubject,
             getSharedFilesBySubjectCount: getSharedFilesBySubjectCount,
+            getSharedFilesBySubjectAndSchoolCount: getSharedFilesBySubjectAndSchoolCount,
             getSharedFilesBySubjectAndSemester: getSharedFilesBySubjectAndSemester,
             getSharedFilesBySubjectAndSemesterAndSchool: getSharedFilesBySubjectAndSemesterAndSchool,
+            getSharedFilesBySubjectAndSemesterAndSchoolCount: getSharedFilesBySubjectAndSemesterAndSchoolCount,
             getSharedFilesBySubjectAndSemesterCount: getSharedFilesBySubjectAndSemesterCount,
             changeFileLike: changeFileLike
 

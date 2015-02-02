@@ -18,6 +18,7 @@ angular.module('schoolManage')
             {
                 data: 'teachers',
                 multiSelect: false,
+                enableColumnResize: true,
                 rowTemplate: '<div  ng-mouseover="$parent.showedit=true" ng-mouseleave="$parent.showedit=false" ng-style="{\'cursor\': row.cursor, \'z-index\': col.zIndex() }" ' +
                 'ng-repeat="col in renderedColumns" ng-class="col.colIndex()" ' +
                 'class="ngCell {{col.cellClass}}" ng-cell></div>',
@@ -25,7 +26,7 @@ angular.module('schoolManage')
                     {field: '_id', visible: false},
                     {field: 'name', displayName: '姓名', cellTemplate: '<a href="">{{row.entity.name}}</a>'},
                     {field: 'username', displayName: '用户名'},
-                    {field: 'roles', displayName: '超级管理员', cellTemplate: '<div>{{row.entity.roles | isAdminFilter}}</div>'},
+                    {field: 'roles', displayName: '是否管理员', cellTemplate: '<div>{{row.entity.roles | isAdminFilter}}</div>'},
                     {field: 'email', displayName: '邮箱'},
                     {field: 'phone', displayName: '电话'},
                     {field: '', displayName: '编辑', cellTemplate:
@@ -62,6 +63,9 @@ angular.module('schoolManage')
                 info.email = $scope.temp.newEmail;
                 if($scope.temp.isAdmin) {
                     info.roles = ['admin', 'teacher'];
+                    if(me.school.toString() === '000000000000000000000000') {
+                        info.roles.push('root');
+                    }
                 }else{
                     info.roles = ['teacher'];
                 }
@@ -114,9 +118,13 @@ angular.module('schoolManage')
                 info.roles = ['teacher'];
                 if($scope.newTeacher.isAdmin) {
                     info.roles.push('admin');
+                    if(me.school.toString() === '000000000000000000000000') {
+                        info.roles.push('root');
+                    }
                 }
+
                 console.log(info.school);
-                info.password = 'xiaoshu';
+                //info.password = 'xiaoshu';
                 TeacherDataProvider.createTeacher(info)
                     .success(function(teacher){
                         console.log(teacher);

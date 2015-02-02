@@ -83,6 +83,7 @@ angular.module('resources')
         {
             data: 'students',
             multiSelect: false,
+            enableColumnResize: true,
             rowTemplate: '<div  ng-mouseover="$parent.showedit=true" ng-mouseleave="$parent.showedit=false" ng-style="{\'cursor\': row.cursor, \'z-index\': col.zIndex() }" ' +
             'ng-repeat="col in renderedColumns" ng-class="col.colIndex()" ' +
             'class="ngCell {{col.cellClass}}" ng-cell></div>',
@@ -124,6 +125,7 @@ angular.module('resources')
         $scope.gridOptions3 =
         {
             data: 'teachers',
+            enableColumnResize: true,
             multiSelect: false,
             rowTemplate: '<div  ng-mouseover="$parent.showedit=true" ng-mouseleave="$parent.showedit=false" ng-style="{\'cursor\': row.cursor, \'z-index\': col.zIndex() }" ' +
             'ng-repeat="col in renderedColumns" ng-class="col.colIndex()" ' +
@@ -247,7 +249,6 @@ angular.module('resources')
             if($scope.newTeacher.isAdmin) {
                 info.roles.push('admin');
             }
-            info.password = 'xiaoshu';
             TeacherDataProvider.createTeacher(info)
                 .success(function(newTeacher){
                     $scope.newTeacher = undefined;

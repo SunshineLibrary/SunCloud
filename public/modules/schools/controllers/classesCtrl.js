@@ -10,6 +10,7 @@ angular.module('schools')
             {
                 data: 'rooms',
                 multiSelect: false,
+                enableColumnResize: true,
                 columnDefs: [
                     {field: '_id', visible: false},
                     {field: 'name', displayName: '班级名'},

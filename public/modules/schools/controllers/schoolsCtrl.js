@@ -59,6 +59,7 @@ angular.module('schools')
             {
                 data: 'schools',
                 multiSelect: false,
+                enableColumnResize: true,
                 rowTemplate: '<div  ng-mouseover="$parent.showedit=true" ng-mouseleave="$parent.showedit=false" ng-style="{\'cursor\': row.cursor, \'z-index\': col.zIndex() }" ' +
                 'ng-repeat="col in renderedColumns" ng-class="col.colIndex()" ' +
                 'class="ngCell {{col.cellClass}}" ng-cell></div>',
@@ -91,7 +92,6 @@ angular.module('schools')
                 var admin = {};
                 admin.name = $scope.newSchool.name;
                 admin.username = $scope.newSchool.admin;
-                admin.password = 'xiaoshu';
                 admin.roles = ['admin'];
 
                 SchoolDataProvider.createSchool(info)

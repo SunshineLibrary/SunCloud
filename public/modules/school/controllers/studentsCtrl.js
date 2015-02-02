@@ -31,6 +31,7 @@ angular.module('schoolManage')
             {
                 data: 'students',
                 multiSelect: false,
+                enableColumnResize: true,
                 rowTemplate: '<div  ng-mouseover="$parent.showedit=true" ng-mouseleave="$parent.showedit=false" ng-style="{\'cursor\': row.cursor, \'z-index\': col.zIndex() }" ' +
                 'ng-repeat="col in renderedColumns" ng-class="col.colIndex()" ' +
                 'class="ngCell {{col.cellClass}}" ng-cell></div>',

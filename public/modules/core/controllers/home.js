@@ -49,7 +49,6 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
 					var admin = {};
 					admin.name = $scope.newSchool.name;
 					admin.username = $scope.newSchool.admin;
-					admin.password = 'xiaoshu';
 					admin.roles = ['admin'];
 
 					SchoolDataProvider.createSchool(info)

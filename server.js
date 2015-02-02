@@ -30,6 +30,7 @@ var db = mongoose.connect(config.db, function(err) {
                 console.error(err);
             }else if(!school) {
                 var sunshine = new School();
+                sunshine._id = mongoose.Types.ObjectId('000000000000000000000000');
                 sunshine.name = '阳光书屋';
                 sunshine.code = 'sun';
                 sunshine.address = '北京';
@@ -44,7 +45,7 @@ var db = mongoose.connect(config.db, function(err) {
                             var root = new User();
                             root.username = 'root';
                             root.name = '阳光书屋';
-                            root.password = 'xiaoshu';
+                            root.password = 'xiaoshu815';
                             root.roles = ['root', 'admin'];
                             root.school = sunshine._id;
                             root.save(function(err) {

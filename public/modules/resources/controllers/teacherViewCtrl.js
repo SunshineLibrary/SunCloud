@@ -4,6 +4,7 @@ angular.module('resources')
         function (TeacherDataProvider, $scope, AuthService, RoomDataProvider, teacher) {
             $scope.teacher = teacher;
             $scope.isAdmin = $scope.teacher.roles.indexOf('admin') > -1;
+            $scope.isRoot = $scope.teacher.roles.indexOf('root') > -1;
             $scope.temp = {};
 
             RoomDataProvider.getRoomsByTeacher(teacher._id).then(function(rooms) {
@@ -51,6 +52,9 @@ angular.module('resources')
                 info.email = $scope.temp.newEmail;
                 if($scope.temp.isAdmin) {
                     info.roles = ['admin', 'teacher'];
+                    if(teacher.school._id.toString() === '000000000000000000000000') {
+                        info.roles.push('root');
+                    }
                 }else{
                     info.roles = ['teacher'];
                 }

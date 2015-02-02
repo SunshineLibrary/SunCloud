@@ -31,7 +31,7 @@ var UserSchema = new Schema({
 	},
 	password: {
 		type: String,
-		default: 'xiaoshu',
+		default: 'xiaoshu', //Fp5l67AEnrOpA88i8pzfD0abFMudc3v9DNPGT8WvITn/4ZvwKPv44Njn8udv65tyV9Atw86sfbeH22EjLe0u6A==
 		validate: [validateLocalStrategyPassword, '密码太短啦']
 	},
 	resetPassword: {
