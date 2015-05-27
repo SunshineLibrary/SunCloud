@@ -16,8 +16,8 @@ var init = require('./config/init')(),
 // Bootstrap db connection
 var db = mongoose.connect(config.db, function(err) {
 	if (err) {
-		console.error('\x1b[31m', 'Could not connect to MongoDB!');
-		console.log(err);
+        console.error(chalk.red('Could not connect to MongoDB!'));
+        console.log(chalk.red(err));
 	}else {
         /**
          * create SunshineLibrary root account if not exists
@@ -62,6 +62,11 @@ var db = mongoose.connect(config.db, function(err) {
     }
 });
 
+mongoose.connection.on('error', function(err) {
+        console.error(chalk.red('MongoDB connection error: ' + err));
+        process.exit(-1);
+    }
+);
 
 
 // Init the express application
@@ -74,11 +79,7 @@ require('./config/passport')();
 app.listen(config.port);
 
 // Expose app
-module.exports = app;
-
-// Logging initialization
-console.log('SunCloud application started on port ' + config.port);
-
+exports = module.exports = app;
 
 // Logging initialization
 console.log('--');
