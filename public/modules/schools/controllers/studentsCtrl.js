@@ -56,13 +56,13 @@ angular.module('schools')
                         if(err.code === 11000) {
                             var message = "用户名已存在，请修改后重试"
                         }
-                        swal({title: "创建失败", text: message, type: 'error'});
+                        sweetAlert({title: "创建失败", text: message, type: 'error'});
                     });
             };
 
             $scope.deleteStudent = function (event, row) {
                 event.stopPropagation();
-                swal({
+                sweetAlert({
                         title: "您确定要删除学生"+row.entity.name+"吗?",
                         text: "删除之后，该学生信息将无法找回",
                         type: "warning",
@@ -74,12 +74,12 @@ angular.module('schools')
                     function(){
                         StudentDataProvider.removeStudent(row.entity._id)
                             .success(function(student){
-                                swal({title: "删除成功", type: "success", timer: 1000 });
+                                sweetAlert({title: "删除成功", type: "success", timer: 1000 });
                                 $scope.students.splice($scope.students.indexOf(row.entity),1);
                             })
                             .error(function(err){
                                 console.error(err);
-                                swal({title: "删除失败", text: "", type: 'error'})
+                                sweetAlert({title: "删除失败", text: "", type: 'error'})
                             })
                     });
             };
@@ -106,12 +106,12 @@ angular.module('schools')
                         $scope.row.entity.username = editedStudent.username;
                         $scope.row.entity.school = info.school;
                         $('#editStudentDialog').modal('hide');
-                        swal({title: "修改成功", type: "success", timer: 1000 });
+                        sweetAlert({title: "修改成功", type: "success", timer: 1000 });
                     })
                     .error(function(err) {
                         console.error(err);
                         $scope.error = true;
-                        swal({title: "修改失败", text: "请重试", type: "error", timer: 2000 });
+                        sweetAlert({title: "修改失败", text: "请重试", type: "error", timer: 2000 });
                     })
             };
 

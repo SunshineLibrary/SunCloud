@@ -86,7 +86,7 @@ angular.module('myRooms').controller('myRoomController',
         };
 
         $scope.logout = function (row) {
-            swal({
+            sweetAlert({
                     title: "您确定要将学生"+row.entity.name+"登出晓书吗?",
                     type: "warning",
                     showCancelButton: true,
@@ -100,18 +100,18 @@ angular.module('myRooms').controller('myRoomController',
                             row.entity.tabletId = null;
                             row.entity.tablet = null;
                             row.entity.loginTime = null;
-                            swal({title: "登出成功", type: "success", timer: 1500 });
+                            sweetAlert({title: "登出成功", type: "success", timer: 1500 });
                         })
                         .error(function(err){
                             console.error(err);
-                            swal({title: "登出失败", text: "请重试", type: 'error', timer: 2000})
+                            sweetAlert({title: "登出失败", text: "请重试", type: 'error', timer: 2000})
                         });
                 });
 
         };
 
         $scope.disclaimRoom = function() {
-            swal({
+            sweetAlert({
                     title: "您确定要取消认领此班级吗?",
                     text: "取消认领之后，该班级将不会出现在您的班级列表中",
                     type: "warning",
@@ -124,16 +124,16 @@ angular.module('myRooms').controller('myRoomController',
                     RoomDataProvider.removeTeacherFromRoom(theRoom._id, me._id)
                         .success(function(disclaimedRoom) {
                             $rootScope.$broadcast('removeRoom', {id: disclaimedRoom._id});
-                            swal({title: "取消认领成功", type: 'success', timer: 1500});
+                            sweetAlert({title: "取消认领成功", type: 'success', timer: 1500});
                         }).error(function(err) {
                             console.error(err);
-                            swal({title: "取消认领失败", text: "请重试", type: 'error', timer: 1500});
+                            sweetAlert({title: "取消认领失败", text: "请重试", type: 'error', timer: 1500});
                         })
                 });
         };
 
         $scope.deleteRoom = function() {
-            swal({
+            sweetAlert({
                     title: "您确定要删除"+$scope.theRoom.name+"吗?",
                     text: "删除之后，该小组所有信息将无法找回",
                     type: "warning",
@@ -146,10 +146,10 @@ angular.module('myRooms').controller('myRoomController',
                     RoomDataProvider.deleteRoom(theRoom._id)
                         .success(function(deletedRoom) {
                             $rootScope.$broadcast('removeRoom', {id: deletedRoom._id});
-                            swal({title: "删除成功", type: 'success', timer: 1500});
+                            sweetAlert({title: "删除成功", type: 'success', timer: 1500});
                         }).error(function(err) {
                             console.error(err);
-                            swal({title: "删除失败", text: "请重试", type: 'error', timer: 1500});
+                            sweetAlert({title: "删除失败", text: "请重试", type: 'error', timer: 1500});
                         })
                     })
         };
@@ -162,7 +162,7 @@ angular.module('myRooms').controller('myRoomController',
                     $rootScope.$broadcast('roomNameChange', {id: room._id,name: room.name})
                 }).error(function(err){
                     console.error(err);
-                    swal({title: "修改失败", text: "请重试", type: 'error'})
+                    sweetAlert({title: "修改失败", text: "请重试", type: 'error'})
                 })
         };
 
@@ -190,16 +190,16 @@ angular.module('myRooms').controller('myRoomController',
         };
         $scope.addCode = function() {
             if(!$scope.newCode.trim().length){
-                swal({title: "请输入班级代号", type: "warning", timer: 1500});
+                sweetAlert({title: "请输入班级代号", type: "warning", timer: 1500});
             }else{
                 RoomDataProvider.editRoomCode(theRoom._id, $scope.newCode)
                     .success(function(newRoom){
                         $scope.theRoom.code = newRoom.code;
                         $scope.isAddingCode = false;
-                        swal({title: "添加成功", text: "班级代号为" + newRoom.code, type: "success", timer: 1500});
+                        sweetAlert({title: "添加成功", text: "班级代号为" + newRoom.code, type: "success", timer: 1500});
                     }).error(function(err){
                         console.error(err);
-                        swal({title: "添加失败", text: "请重试", type: "error", timer: 2000});
+                        sweetAlert({title: "添加失败", text: "请重试", type: "error", timer: 2000});
                     })
             }
         };
@@ -212,7 +212,7 @@ angular.module('myRooms').controller('myRoomController',
             StudentDataProvider.createStudent(info)
                 .success(function(newStudent) {
                     $scope.newStudent = null;
-                    swal({title: "创建成功", type: 'success', timer: 1000});
+                    sweetAlert({title: "创建成功", type: 'success', timer: 1000});
                     $scope.studentsNotInRoom.push(newStudent);
                     $scope.selectedStudents.push(newStudent);
                     $scope.isCreatingStudent = false;
@@ -222,7 +222,7 @@ angular.module('myRooms').controller('myRoomController',
                     if(err.code === 11000) {
                         var message = "用户名已存在，请修改后重试"
                     }
-                    swal({title: "创建失败", text: message, type: 'error', timer: 2000});
+                    sweetAlert({title: "创建失败", text: message, type: 'error', timer: 2000});
                 }
             );
         };
@@ -240,12 +240,12 @@ angular.module('myRooms').controller('myRoomController',
                     RoomDataProvider.addStudentsToRoom($scope.theRoom._id, [newStudent._id])
                         .then(function() {
                             $scope.students.push(newStudent);
-                            swal({title: "创建并添加学生成功", type: 'success', timer: 1500});
+                            sweetAlert({title: "创建并添加学生成功", type: 'success', timer: 1500});
                             $('#createStudentDialog').modal('hide');
                         }, function(err) {
                             console.error(err);
                             $('#createStudentDialog').modal('hide');
-                            swal({title: "创建学生成功,添加学生到班级失败", text: '请从所有学生列表中添加', type: 'warning', timer: 1500});
+                            sweetAlert({title: "创建学生成功,添加学生到班级失败", text: '请从所有学生列表中添加', type: 'warning', timer: 1500});
                             $scope.toAddStudents();
                         });
                 })
@@ -254,7 +254,7 @@ angular.module('myRooms').controller('myRoomController',
                     if(err.code === 11000) {
                         var message = "用户名已存在，请修改后重试"
                     }
-                    swal({title: "创建失败", text: message, type: 'error', timer: 2000});
+                    sweetAlert({title: "创建失败", text: message, type: 'error', timer: 2000});
                 }
             );
         };
@@ -319,13 +319,13 @@ angular.module('myRooms').controller('myRoomController',
                         $scope.students = $scope.students.concat($scope.selectedStudents);
                         $scope.gridOptions2.selectAll(false);
                         $rootScope.$broadcast('changeStudents', {id: $scope.theRoom._id,studentsNum:$scope.students.length});
-                        swal({title: "添加成功", type: "success", timer: 1000});
+                        sweetAlert({title: "添加成功", type: "success", timer: 1000});
                     }).error(function(err) {
                         console.log(err);
-                        swal({title: "添加失败", text: "请重试", type: "error",timer: 2000});
+                        sweetAlert({title: "添加失败", text: "请重试", type: "error",timer: 2000});
                     });
             }else {
-                swal({title: "您还没有选择任何学生", type: "warning", timer: 2000});
+                sweetAlert({title: "您还没有选择任何学生", type: "warning", timer: 2000});
             }
         };
 
@@ -352,18 +352,18 @@ angular.module('myRooms').controller('myRoomController',
                         });
                         $scope.students = $scope.students.concat(selectedStudents);
                         $rootScope.$broadcast('changeStudents', {id: $scope.theRoom._id,studentsNum:$scope.students.length});
-                        swal({title: "添加成功", type: "success", timer: 1500});
+                        sweetAlert({title: "添加成功", type: "success", timer: 1500});
                     }).error(function(err) {
                         console.log(err);
-                        swal({title: "添加失败", text: "请重试", type: "error",timer: 2000});
+                        sweetAlert({title: "添加失败", text: "请重试", type: "error",timer: 2000});
                     });
             }else {
-                swal({title: "您还没有选择任何学生", type: "warning", timer: 2000});
+                sweetAlert({title: "您还没有选择任何学生", type: "warning", timer: 2000});
             }
         };
 
         $scope.removeStudentFromRoom = function(row) {
-            swal({
+            sweetAlert({
                     title: "您确定要将"+row.entity.name+"移出班级吗?",
                     type: "warning",
                     showCancelButton: true,
@@ -377,11 +377,11 @@ angular.module('myRooms').controller('myRoomController',
                             $scope.students = _.reject($scope.students, function(student) {
                                 return student._id === row.entity._id;
                             });
-                            swal({title: "移出成功", type: 'success', timer: 1500});
+                            sweetAlert({title: "移出成功", type: 'success', timer: 1500});
                             $rootScope.$broadcast('changeStudents', {id: $scope.theRoom._id,studentsNum:$scope.students.length});
                         }).error(function(err) {
                             console.error(err);
-                            swal({title: "移出失败", text: "请重试", type: 'error', timer: 1500});
+                            sweetAlert({title: "移出失败", text: "请重试", type: 'error', timer: 1500});
                         });
                 })
 
@@ -406,12 +406,12 @@ angular.module('myRooms').controller('myRoomController',
                     $scope.row.entity.username = editedStudent.username;
                     $scope.row.entity.birthday = editedStudent.birthday;
                     $('#editStudentDialog').modal('hide');
-                    swal({title: "修改成功", type: "success", timer: 1000 });
+                    sweetAlert({title: "修改成功", type: "success", timer: 1000 });
                 })
                 .error(function(err) {
                     console.error(err);
                     $scope.error = true;
-                    swal({title: "修改失败", text: "请重试", type: "error", timer: 2000 });
+                    sweetAlert({title: "修改失败", text: "请重试", type: "error", timer: 2000 });
                 })
         };
 
@@ -428,7 +428,7 @@ angular.module('myRooms').controller('myRoomController',
             StudentDataProvider.manualCreateAddStudents(me.school, $scope.theRoom._id, newStudents)
                 .success(function(newStudents) {
                     $scope.newStudentsList = null;
-                    swal({title: '批量创建并添加学生成功', type: 'success', timer: 2000});
+                    sweetAlert({title: '批量创建并添加学生成功', type: 'success', timer: 2000});
                     $scope.students = $scope.students.concat(newStudents);
                     $('#addStudentsBatchDialog').modal('hide');
                     $scope.temp.manualCreateError = false;
@@ -443,9 +443,9 @@ angular.module('myRooms').controller('myRoomController',
                         });
                         $scope.newStudentsList = errorList;
                         $scope.temp.manualCreateError = true;
-                        swal({title: '以下学生创建失败，请重试',text: errorList, type: 'error'});
+                        sweetAlert({title: '以下学生创建失败，请重试',text: errorList, type: 'error'});
                     }else if(status === 500) {
-                        swal({title: '服务器内部错误', text: '请重试', type: 'error'});
+                        sweetAlert({title: '服务器内部错误', text: '请重试', type: 'error'});
                         $scope.newStudentsList = null;
                         $('#addStudentsBatchDialog').modal('hide');
                     }
@@ -463,7 +463,7 @@ angular.module('myRooms').controller('myRoomController',
             StudentDataProvider.autoCreateAddStudents(me.school, $scope.theRoom._id, names)
                 .success(function(newStudents) {
                     $scope.newNamesList = null;
-                    swal({title: '批量创建并添加学生成功', type: 'success', timer: 2000});
+                    sweetAlert({title: '批量创建并添加学生成功', type: 'success', timer: 2000});
                     $scope.students = $scope.students.concat(newStudents);
                     $('#addStudentsBatchDialog').modal('hide');
                     $scope.temp.autoCreateError = false;
@@ -477,9 +477,9 @@ angular.module('myRooms').controller('myRoomController',
                         });
                         $scope.newNamesList = errorList;
                         $scope.temp.autoCreateError = true;
-                        swal({title: '批量创建学生失败',text: errorList, type: 'error', timer: 2000});
+                        sweetAlert({title: '批量创建学生失败',text: errorList, type: 'error', timer: 2000});
                     }else if(status === 500) {
-                        swal({title: '添加学生到该班级失败', text: '请从学生列表中添加', type: 'error', timer: 1500});
+                        sweetAlert({title: '添加学生到该班级失败', text: '请从学生列表中添加', type: 'error', timer: 1500});
                         $scope.newNamesList = null;
                         $('#addStudentsBatchDialog').modal('hide');
                     }

@@ -15,7 +15,7 @@
 	"scripts": {
 		"start": "grunt",
 		"test": "grunt test",
-		"postinstall": "bower install --config.interactive=false"
+		"postinstall": "bower install"
 	},
 	"dependencies": {
 		"express": "~4.10.1",
@@ -48,7 +48,7 @@
 	  	"multer": "~0.1.6",
 	  	"q": "~1.1.2",
 	  	"chalk": "~1.0.0",
-	   "sendmail": ""
+	  	"sendmail": ""
 	},
 	"devDependencies": {
 		"supertest": "~0.14.0",

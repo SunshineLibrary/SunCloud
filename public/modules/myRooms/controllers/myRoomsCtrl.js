@@ -103,11 +103,11 @@ angular.module('myRooms')
                     $scope.rooms.push(newRoom);
                     $scope.newRoomName = '';
                     $('#createRoomDialog').modal('hide');
-                    swal({title: "创建成功", type: "success", timer: 1500});
+                    sweetAlert({title: "创建成功", type: "success", timer: 1500});
                     $location.path('/myrooms/' + newRoom._id);
                 }).error(function(err){
                     console.error(err);
-                    swal({title: "创建失败", text: "请重试", type: "error", timer: 1500});
+                    sweetAlert({title: "创建失败", text: "请重试", type: "error", timer: 1500});
                 });
             };
 
@@ -116,12 +116,12 @@ angular.module('myRooms')
                     .success(function(newRoom){
                         $scope.rooms.push(newRoom);
                         $('#claimRoomDialog').modal('hide');
-                        swal({title: "认领成功", type: "success", timer: 1500});
+                        sweetAlert({title: "认领成功", type: "success", timer: 1500});
                         $location.path('/myrooms/' + newRoom._id);
                     })
                     .error(function(err){
                         console.error(err);
-                        swal({title: "认领失败", text: "请重试", type: "error", timer: 1500});
+                        sweetAlert({title: "认领失败", text: "请重试", type: "error", timer: 1500});
                     })
             };
 

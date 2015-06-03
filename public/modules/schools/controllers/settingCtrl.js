@@ -18,9 +18,9 @@ angular.module('schools')
                     .error(function(err) {
                         console.error(err);
                         if(err.code === 11000 || err.code === 11001) {
-                            swal({title: '科目名'+ $scope.tmp.subject +'已存在', type: 'error'})
+                            sweetAlert({title: '科目名'+ $scope.tmp.subject +'已存在', type: 'error'})
                         }else {
-                            swal({title: '服务器错误', text: '请重试', type: 'error'})
+                            sweetAlert({title: '服务器错误', text: '请重试', type: 'error'})
                         }
                     })
             };
@@ -34,9 +34,9 @@ angular.module('schools')
                     .error(function(err) {
                         console.error(err);
                         if(err.code === 11000 || err.code === 11001) {
-                            swal({title: '年级名'+ $scope.tmp.semester +'已存在', type: 'error'})
+                            sweetAlert({title: '年级名'+ $scope.tmp.semester +'已存在', type: 'error'})
                         }else {
-                            swal({title: '服务器错误', text: '请重试', type: 'error'})
+                            sweetAlert({title: '服务器错误', text: '请重试', type: 'error'})
                         }
                     })
             };
@@ -54,7 +54,7 @@ angular.module('schools')
                 return SemesterDataProvider.editSemester({name: name, _id: id});
             };
             $scope.removeSubject = function(subject) {
-                swal({
+                sweetAlert({
                         title: "删除科目",
                         text: "您确定要删除科目"+subject.name+"吗?",
                         type: "warning",
@@ -66,19 +66,19 @@ angular.module('schools')
                     function(){
                         SubjectDataProvider.deleteSubject(subject._id)
                             .success(function() {
-                                swal({title: "删除成功", type: "success", timer: 1000 });
+                                sweetAlert({title: "删除成功", type: "success", timer: 1000 });
                                 $scope.subjects.splice($scope.subjects.indexOf(subject),1);
                             })
                             .error(function(err) {
                                 console.error(err);
-                                swal({title: "删除失败", text: "", type: 'error'})
+                                sweetAlert({title: "删除失败", text: "", type: 'error'})
 
                             })
                     });
 
             };
             $scope.removeSemester = function(semester) {
-                swal({
+                sweetAlert({
                         title: "删除年级",
                         text: "您确定要删除年级"+semester.name+"吗?",
                         type: "warning",
@@ -90,12 +90,12 @@ angular.module('schools')
                     function(){
                         SemesterDataProvider.deleteSemester(semester._id)
                             .success(function() {
-                                swal({title: "删除成功", type: "success", timer: 1000 });
+                                sweetAlert({title: "删除成功", type: "success", timer: 1000 });
                                 $scope.semesters.splice($scope.semesters.indexOf(semester),1);
                             })
                             .error(function(err) {
                                 console.error(err);
-                                swal({title: "删除失败", text: "", type: 'error'})
+                                sweetAlert({title: "删除失败", text: "", type: 'error'})
 
                             })
                     });

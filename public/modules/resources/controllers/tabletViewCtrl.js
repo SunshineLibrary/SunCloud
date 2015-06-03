@@ -17,7 +17,7 @@ angular.module('resources')
             });
 
             $scope.logout = function () {
-                swal({
+                sweetAlert({
                         title: "登出晓书",
                         text: "您确定要将"+$scope.user.name+"登出晓书吗?",
                         type: "warning",
@@ -30,11 +30,11 @@ angular.module('resources')
                         TabletDataProvider.logout($scope.user._id, $scope.tablet._id)
                             .success(function(record){
                                 $scope.user = null;
-                                swal({title: "登出成功", type: "success", timer: 1500 });
+                                sweetAlert({title: "登出成功", type: "success", timer: 1500 });
                             })
                             .error(function(err){
                                 console.error(err);
-                                swal({title: "登出失败", text: "请重试", type: 'error', timer: 2000})
+                                sweetAlert({title: "登出失败", text: "请重试", type: 'error', timer: 2000})
                             });
                     });
 

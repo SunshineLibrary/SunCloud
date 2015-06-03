@@ -27,10 +27,10 @@ angular.module('schoolManage')
                     .success(function(newSchool) {
                         $scope.school.launcherPassword = newSchool.launcherPassword;
                         $scope.isResettingPassword = false;
-                        swal({title: "重置密码成功", type: "success", timer: 1500});
+                        sweetAlert({title: "重置密码成功", type: "success", timer: 1500});
                     }).error(function(err) {
                         console.error(err);
-                        swal({title: "重置密码失败", text:"请重试", type: "error", timer: 2000});
+                        sweetAlert({title: "重置密码失败", text:"请重试", type: "error", timer: 2000});
                     })
             };
 
@@ -88,10 +88,10 @@ angular.module('schoolManage')
                         })
                 }, function(err) {
                     if(err) {
-                        swal({title: "修改权限失败", text: "请重试", type: "error", timer: 2000 });
+                        sweetAlert({title: "修改权限失败", text: "请重试", type: "error", timer: 2000 });
                     }else {
                         $('#whoCanCreateAppDialog').modal('hide');
-                        swal({title: "修改权限成功", type: "success", timer: 1500});
+                        sweetAlert({title: "修改权限成功", type: "success", timer: 1500});
                     }
                 })
             };

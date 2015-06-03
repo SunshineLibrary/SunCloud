@@ -66,7 +66,7 @@ angular.module('sunpack')
                 })
                 .error(function(err) {
                     console.error(err);
-                    swal({title: "添加科目失败", text: "请重试", type: "error", timer: 2000});
+                    sweetAlert({title: "添加科目失败", text: "请重试", type: "error", timer: 2000});
                 })
         };
 
@@ -77,7 +77,7 @@ angular.module('sunpack')
 
 
             $scope.removeSubject = function(subject) {
-                swal({
+                sweetAlert({
                         title: "您确定要移除"+subject.name+"吗?",
                         text: "移除之后，该科目下的文件夹也将会删除",
                         type: "warning",
@@ -92,11 +92,11 @@ angular.module('sunpack')
                                 $scope.mySubjects.splice($scope.mySubjects.indexOf(subject), 1);
                                 $scope.subjectsNotIn.push(subject);
                                 console.log('success');
-                                swal({title: "移除科目成功", type: "success", timer: 1500});
+                                sweetAlert({title: "移除科目成功", type: "success", timer: 1500});
                             })
                             .error(function(err) {
                                 console.error(err);
-                                swal({title: "移除科目失败", text: "请重试", type: "error", timer: 2000});
+                                sweetAlert({title: "移除科目失败", text: "请重试", type: "error", timer: 2000});
                             })
                     });
 

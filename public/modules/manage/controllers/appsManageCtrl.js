@@ -68,7 +68,7 @@ angular.module('manage')
                 };
 
                 $scope.addAppToRoom = function(app) {
-                    swal({
+                    sweetAlert({
                             title: "添加应用程序",
                             text: "您确定要将"+app.name+"添加到班级"+$scope.selectedRoom.name+ "吗?",
                             type: "warning",
@@ -86,11 +86,11 @@ angular.module('manage')
                                     });
                                     var theApp = _.findWhere($scope.apps, {_id: app._id});
                                     theApp.room.push($scope.selectedRoom.name);
-                                    swal({title: "添加成功", type: "success", timer: 1000 });
+                                    sweetAlert({title: "添加成功", type: "success", timer: 1000 });
                                 })
                                 .error(function(err){
                                     console.error(err);
-                                    swal({title: "添加失败", text: "请重试", type: 'error', timer: 1000})
+                                    sweetAlert({title: "添加失败", text: "请重试", type: 'error', timer: 1000})
 
                                 });
                         });
@@ -98,7 +98,7 @@ angular.module('manage')
                 };
 
                 $scope.removeAppFromRoom = function(app) {
-                    swal({
+                    sweetAlert({
                             title: "移除应用程序",
                             text: "您确定要将"+app.name+"从班级"+$scope.selectedRoom.name+ "中移除吗?",
                             type: "warning",
@@ -115,11 +115,11 @@ angular.module('manage')
                                     $scope.otherApps.push(app);
                                     var theApp = _.findWhere($scope.apps, {_id: app._id});
                                     theApp.room = _.without(theApp.room, $scope.selectedRoom.name);
-                                    swal({title: "移除成功", type: "success", timer: 1000 });
+                                    sweetAlert({title: "移除成功", type: "success", timer: 1000 });
                                 })
                                 .error(function(err){
                                     console.error(err);
-                                    swal({title: "移除失败", text: "请重试", type: 'error', timer: 1000})
+                                    sweetAlert({title: "移除失败", text: "请重试", type: 'error', timer: 1000})
                                 });
                         });
 
@@ -194,7 +194,7 @@ angular.module('manage')
 
             $scope.deleteApp = function (event, row) {
                 event.stopPropagation();
-                swal({
+                sweetAlert({
                         title: "您确定要删除此应用程序吗?",
                         type: "warning",
                         showCancelButton: true,
@@ -205,12 +205,12 @@ angular.module('manage')
                     function(){
                         AppDataProvider.deleteApp(row.entity._id)
                             .success(function(app){
-                                swal({title: "删除成功", type: "success", timer: 1000 });
+                                sweetAlert({title: "删除成功", type: "success", timer: 1000 });
                                 $scope.apps.splice($scope.apps.indexOf(row.entity),1);
                             })
                             .error(function(err){
                                 console.error(err);
-                                swal({title: "删除失败", text: "请重试", type: 'error', timer: 1000})
+                                sweetAlert({title: "删除失败", text: "请重试", type: 'error', timer: 1000})
 
                             })
                     });

@@ -72,7 +72,7 @@ angular.module('resources')
                     console.log('changed success');
                 })
                     .error(function(err) {
-                        swal({title: '修改失败', text: '请重试', timer: 2000 });
+                        sweetAlert({title: '修改失败', text: '请重试', timer: 2000 });
                     console.error(err);
                 });
             };
@@ -138,7 +138,7 @@ angular.module('resources')
                         console.log('success response:');
                         console.log(res);
                         $('#assignAppDialog').modal('hide');
-                        swal({title:"分配成功", type: "success", timer: 1000});
+                        sweetAlert({title:"分配成功", type: "success", timer: 1000});
                         $scope.myRoomsAssigned = _.filter($scope.myRooms, function(myRoom) {
                             return myRoom.assigned;
                         });
@@ -150,7 +150,7 @@ angular.module('resources')
                     .error(function(err){
                         console.log('fail response');
                         console.error(err);
-                        swal({title:"分配失败", text: "请重试", type: "error", timer: 2000})
+                        sweetAlert({title:"分配失败", text: "请重试", type: "error", timer: 2000})
                     })
             };
 
@@ -163,7 +163,7 @@ angular.module('resources')
                         $scope.app.name = app.name;
                     }).error(function(err){
                         console.error(err);
-                        swal({title: "修改失败", text: "请重试", type: 'error'})
+                        sweetAlert({title: "修改失败", text: "请重试", type: 'error'})
                     })
             };
 
@@ -176,9 +176,9 @@ angular.module('resources')
             $scope.uploader.onSuccessItem = function(item, response, status) {
                 $('#uploadApkDialog').modal('hide');
                 if(status === 201) {
-                    swal({title: " 上传成功",text: "您之前已上传过此版本的APK文件，新上传文件已覆盖之前文件",type: 'success', timer: 4000});
+                    sweetAlert({title: " 上传成功",text: "您之前已上传过此版本的APK文件，新上传文件已覆盖之前文件",type: 'success', timer: 4000});
                 }else if(status === 200) {
-                    swal({title: " 上传成功",type: 'success', timer: 2000});
+                    sweetAlert({title: " 上传成功",type: 'success', timer: 2000});
                     $scope.app.apks.push(response);
                 }
                 $scope.uploader.clearQueue();
@@ -187,7 +187,7 @@ angular.module('resources')
             };
 
             $scope.uploader.onErrorItem = function(item, response, status) {
-                swal({title: " 上传失败", text: response.message,type: 'error'});
+                sweetAlert({title: " 上传失败", text: response.message,type: 'error'});
                 if (status == 406) {
                     $scope.error.package = true;
                     //$scope.uploader.clearQueue();
@@ -241,7 +241,7 @@ angular.module('resources')
 
 
             $scope.deleteApk = function (row) {
-                swal({
+                sweetAlert({
                         title: "您确定要删除此安装包吗?",
                         type: "warning",
                         showCancelButton: true,
@@ -252,12 +252,12 @@ angular.module('resources')
                     function(){
                         AppDataProvider.deleteApk($scope.app, row.entity._id)
                             .success(function(app){
-                                swal({title: "删除成功", type: "success", timer: 1000 });
+                                sweetAlert({title: "删除成功", type: "success", timer: 1000 });
                                 $scope.app = app;
                             })
                             .error(function(err){
                                 console.error(err);
-                                swal({title: "删除失败", text: "请重试", type: 'error', timer: 1500})
+                                sweetAlert({title: "删除失败", text: "请重试", type: 'error', timer: 1500})
                             })
                     });
             };

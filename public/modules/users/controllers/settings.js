@@ -40,10 +40,10 @@ angular.module('users').controller('SettingsController', ['$scope', '$http', '$l
 					$scope.success = true;
 					Authentication.user = response;
 					$('#editProfileDialog').modal('hide');
-					swal({title: "修改个人资料成功", type: "success", timer: 1500 });
+					sweetAlert({title: "修改个人资料成功", type: "success", timer: 1500 });
 				}, function(response) {
 					$scope.error = response.data.message;
-					swal({title: "修改失败，请重试", text: $scope.error,type: "error"});
+					sweetAlert({title: "修改失败，请重试", text: $scope.error,type: "error"});
 				});
 			} else {
 				$scope.submitted = true;
@@ -63,10 +63,10 @@ angular.module('users').controller('SettingsController', ['$scope', '$http', '$l
 				$scope.user.resetPassword = true;
 				$scope.passwordDetails = null;
 				$('#resetPasswordDialog').modal('hide');
-				swal({title: "修改密码成功", type: "success", timer: 1500 });
+				sweetAlert({title: "修改密码成功", type: "success", timer: 1500 });
 			}).error(function(response) {
 				$scope.error = response.message;
-				swal({title: "修改失败，请重试", text: $scope.error,type: "error"});
+				sweetAlert({title: "修改失败，请重试", text: $scope.error,type: "error"});
 			});
 		};
 
@@ -75,11 +75,11 @@ angular.module('users').controller('SettingsController', ['$scope', '$http', '$l
 				.success(function(newRoom){
 					$scope.myRooms.push(newRoom);
 					$('#claimRoomDialog').modal('hide');
-					swal({title: "认领成功", type: "success", timer: 1500});
+					sweetAlert({title: "认领成功", type: "success", timer: 1500});
 				})
 				.error(function(err){
 					console.error(err);
-					swal({title: "认领失败", text: "请重试", type: "error", timer: 1500});
+					sweetAlert({title: "认领失败", text: "请重试", type: "error", timer: 1500});
 				})
 		};
 		// Focus state for append/prepend inputs

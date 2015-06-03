@@ -44,14 +44,14 @@ angular.module('sunpack')
                         folder.semester = $scope.newFolder.semester;
                         $scope.folders = $scope.folders.concat(folder);
                         $scope.newFolder = undefined;
-                        swal({title: '创建文件夹成功', type: 'success', timer: 1500});
+                        sweetAlert({title: '创建文件夹成功', type: 'success', timer: 1500});
                         $('#createFolderDialog').modal('hide');
                         $rootScope.$broadcast('createFolder', {subjectId: subject._id});
 
                     })
                     .error(function(err) {
                         console.error(err);
-                        swal({title: '创建文件夹失败', text: '请重试', type: 'error', timer: 2000});
+                        sweetAlert({title: '创建文件夹失败', text: '请重试', type: 'error', timer: 2000});
 
                     })
             };
@@ -78,12 +78,12 @@ angular.module('sunpack')
                             $scope.row.entity.name = editedFolder.name;
                             $scope.row.entity.updated_at = editedFolder.updated_at;
                             $('#editFolderDialog').modal('hide');
-                            swal({title: "修改成功", type: "success", timer: 1000 });
+                            sweetAlert({title: "修改成功", type: "success", timer: 1000 });
                         })
                         .error(function(err) {
                             console.error(err);
                             $scope.error = true;
-                            swal({title: "修改失败", text: "请重试", type: "error", timer: 2000 });
+                            sweetAlert({title: "修改失败", text: "请重试", type: "error", timer: 2000 });
                         })
                 }else {
                     FolderDataProvider.editFolderNameAndSemester(info)
@@ -92,12 +92,12 @@ angular.module('sunpack')
                             $scope.row.entity.semester = $scope.temp.newSemester;
                             $scope.row.entity.updated_at = editedFolder.updated_at;
                             $('#editFolderDialog').modal('hide');
-                            swal({title: "修改成功", type: "success", timer: 1000 });
+                            sweetAlert({title: "修改成功", type: "success", timer: 1000 });
                         })
                         .error(function(err) {
                             console.error(err);
                             $scope.error = true;
-                            swal({title: "修改失败", text: err, type: "error", timer: 2000 });
+                            sweetAlert({title: "修改失败", text: err, type: "error", timer: 2000 });
                         })
                 }
             };
@@ -105,7 +105,7 @@ angular.module('sunpack')
 
             $scope.deleteFolder = function (event, row) {
                 event.stopPropagation();
-                swal({
+                sweetAlert({
                         title: "您确定要删除"+row.entity.name+"吗?",
                         text: "删除之后，文件夹内所有文件也会一起删除",
                         type: "warning",
@@ -117,13 +117,13 @@ angular.module('sunpack')
                     function(){
                         FolderDataProvider.deleteFolder(row.entity._id)
                             .success(function(folder){
-                                swal({title: "删除成功", type: "success", timer: 1000 });
+                                sweetAlert({title: "删除成功", type: "success", timer: 1000 });
                                 $scope.folders.splice($scope.folders.indexOf(row.entity),1);
                                 $rootScope.$broadcast('deleteFolder', {subjectId: subject._id});
                             })
                             .error(function(err){
                                 console.error(err);
-                                swal({title: "删除失败", text: "请重试", type: 'error'})
+                                sweetAlert({title: "删除失败", text: "请重试", type: 'error'})
 
                             })
                     });

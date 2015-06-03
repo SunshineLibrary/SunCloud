@@ -12,7 +12,7 @@ angular.module('resources')
             });
 
             $scope.resetPassword = function() {
-                swal({
+                sweetAlert({
                         title: "重置密码",
                         text: teacher.name + "的密码将被重置为原始密码 xiaoshu",
                         type: "warning",
@@ -24,11 +24,11 @@ angular.module('resources')
                     function(){
                         TeacherDataProvider.resetPassword(teacher._id)
                             .success(function(){
-                                swal({title: "重置密码成功", type: "success", timer: 1000 });
+                                sweetAlert({title: "重置密码成功", type: "success", timer: 1000 });
                             })
                             .error(function(err){
                                 console.error(err);
-                                swal({title: "重置失败", text: "请重试", type: 'error'})
+                                sweetAlert({title: "重置失败", text: "请重试", type: 'error'})
                             })
                     });
 
@@ -66,12 +66,12 @@ angular.module('resources')
                         $scope.teacher.email = editedTeacher.email;
                         $scope.teacher.roles = editedTeacher.roles;
                         $('#editTeacherDialog').modal('hide');
-                        swal({title: "修改成功", type: "success", timer: 1000 });
+                        sweetAlert({title: "修改成功", type: "success", timer: 1000 });
                     })
                     .error(function(err) {
                         console.error(err);
                         $scope.error = true;
-                        swal({title: "修改失败", text: "请重试", type: "error", timer: 2000 });
+                        sweetAlert({title: "修改失败", text: "请重试", type: "error", timer: 2000 });
                     })
             };
             // Focus state for append/prepend inputs

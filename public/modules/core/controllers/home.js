@@ -25,17 +25,16 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
 					$scope.user.resetPassword = true;
 					$scope.passwordDetails = null;
 					$('#resetPasswordDialog').modal('hide');
-					swal({title: "修改密码成功", type: "success", timer: 1500 });
+					sweetAlert({title: "修改密码成功", type: "success", timer: 1500 });
 				}).error(function(response) {
 					$scope.error = response.message;
-					swal({title: "修改失败，请重试", text: $scope.error,type: "error"});
+					sweetAlert({title: "修改失败，请重试", text: $scope.error,type: "error"});
 				});
 			};
 
 			if($scope.isRoot) {
 				RootDataProvider.getAllSchools().then(function(schools) {
 					$scope.schools = schools;
-					console.log(schools);
 				});
 
 				$scope.createSchool = function () {
@@ -53,14 +52,13 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
 
 					SchoolDataProvider.createSchool(info)
 						.success(function(school){
-							console.log(school);
 							$scope.schools.push(school);
 							$scope.newSchool = {};
 							$('#createSchoolDialog').modal('hide');
 							admin.school = school._id;
 							TeacherDataProvider.createTeacher(admin)
 								.success(function(newUser) {
-									swal({
+									sweetAlert({
 										title: "创建学校成功",
 										text: "学校管理员用户名为"+newUser.username+"\n默认密码为xiaoshu",
 										type: "success",
@@ -68,8 +66,8 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
 										confirmButtonText: "确定",
 										closeOnConfirm: false })
 								}).error(function(err){
-									console.log(err);
-									swal({
+									console.error(err);
+									sweetAlert({
 										title: "创建学校成功",
 										text: "创建学校管理员账号失败，可能由于用户名已存在\n请去学校页面或修改学校中添加管理员",
 										type: "warning",
@@ -80,7 +78,7 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
 
 						}).error(function(err){
 							console.error(err);
-							swal('创建失败','请重试','error');
+							sweetAlert('创建失败','请重试','error');
 						});
 				};
 
@@ -110,12 +108,12 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
 							$scope.schools[index].serverUrl = editedSchool.serverUrl;
 							$scope.schools[index].serverIP = editedSchool.serverIP;
 							$('#editSchoolDialog').modal('hide');
-							swal({title: "修改成功", type: "success", timer: 1000 });
+							sweetAlert({title: "修改成功", type: "success", timer: 1000 });
 						})
 						.error(function(err) {
 							console.error(err);
 							$scope.error = true;
-							swal({title: "修改失败", text: "请重试", type: "error", timer: 2000 });
+							sweetAlert({title: "修改失败", text: "请重试", type: "error", timer: 2000 });
 						})
 				};
 			}

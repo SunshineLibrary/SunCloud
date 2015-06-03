@@ -128,18 +128,18 @@ angular.module('sunpack')
                     //    return selectedFolderIds.indexOf(folder._id) > -1;
                     //});
                     $('#addFoldersDialog').modal('hide');
-                    swal({title: '添加成功', type: 'success', timer: 1500});
+                    sweetAlert({title: '添加成功', type: 'success', timer: 1500});
                     $rootScope.$broadcast('addFoldersToRoom', {roomId: newRoom._id, num: selectedFolders.length});
                 })
                 .error(function(err) {
                     console.error(err);
-                    swal({title: '添加失败', text: '请重试', type: 'error', timer: 2000});
+                    sweetAlert({title: '添加失败', text: '请重试', type: 'error', timer: 2000});
                 });
         };
 
         $scope.removeFolderFromRoom = function(event, row) {
             event.stopPropagation();
-            swal({
+            sweetAlert({
                     title: "移出文件夹",
                     text: "您确定要将文件夹 "+row.entity.name+" 移出班级吗?\n 移出之后，该文件夹不会被删除",
                     type: "warning",
@@ -152,13 +152,13 @@ angular.module('sunpack')
                     RoomDataProvider.removeFolderFromRoom($scope.myRoom._id, row.entity._id)
                         .success(function(newRoom) {
                             $scope.myRoom = newRoom;
-                            swal({title: "移出成功", type: "success", timer: 1000 });
+                            sweetAlert({title: "移出成功", type: "success", timer: 1000 });
                             $scope.folders.splice($scope.folders.indexOf(row.entity),1);
                             $rootScope.$broadcast('removeFolderFromRoom', {roomId: newRoom._id});
                         })
                         .error(function(err) {
                             console.error(err);
-                            swal({title: "移出失败", text: "请重试", type: 'error'})
+                            sweetAlert({title: "移出失败", text: "请重试", type: 'error'})
 
                         });
                 });

@@ -62,7 +62,7 @@ angular.module('schools')
 
             $scope.deleteApp = function (event, row) {
                 event.stopPropagation();
-                swal({
+                sweetAlert({
                         title: "您确定要删除此应用程序吗?",
                         text: "删除之后，该应用程序所有信息将无法找回。",
                         type: "warning",
@@ -74,12 +74,12 @@ angular.module('schools')
                     function(){
                         AppDataProvider.deleteApp(row.entity._id)
                             .success(function(app){
-                                swal({title: "删除成功", type: "success", timer: 1000 });
+                                sweetAlert({title: "删除成功", type: "success", timer: 1000 });
                                 $scope.apps.splice($scope.apps.indexOf(row.entity),1);
                             })
                             .error(function(err){
                                 console.error(err);
-                                swal({title: "删除失败", text: "请重试", type: 'error', timer: 1000})
+                                sweetAlert({title: "删除失败", text: "请重试", type: 'error', timer: 1000})
 
                             })
                     });

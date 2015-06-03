@@ -105,11 +105,11 @@ angular.module('sunpack')
                 FolderDataProvider.addFileToFolder($scope.selectedFolder, $scope.file._id)
                     .success(function(editedFolder) {
                         $('#addToMyFolderDialog').modal('hide');
-                        swal({title: '文件已成功添加至您的文件夹', type: 'success', timer: 1500});
+                        sweetAlert({title: '文件已成功添加至您的文件夹', type: 'success', timer: 1500});
                 })
                     .error(function(err) {
                         console.error(err);
-                        swal({title: '添加文件失败', text: '请重试', type: 'error', timer: 2000});
+                        sweetAlert({title: '添加文件失败', text: '请重试', type: 'error', timer: 2000});
                     })
             };
 

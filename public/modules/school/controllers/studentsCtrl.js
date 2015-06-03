@@ -74,19 +74,19 @@ angular.module('schoolManage')
                         $scope.row.entity.username = editedStudent.username;
                         $scope.row.entity.birthday = editedStudent.birthday;
                         $('#editStudentDialog').modal('hide');
-                        swal({title: "修改成功", type: "success", timer: 1000 });
+                        sweetAlert({title: "修改成功", type: "success", timer: 1000 });
                         $scope.error = false;
                     })
                     .error(function(err) {
                         console.error(err);
                         $scope.error = true;
-                        swal({title: "修改失败", text: "请重试", type: "error", timer: 2000 });
+                        sweetAlert({title: "修改失败", text: "请重试", type: "error", timer: 2000 });
                     })
             };
 
             $scope.removeStudent = function (event, row) {
                 event.stopPropagation();
-                swal({
+                sweetAlert({
                         title: "您确定要删除学生"+row.entity.name+"吗?",
                         text: "删除之后，该学生信息将无法找回",
                         type: "warning",
@@ -98,12 +98,12 @@ angular.module('schoolManage')
                     function(){
                         StudentDataProvider.removeStudent(row.entity._id)
                             .success(function(student){
-                                swal({title: "删除成功", type: "success", timer: 1000 });
+                                sweetAlert({title: "删除成功", type: "success", timer: 1000 });
                                 $scope.students.splice($scope.students.indexOf(row.entity),1);
                             })
                             .error(function(err){
                                 console.error(err);
-                                swal({title: "删除失败", text: "请重试", type: 'error'})
+                                sweetAlert({title: "删除失败", text: "请重试", type: 'error'})
 
                             })
                     });
@@ -129,7 +129,7 @@ angular.module('schoolManage')
                         students.push(newStudent);
                         $('#createStudentDialog').modal('hide');
                         $scope.newStudent = {};
-                        swal({title: "创建成功", type: 'success', timer: 1000});
+                        sweetAlert({title: "创建成功", type: 'success', timer: 1000});
 
                     })
                     .error(function(err) {
@@ -137,7 +137,7 @@ angular.module('schoolManage')
                         if(err.code === 11000) {
                             var message = "用户名已存在，请修改后重试"
                         }
-                        swal({title: "创建失败", text: message, type: 'error'});
+                        sweetAlert({title: "创建失败", text: message, type: 'error'});
                     }
                 );
             };
@@ -168,7 +168,7 @@ angular.module('schoolManage')
                 StudentDataProvider.createStudentBatch(newStudents)
                     .success(function(students){
                         console.log(students);
-                        swal({title: '批量创建学生成功', type: 'success', timer: 1500});
+                        sweetAlert({title: '批量创建学生成功', type: 'success', timer: 1500});
                         $scope.students = $scope.students.concat(students);
                         $('#createStudentBatchDialog').modal('hide');
                         $scope.newStudentsList = null;
@@ -180,7 +180,7 @@ angular.module('schoolManage')
                         _.each(err, function(e) {
                             errList = errList.concat(e.name + ', ' + e.username + '\n');
                         });
-                        swal({title: '部分学生创建失败', text: '由于用户名已存在，以下学生创建失败，\n'+'请修改用户名后重试.\n'  + errList, type: 'error'})
+                        sweetAlert({title: '部分学生创建失败', text: '由于用户名已存在，以下学生创建失败，\n'+'请修改用户名后重试.\n'  + errList, type: 'error'})
                         $scope.error.unique = true;
                         $scope.newStudentsList = errList;
                     })

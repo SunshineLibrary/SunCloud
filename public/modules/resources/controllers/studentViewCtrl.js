@@ -45,13 +45,13 @@ angular.module('resources')
                         $scope.student.username = editedStudent.username;
                         $scope.student.birthday = editedStudent.birthday;
                         $('#editStudentDialog').modal('hide');
-                        swal({title: "修改成功", type: "success", timer: 1000 });
+                        sweetAlert({title: "修改成功", type: "success", timer: 1000 });
                         $scope.error = false;
                     })
                     .error(function(err) {
                         console.error(err);
                         $scope.error = true;
-                        swal({title: "修改失败", text: "请重试", type: "error", timer: 2000 });
+                        sweetAlert({title: "修改失败", text: "请重试", type: "error", timer: 2000 });
                     })
             };
 

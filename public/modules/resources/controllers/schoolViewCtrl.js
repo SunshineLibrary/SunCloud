@@ -53,13 +53,13 @@ angular.module('resources')
                     $scope.rooms.push(tempRoom);
                     $scope.tempRoom = {};
                     $('#createRoomDialog').modal('hide');
-                    swal({title: "创建班级成功", type: "success", timer: 1000 });
+                    sweetAlert({title: "创建班级成功", type: "success", timer: 1000 });
                     $location.path('/rooms/' + tempRoom._id);
                 })
                 .error(function(err){
                     console.log(err);
                     var message = err.errors.name.message || "创建失败，请重试";
-                    swal({title: "创建失败", text: message, type: "error", timer: 2000 });
+                    sweetAlert({title: "创建失败", text: message, type: "error", timer: 2000 });
                 });
         };
 
@@ -96,7 +96,7 @@ angular.module('resources')
                     $scope.row.entity.name = editedRoom.name;
                     $scope.row.entity.code = editedRoom.code;
                     $('#editRoomDialog').modal('hide');
-                    swal({title: "修改成功", type: "success", timer: 1000 });
+                    sweetAlert({title: "修改成功", type: "success", timer: 1000 });
                     $scope.editRoom.codeError = false;
                     $scope.editRoom.codeError = false;
                     $scope.tempRoom = {};
@@ -104,7 +104,7 @@ angular.module('resources')
                 .error(function(err) {
                     console.error(err);
                     $scope.error = true;
-                    swal({title: "修改失败", text: "请重试", type: "error", timer: 2000 });
+                    sweetAlert({title: "修改失败", text: "请重试", type: "error", timer: 2000 });
                 })
         };
 
@@ -132,19 +132,19 @@ angular.module('resources')
                     $scope.row.entity.phone = editedTeacher.phone;
                     $scope.row.entity.email = editedTeacher.email;
                     $('#editAdminDialog').modal('hide');
-                    swal({title: "修改成功", type: "success", timer: 1000 });
+                    sweetAlert({title: "修改成功", type: "success", timer: 1000 });
                 })
                 .error(function(err) {
                     console.error(err);
                     $scope.error = true;
-                    swal({title: "修改失败", text: "请重试", type: "error", timer: 2000 });
+                    sweetAlert({title: "修改失败", text: "请重试", type: "error", timer: 2000 });
                 })
         };
 
 
         $scope.deleteRoom = function (event, row) {
             event.stopPropagation();
-            swal({
+            sweetAlert({
                     title: "您确定要删除"+row.entity.name+"吗?",
                     text: "删除之后，该班级信息将无法找回",
                     type: "warning",
@@ -156,12 +156,12 @@ angular.module('resources')
                 function(){
                     RoomDataProvider.deleteRoom(row.entity._id)
                         .success(function(room){
-                            swal({title: "删除成功", type: "success", timer: 1000 });
+                            sweetAlert({title: "删除成功", type: "success", timer: 1000 });
                             $scope.rooms.splice($scope.rooms.indexOf(row.entity),1);
                         })
                         .error(function(err){
                             console.error(err);
-                            swal({title: "删除失败", text: "", type: 'error'})
+                            sweetAlert({title: "删除失败", text: "", type: 'error'})
                         })
                 });
         };
@@ -169,7 +169,7 @@ angular.module('resources')
 
         $scope.removeAdminFromSchool = function (event, row) {
             event.stopPropagation();
-            swal({
+            sweetAlert({
                     title: "取消超级管理员资格",
                     text: "您确定要将取消"+row.entity.name+"的超级管理员资格吗?",
                     type: "warning",
@@ -182,12 +182,12 @@ angular.module('resources')
                     var roles = _.without(row.entity.roles, 'admin');
                     TeacherDataProvider.editTeacherRole(row.entity._id, roles)
                         .success(function(teacher){
-                            swal({title: "取消成功", type: "success", timer: 1000 });
+                            sweetAlert({title: "取消成功", type: "success", timer: 1000 });
                             $scope.admins.splice($scope.admins.indexOf(row.entity),1);
                         })
                         .error(function(err){
                             console.error(err);
-                            swal({title: "取消失败", text: "请重试", type: 'error', timer: 2000});
+                            sweetAlert({title: "取消失败", text: "请重试", type: 'error', timer: 2000});
                         })
                 });
         };
@@ -219,9 +219,9 @@ angular.module('resources')
 
             }, function(err){
                 if(err) {
-                    swal({title: '添加管理员失败，请重试', type: 'error', timer: 1500});
+                    sweetAlert({title: '添加管理员失败，请重试', type: 'error', timer: 1500});
                 }else {
-                    swal({title: '添加管理员成功', type: 'success', timer: 1500});
+                    sweetAlert({title: '添加管理员成功', type: 'success', timer: 1500});
                     $('#addAdminsDialog').modal('hide');
                 }
 
@@ -301,7 +301,7 @@ angular.module('resources')
             TeacherDataProvider.createTeacher(info)
                 .success(function(newAdmin) {
                     $scope.newAdmin = null;
-                    swal({title: "创建成功", type: 'success', timer: 1000});
+                    sweetAlert({title: "创建成功", type: 'success', timer: 1000});
                     $('body').addClass('modal-open');
                     $scope.notAdmins.push(newAdmin);
                     $scope.selectedTeachers.push(newAdmin);
@@ -312,7 +312,7 @@ angular.module('resources')
                     if(err.code === 11000) {
                         var message = "用户名已存在，请修改后重试"
                     }
-                    swal({title: "创建失败", text: message, type: 'error', timer: 2000});
+                    sweetAlert({title: "创建失败", text: message, type: 'error', timer: 2000});
                 }
             );
         };

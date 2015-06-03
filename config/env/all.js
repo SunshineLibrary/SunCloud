@@ -44,7 +44,7 @@ module.exports = {
 				'public/lib/flat-ui-pro/dist/css/flat-ui-pro.css',
 				'public/lib/bower/flat-ui-pro/docs/assets/css/docs.css',
 				'public/lib/bower/ng-grid/ng-grid.css',
-				'public/lib/bower/sweetalert/lib/sweet-alert.css',
+				'public/lib/bower/sweetalert/dist/sweetalert.css',
 				'public/lib/bower/font-awesome/css/font-awesome.css',
                 'public/lib/bower/angular-xeditable/dist/css/xeditable.css'
 			],
@@ -63,7 +63,7 @@ module.exports = {
 				'public/lib/bower/angular-moment/angular-moment.js',
 				'public/lib/bower/moment/locale/zh-cn.js',
 				//'public/lib/bower/bootstrap/dist/js/bootstrap.min.js',
-				'public/lib/bower/sweetalert/lib/sweet-alert.min.js',
+				'public/lib/bower/sweetalert/dist/sweetalert.min.js',
 				'public/lib/bower/angular-file-upload/angular-file-upload.js',
 				'public/lib/bower/angular-bootstrap-checkbox/angular-bootstrap-checkbox.js',
 				'public/lib/bower/async/lib/async.js',

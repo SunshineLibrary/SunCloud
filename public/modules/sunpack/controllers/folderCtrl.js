@@ -46,7 +46,7 @@ angular.module('sunpack')
                     console.log('success response:');
                     console.log(res);
                     $('#assignFolderDialog').modal('hide');
-                    swal({title:"分配成功", type: "success", timer: 1000});
+                    sweetAlert({title:"分配成功", type: "success", timer: 1000});
                     _.each($scope.myRooms, function(myRoom) {
                         var i = myRoom.sunpack.indexOf(folder._id);
                         if(myRoom.assigned && i === -1) {
@@ -64,7 +64,7 @@ angular.module('sunpack')
                 })
                 .error(function(err){
                     console.error(err);
-                    swal({title:"分配失败", text: "请重试", type: "error", timer: 2000})
+                    sweetAlert({title:"分配失败", text: "请重试", type: "error", timer: 2000})
                 })
         };
 
@@ -101,13 +101,13 @@ angular.module('sunpack')
             info._id = row.entity._id;
             info.description = $scope.temp.description;
             FileDataProvider.addDescription(info).success(function(newFile) {
-                swal({title: '添加描述成功', type: 'success', timer: 1500});
+                sweetAlert({title: '添加描述成功', type: 'success', timer: 1500});
                 $scope.row.entity.description = newFile.description;
                 $('#addDescriptionOnRowDialog').modal('hide');
                 $scope.temp.description = null;
             }).error(function(err) {
                 console.error(err);
-                swal({title: '添加描述失败', text: '请重试',type: 'error', timer: 2000});
+                sweetAlert({title: '添加描述失败', text: '请重试',type: 'error', timer: 2000});
             });
         };
         $scope.uploader = new FileUploader({
@@ -130,7 +130,7 @@ angular.module('sunpack')
             console.log('~~',item.formData);
         };
         $scope.uploader.onErrorItem = function(item, response, status) {
-            swal({title: " 上传失败", text: response.message,type: 'error'});
+            sweetAlert({title: " 上传失败", text: response.message,type: 'error'});
             if (status == 406) {
                 $scope.uploader.clearQueue();
             }
@@ -142,7 +142,7 @@ angular.module('sunpack')
         $scope.uploader.onCompleteAll = function() {
             console.info('onCompleteAll');
             $timeout(function() {
-                swal({title: "上传成功", type: 'success', timer: 2000});
+                sweetAlert({title: "上传成功", type: 'success', timer: 2000});
                 $('#uploadFileDialog').modal('hide');
                 $scope.uploader.clearQueue();
                 console.log('update with timeout fired')
@@ -177,12 +177,12 @@ angular.module('sunpack')
                     .success(function(editedFolder) {
                         $scope.folder.name = editedFolder.name;
                         $('#editFolderDialog').modal('hide');
-                        swal({title: "修改成功", type: "success", timer: 1000 });
+                        sweetAlert({title: "修改成功", type: "success", timer: 1000 });
                     })
                     .error(function(err) {
                         console.error(err);
                         $scope.error = true;
-                        swal({title: "修改失败", text: "请重试", type: "error", timer: 2000 });
+                        sweetAlert({title: "修改失败", text: "请重试", type: "error", timer: 2000 });
                     })
             }else {
                 FolderDataProvider.editFolderNameAndSemester(info)
@@ -190,12 +190,12 @@ angular.module('sunpack')
                         $scope.folder.name = editedFolder.name;
                         $scope.folder.semester = $scope.temp.newSemester;
                         $('#editFolderDialog').modal('hide');
-                        swal({title: "修改成功", type: "success", timer: 1000 });
+                        sweetAlert({title: "修改成功", type: "success", timer: 1000 });
                     })
                     .error(function(err) {
                         console.error(err);
                         $scope.error = true;
-                        swal({title: "修改失败", text: err, type: "error", timer: 2000 });
+                        sweetAlert({title: "修改失败", text: err, type: "error", timer: 2000 });
                     })
             }
 
@@ -221,13 +221,13 @@ angular.module('sunpack')
             if($scope.editFileUploader.queue.length) {
                 $scope.editFileUploader.uploadAll();
                 $scope.editFileUploader.onErrorItem = function(item, response, status) {
-                    swal({title: " 修改文件内容失败", text: response.message,type: 'error', timer: 2000});
+                    sweetAlert({title: " 修改文件内容失败", text: response.message,type: 'error', timer: 2000});
                     if (status == 406) {
                         $scope.editFileUploader.clearQueue();
                     }
                 };
                 $scope.editFileUploader.onSuccessItem = function(item, response) {
-                    swal({title: "修改文件成功", type: 'success', timer: 2000});
+                    sweetAlert({title: "修改文件成功", type: 'success', timer: 2000});
                     $('#editFileDialog').modal('hide');
                     $scope.row.entity.originalname = response.originalname;
                     $scope.row.entity.description = response.description;
@@ -242,12 +242,12 @@ angular.module('sunpack')
                         $scope.row.entity.originalname = editedFile.originalname;
                         $scope.row.entity.description = editedFile.description;
                         $scope.temp = {};
-                        swal({title: '修改成功', type: 'success', timer: 2000});
+                        sweetAlert({title: '修改成功', type: 'success', timer: 2000});
                         $('#editFileDialog').modal('hide');
                     })
                     .error(function(err) {
                         console.error(err);
-                        swal({title: '修改失败', text: '请重试', type: 'error'});
+                        sweetAlert({title: '修改失败', text: '请重试', type: 'error'});
                     })
             }
         };
@@ -255,7 +255,7 @@ angular.module('sunpack')
 
         $scope.deleteFile = function (event, row) {
             event.stopPropagation();
-            swal({
+            sweetAlert({
                     title: "您确定要删除"+row.entity.originalname+"吗?",
                     text: "删除之后，文件信息将无法找回",
                     type: "warning",
@@ -267,13 +267,13 @@ angular.module('sunpack')
                 function(){
                     FileDataProvider.deleteFileFromFolder(row.entity._id, folder._id)
                         .success(function(file){
-                            swal({title: "删除成功", type: "success", timer: 1000 });
+                            sweetAlert({title: "删除成功", type: "success", timer: 1000 });
                             $scope.files.splice($scope.files.indexOf(row.entity),1);
                             $rootScope.$broadcast('deleteFile', {folderId: folder._id, updated_at: Date.now()});
                         })
                         .error(function(err){
                             console.error(err);
-                            swal({title: "删除失败", text: "请重试", type: 'error'})
+                            sweetAlert({title: "删除失败", text: "请重试", type: 'error'})
                         })
                 });
         };

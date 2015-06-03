@@ -146,7 +146,7 @@ angular.module('schoolManage')
                         $scope.school.name = school.name;
                     }).error(function(err){
                         console.error(err);
-                        swal({title: "修改失败", text: "请重试", type: 'error'})
+                        sweetAlert({title: "修改失败", text: "请重试", type: 'error'})
                     })
             };
 

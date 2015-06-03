@@ -45,7 +45,7 @@ angular.module('manage')
 
             $scope.logout = function (event, row) {
                 event.stopPropagation();
-                swal({
+                sweetAlert({
                         title: "登出晓书",
                         text: "您确定要将"+row.entity.userName+"登出晓书吗?",
                         type: "warning",
@@ -60,11 +60,11 @@ angular.module('manage')
                                 row.entity.userId = null;
                                 row.entity.userName = null;
                                 //row.entity.loginTime = null;
-                                swal({title: "登出成功", type: "success", timer: 1500 });
+                                sweetAlert({title: "登出成功", type: "success", timer: 1500 });
                             })
                             .error(function(err){
                                 console.error(err);
-                                swal({title: "登出失败", text: "请重试", type: 'error', timer: 2000})
+                                sweetAlert({title: "登出失败", text: "请重试", type: 'error', timer: 2000})
                             });
                     });
 

@@ -13,7 +13,7 @@ Run the back-end of SunLauncher and SunPack on cloud.
 Clone this Repo :
 
 ```
-~$ git clone https://github.com/summer-liu/SunCloud.git
+~$ git clone https://github.com/SunshineLibrary/SunCloud
 ```
 
 Install npm package and bower lib:
@@ -21,7 +21,6 @@ Install npm package and bower lib:
 ```
 ~$ cd SunCloud
 ~$ npm install
-~$ bower install
 ```
 
 prepare your mongodb <http://docs.mongodb.org/> .
@@ -32,6 +31,12 @@ run it :
 ```
 ~$ grunt
 ```
+Or
+```
+~$NODE_ENV={The Environment Name} grunt
+```
+The Environment Name: development / production / test
+
 
 ## Technology stack
 
@@ -44,7 +49,7 @@ run it :
 
 ## License
 
-Copyright (c) 2014 [Sunshine Library](http://sunshine-library.org) .
+Copyright (c) 2015 [Sunshine Library](http://sunshine-library.org) .
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

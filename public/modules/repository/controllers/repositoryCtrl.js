@@ -78,13 +78,13 @@ angular.module('repository')
             if($scope.editFileUploader.queue.length) {
                 $scope.editFileUploader.uploadAll();
                 $scope.editFileUploader.onErrorItem = function(item, response, status) {
-                    swal({title: " 修改文件内容失败", text: response.message,type: 'error', timer: 2000});
+                    sweetAlert({title: " 修改文件内容失败", text: response.message,type: 'error', timer: 2000});
                     if (status == 406) {
                         $scope.editFileUploader.clearQueue();
                     }
                 };
                 $scope.editFileUploader.onSuccessItem = function(item, response) {
-                    swal({title: "修改文件成功", type: 'success', timer: 2000});
+                    sweetAlert({title: "修改文件成功", type: 'success', timer: 2000});
                     $('#editFileDialog').modal('hide');
                     $scope.row.entity.originalname = response.originalname;
                     $scope.row.entity.description = response.description;
@@ -100,12 +100,12 @@ angular.module('repository')
                         $scope.row.entity.originalname = editedFile.originalname;
                         $scope.row.entity.description = editedFile.description;
                         $scope.temp = {};
-                        swal({title: '修改成功', type: 'success', timer: 2000});
+                        sweetAlert({title: '修改成功', type: 'success', timer: 2000});
                         $('#editFileDialog').modal('hide');
                     })
                     .error(function(err) {
                         console.error(err);
-                        swal({title: '修改失败', text: '请重试', type: 'error'});
+                        sweetAlert({title: '修改失败', text: '请重试', type: 'error'});
                     })
             }
         };
@@ -143,7 +143,7 @@ angular.module('repository')
         };
 
         $scope.uploader.onErrorItem = function(item, response, status) {
-            swal({title: " 上传失败", text: response.message,type: 'error'});
+            sweetAlert({title: " 上传失败", text: response.message,type: 'error'});
             if (status == 406) {
                 $scope.uploader.clearQueue();
             }
@@ -160,7 +160,7 @@ angular.module('repository')
         };
         $scope.uploader.onCompleteAll = function() {
             $timeout(function() {
-                swal({title: "上传成功", type: 'success', timer: 2000});
+                sweetAlert({title: "上传成功", type: 'success', timer: 2000});
                 $('#addResourceDialog').modal('hide');
                 $scope.uploader.clearQueue();
             }, 1200);
@@ -217,7 +217,7 @@ angular.module('repository')
 
         $scope.deleteFile = function (event, row) {
             event.stopPropagation();
-            swal({
+            sweetAlert({
                     title: "删除文件",
                     text: "您确定要删除"+row.entity.originalname+"吗?\n删除之后，文件信息将无法找回",
                     type: "warning",
@@ -229,12 +229,12 @@ angular.module('repository')
                 function(){
                     FileDataProvider.deleteFile(row.entity._id)
                         .success(function(file){
-                            swal({title: "删除成功", type: "success", timer: 1000 });
+                            sweetAlert({title: "删除成功", type: "success", timer: 1000 });
                             $scope.files.splice($scope.files.indexOf(row.entity),1);
                         })
                         .error(function(err){
                             console.error(err);
-                            swal({title: "删除失败", text: "请重试", type: 'error'})
+                            sweetAlert({title: "删除失败", text: "请重试", type: 'error'})
                         })
                 });
         };

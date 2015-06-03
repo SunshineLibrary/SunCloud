@@ -77,18 +77,18 @@ angular.module('schoolManage')
                         $scope.row.entity.email = editedTeacher.email;
                         $scope.row.entity.roles = editedTeacher.roles;
                         $('#editTeacherDialog').modal('hide');
-                        swal({title: "修改成功", type: "success", timer: 1000 });
+                        sweetAlert({title: "修改成功", type: "success", timer: 1000 });
                     })
                     .error(function(err) {
                         console.error(err);
                         $scope.error = true;
-                        swal({title: "修改失败", text: "请重试", type: "error", timer: 2000 });
+                        sweetAlert({title: "修改失败", text: "请重试", type: "error", timer: 2000 });
                     })
             };
 
             $scope.deleteTeacher = function (event, row) {
                 event.stopPropagation();
-                swal({
+                sweetAlert({
                         title: "您确定要删除老师"+row.entity.name+"吗?",
                         text: "删除之后，该老师信息将无法找回",
                         type: "warning",
@@ -100,12 +100,12 @@ angular.module('schoolManage')
                     function(){
                         TeacherDataProvider.deleteTeacher(row.entity._id)
                             .success(function(teacher){
-                                swal({title: "删除成功", type: "success", timer: 1000 });
+                                sweetAlert({title: "删除成功", type: "success", timer: 1000 });
                                 $scope.teachers.splice($scope.teachers.indexOf(row.entity),1);
                             })
                             .error(function(err){
                                 console.error(err);
-                                swal({title: "删除失败", text: "", type: 'error'})
+                                sweetAlert({title: "删除失败", text: "", type: 'error'})
                             })
                     });
             };
@@ -131,7 +131,7 @@ angular.module('schoolManage')
                         $scope.teachers.push(teacher);
                         $scope.newTeacher = undefined;
                         $('#createTeacherDialog').modal('hide');
-                        swal({
+                        sweetAlert({
                             title: "创建成功",
                             text: "此用户名可登录晓书教师账号和教师平台\n教师平台默认密码为xiaoshu",
                             type: "success",
@@ -144,7 +144,7 @@ angular.module('schoolManage')
                         if(err.code === 11000) {
                             $scope.errorMessage = "用户名已存在，请修改后重试"
                         }
-                        swal({title: "创建失败", text: $scope.errorMessage, type: 'error'});
+                        sweetAlert({title: "创建失败", text: $scope.errorMessage, type: 'error'});
                     });
             };
 
